@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neomirdata"
-version = "0.1.5"
+version = "0.1.6"
 description = "Common loaders for MIR datasets."
 authors = ["Igor Bogicevic <igor.bogicevic@gmail.com>"]
 maintainers = ["Igor Bogicevic <igor.bogicevic@gmail.com>"]
@@ -24,7 +24,7 @@ chardet = "^5.2.0"
 Deprecated = "^1.2.14"
 h5py = "^3.10.0"
 librosa = "^0.10.1"
-numpy = "^1.26.4"
+numpy = "^2.2.5"
 pandas = "^2.2.1"
 pretty_midi = "^0.2.10"
 pyyaml = "^6.0.1"
