@@ -476,6 +476,7 @@ def test_multitrack_unequal_len():
     mtrack_id = "ab"
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
+    metadata_none = lambda: None
     mtrack = TestMultiTrack1(mtrack_id, data_home, dataset_name, index, TestTrack, metadata_none)
 
     with pytest.raises(ValueError):
@@ -514,6 +515,7 @@ def test_multitrack_unequal_sr():
     mtrack_id = "ab"
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
+    metadata_none = lambda: None
     mtrack = TestMultiTrack1(
         mtrack_id,
         data_home,
@@ -549,6 +551,7 @@ def test_multitrack_mono():
     mtrack_id = "ab"
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
+    metadata_none = lambda: None
     mtrack = TestMultiTrack1(mtrack_id, data_home, dataset_name, index, TestTrack, metadata_none)
 
     target1 = mtrack.get_target(["a", "c"])
@@ -580,6 +583,7 @@ def test_multitrack_mono():
     mtrack_id = "ab"
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
+    metadata_none = lambda: None
     mtrack = TestMultiTrack1(mtrack_id, data_home, dataset_name, index, TestTrack, metadata_none)
 
     target1 = mtrack.get_target(["a", "c"])
