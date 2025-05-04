@@ -92,9 +92,7 @@ REMOTES = {
         url="https://github.com/HuwCheston/Jazz-Trio-Database/releases/download/v02-zenodo/jazz-trio-database-v02.zip",
         checksum="43f543fb286c6222ae1f52bcf7561f37",
         destination_dir="annotations",
-        unpack_directories=[
-            "jazz-trio-database-v02"
-        ],  # removes a redundant extra subdirectory
+        unpack_directories=["jazz-trio-database-v02"],  # removes a redundant extra subdirectory
     )
 }
 
@@ -103,9 +101,9 @@ To download the audio for files for JTD, visit: https://zenodo.org/records/13828
 
 After you've been granted access, press the "Download all" button on the Zenodo record.
 
-This will create a new file named files-archive (with no extension). Rename the file to files-archive.zip and extract 
-using any unzipping tool (7zip, WinRAR, the unarchiver) or the command line. This will give you a list of multi-part 
-zip files in the form [processed.zip.001, processed.zip.002, ...] and [raw.zip.001, raw.zip.002, ...]. 
+This will create a new file named files-archive (with no extension). Rename the file to files-archive.zip and extract
+using any unzipping tool (7zip, WinRAR, the unarchiver) or the command line. This will give you a list of multi-part
+zip files in the form [processed.zip.001, processed.zip.002, ...] and [raw.zip.001, raw.zip.002, ...].
 
 To extract these, use 7zip from the command line:
 
@@ -114,13 +112,13 @@ To extract these, use 7zip from the command line:
 7z x raw.zip.001
 ```
 
-Note that the default `unzip` command on Linux can't handle these files, so you'll need to use 7zip. You may also be 
-able to use a GUI tool like WinRAR, which was used to create the archive in the first place. 
+Note that the default `unzip` command on Linux can't handle these files, so you'll need to use 7zip. You may also be
+able to use a GUI tool like WinRAR, which was used to create the archive in the first place.
 
-These commands will extract the audio to the current folder. You'll then need to move the results to {0}/processed and 
+These commands will extract the audio to the current folder. You'll then need to move the results to {0}/processed and
 {0}/raw, respectively, creating these folders if they don't already exist.
 
-Combined with the annotation files (which can be obtained by calling `.download()` on the `mirdata.Dataset` instance 
+Combined with the annotation files (which can be obtained by calling `.download()` on the `mirdata.Dataset` instance
 you've just initialized), the end result should be a file structure that looks like:
 
 ```
@@ -149,17 +147,17 @@ LICENSE_INFO = """
 The MIT License (MIT)
 Copyright (c) 2023, Huw Cheston
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
 persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
 Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """
@@ -303,9 +301,7 @@ class MultiTrack(core.MultiTrack):
 
     """
 
-    def __init__(
-        self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-    ):
+    def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
         super().__init__(
             mtrack_id=mtrack_id,
             data_home=data_home,
@@ -517,12 +513,11 @@ def timestamp_to_seconds(ts: str) -> int:
         hours, minutes, seconds = map(int, ts.split(":"))
         return int((hours * 60 * 60) + (minutes * 60) + seconds)
     # Timestamp is in format minutes-seconds
-    elif ts.count(":") == 1:
+    if ts.count(":") == 1:
         minutes, seconds = map(int, ts.split(":"))
         return int((minutes * 60) + seconds)
     # Timestamp is in incorrect format
-    else:
-        raise ValueError("Timestamp must be in format %H:%M:%S or %M:%S")
+    raise ValueError("Timestamp must be in format %H:%M:%S or %M:%S")
 
 
 @io.coerce_to_bytes_io
@@ -591,9 +586,7 @@ def load_beats(fhandle: TextIO, col_idx: int) -> Optional[annotations.BeatData]:
         # Append everything to the list with the required datatypes
         timestamps.append(desired_data_fmt)
         positions.append(int(float(metre)))  # coerce string to float and then to int
-    return annotations.BeatData(
-        np.array(timestamps), "s", np.array(positions), "bar_index"
-    )
+    return annotations.BeatData(np.array(timestamps), "s", np.array(positions), "bar_index")
 
 
 @core.docstring_inherit(core.Dataset)

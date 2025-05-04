@@ -36,16 +36,14 @@
 
 """
 
-import csv
 import json
-import os
-from typing import BinaryIO, Dict, List, Optional, TextIO, Tuple
+from typing import BinaryIO, List, Optional, TextIO, Tuple
 
 import librosa
 import numpy as np
 from smart_open import open
 
-from mirdata import annotations, core, download_utils, io
+from mirdata import core, io
 
 BIBTEX = """
 @inproceedings{
@@ -133,7 +131,7 @@ The Filosax dataset contains copyright material and is shared with researchers u
     D. Foster and S. Dixon (2021),  Filosax: A Dataset of Annotated Jazz Saxophone Recordings.
     22nd International Society for Music Information Retrieval Conference (ISMIR).
 5. Queen Mary University of London shall not be held liable for any errors in the content of Filosax nor damage arising from the use of Filosax.
-6. The Filosax administrator may update these conditions of use at any time. 
+6. The Filosax administrator may update these conditions of use at any time.
 """
 
 
@@ -182,88 +180,38 @@ class Note:
     """
 
     def __init__(self, input_dict):
-        self.a_start_time = (
-            input_dict.get("a_start_time", 0.0)
-        )
-        self.a_end_time = (
-            input_dict.get("a_end_time", 0.0)
-        )
-        self.a_duration = (
-            input_dict.get("a_duration", 0.0)
-        )
-        self.a_onset_time = (
-            input_dict.get("a_onset_time", 0.0)
-        )
+        self.a_start_time = input_dict.get("a_start_time", 0.0)
+        self.a_end_time = input_dict.get("a_end_time", 0.0)
+        self.a_duration = input_dict.get("a_duration", 0.0)
+        self.a_onset_time = input_dict.get("a_onset_time", 0.0)
         self.midi_pitch = input_dict.get("midi_pitch", 0)
-        self.crochet_num = (
-            input_dict.get("crochet_num", 24)
-        )
+        self.crochet_num = input_dict.get("crochet_num", 24)
         self.musician = input_dict.get("musician", 1)
         self.bar_num = input_dict.get("bar_num", 1)
-        self.s_start_time = (
-            input_dict.get("s_start_time", 0.0)
-        )
-        self.s_duration = (
-            input_dict.get("s_duration", 0.0)
-        )
-        self.s_end_time = (
-            (self.s_start_time + self.s_duration)
-            if "s_start_time" in input_dict
-            else 0.0
-        )
-        self.s_rhythmic_duration = (
-            input_dict.get("s_rhythmic_duration", 0.0)
-        )
-        self.s_rhythmic_position = (
-            input_dict.get("s_rhythmic_position", 0.0)
-        )
+        self.s_start_time = input_dict.get("s_start_time", 0.0)
+        self.s_duration = input_dict.get("s_duration", 0.0)
+        self.s_end_time = (self.s_start_time + self.s_duration) if "s_start_time" in input_dict else 0.0
+        self.s_rhythmic_duration = input_dict.get("s_rhythmic_duration", 0.0)
+        self.s_rhythmic_position = input_dict.get("s_rhythmic_position", 0.0)
         self.tempo = input_dict.get("tempo", 0.0)
         self.bar_type = input_dict.get("bar_type", 1)
         self.is_grace = input_dict.get("is_grace", 0)
-        self.chord_changes = (
-            input_dict.get("chord_changes", [0])
-        )
-        self.num_chord_changes = (
-            input_dict.get("num_chord_changes", 0)
-        )
-        self.main_chord_num = (
-            input_dict.get("main_chord_num", 0)
-        )
-        self.scale_changes = (
-            input_dict.get("scale_changes", [0])
-        )
-        self.loudness_max_val = (
-            input_dict.get("loudness_max_val", 0.0)
-        )
-        self.loudness_max_time = (
-            input_dict.get("loudness_max_time", 0.0)
-        )
-        self.loudness_curve = (
-            input_dict.get("loudness_curve", [0.0])
-        )
-        self.pitch_average_val = (
-            input_dict.get("pitch_average_val", 0.0)
-        )
-        self.pitch_average_time = (
-            input_dict.get("pitch_average_time", 0.0)
-        )
-        self.pitch_curve = (
-            input_dict.get("pitch_curve", [0.0])
-        )
-        self.pitch_vib_freq = (
-            input_dict.get("pitch_vib_freq", 0.0)
-        )
-        self.pitch_vib_ext = (
-            input_dict.get("pitch_vib_ext", 0.0)
-        )
+        self.chord_changes = input_dict.get("chord_changes", [0])
+        self.num_chord_changes = input_dict.get("num_chord_changes", 0)
+        self.main_chord_num = input_dict.get("main_chord_num", 0)
+        self.scale_changes = input_dict.get("scale_changes", [0])
+        self.loudness_max_val = input_dict.get("loudness_max_val", 0.0)
+        self.loudness_max_time = input_dict.get("loudness_max_time", 0.0)
+        self.loudness_curve = input_dict.get("loudness_curve", [0.0])
+        self.pitch_average_val = input_dict.get("pitch_average_val", 0.0)
+        self.pitch_average_time = input_dict.get("pitch_average_time", 0.0)
+        self.pitch_curve = input_dict.get("pitch_curve", [0.0])
+        self.pitch_vib_freq = input_dict.get("pitch_vib_freq", 0.0)
+        self.pitch_vib_ext = input_dict.get("pitch_vib_ext", 0.0)
         self.spec_cent = input_dict.get("spec_cent", 0.0)
         self.spec_flux = input_dict.get("spec_flux", 0.0)
-        self.spec_cent_curve = (
-            input_dict.get("spec_cent_curve", [0.0])
-        )
-        self.spec_flux_curve = (
-            input_dict.get("spec_flux_curve", [0.0])
-        )
+        self.spec_cent_curve = input_dict.get("spec_cent_curve", [0.0])
+        self.spec_flux_curve = input_dict.get("spec_flux_curve", [0.0])
         self.seq_len = input_dict.get("seq_len", -1)
         self.seq_num = input_dict["seq_num"] if "seq_len" in input_dict else -1
 
@@ -311,8 +259,7 @@ class Track(core.Track):
         """
         if not self.annotation_path:
             return [Note({})]
-        else:
-            return load_annotation(self.annotation_path)
+        return load_annotation(self.annotation_path)
 
     @property
     def audio(self) -> Optional[Tuple[np.ndarray, float]]:
@@ -353,9 +300,7 @@ class MultiTrack(core.MultiTrack):
 
     """
 
-    def __init__(
-        self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-    ):
+    def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
         super().__init__(
             mtrack_id=mtrack_id,
             data_home=data_home,
@@ -404,11 +349,7 @@ class MultiTrack(core.MultiTrack):
             * (SortedKeyList, Observation) - timestamp, duration (seconds), beat
 
         """
-        return [
-            x["data"]
-            for x in self.annotation["annotations"]
-            if x["namespace"] == "beat"
-        ][0]
+        return [x["data"] for x in self.annotation["annotations"] if x["namespace"] == "beat"][0]
 
     @property
     def chords(self):
@@ -418,11 +359,7 @@ class MultiTrack(core.MultiTrack):
             * (SortedKeyList, Observation) - timestamp, duration (seconds), chord symbol
 
         """
-        return [
-            x["data"]
-            for x in self.annotation["annotations"]
-            if x["namespace"] == "chord"
-        ][0]
+        return [x["data"] for x in self.annotation["annotations"] if x["namespace"] == "chord"][0]
 
     @property
     def segments(self):
@@ -433,11 +370,7 @@ class MultiTrack(core.MultiTrack):
             * (SortedKeyList, Observation) - timestamp, duration (seconds), beat
 
         """
-        return [
-            x["data"]
-            for x in self.annotation["annotations"]
-            if x["namespace"] == "segment_open"
-        ][0]
+        return [x["data"] for x in self.annotation["annotations"] if x["namespace"] == "segment_open"][0]
 
     @property
     def bass_drums(self):

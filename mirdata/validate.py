@@ -57,7 +57,7 @@ def validate(local_path, checksum):
         return False, False
 
     # validate that the checksum matches
-    valid = False if md5(local_path) != checksum else True
+    valid = not md5(local_path) != checksum
 
     return True, valid
 
@@ -83,20 +83,19 @@ def validate_files(file_dict, data_home, verbose):
             if tracks == "tracks":
                 continue
             # tracks
-            else:
-                filepath = file[tracks][0]
-                checksum = file[tracks][1]
-                if filepath is not None:
-                    local_path = os.path.join(data_home, filepath)
-                    exists, valid = validate(local_path, checksum)
-                    if not exists:
-                        if file_id not in missing:
-                            missing[file_id] = []
-                        missing[file_id].append(local_path)
-                    elif not valid:
-                        if file_id not in invalid:
-                            invalid[file_id] = []
-                        invalid[file_id].append(local_path)
+            filepath = file[tracks][0]
+            checksum = file[tracks][1]
+            if filepath is not None:
+                local_path = os.path.join(data_home, filepath)
+                exists, valid = validate(local_path, checksum)
+                if not exists:
+                    if file_id not in missing:
+                        missing[file_id] = []
+                    missing[file_id].append(local_path)
+                elif not valid:
+                    if file_id not in invalid:
+                        invalid[file_id] = []
+                    invalid[file_id].append(local_path)
 
     return missing, invalid
 
@@ -152,23 +151,17 @@ def validate_index(dataset_index, data_home, verbose=True):
 
     # check index
     if "metadata" in dataset_index and dataset_index["metadata"] is not None:
-        missing_metadata, invalid_metadata = validate_metadata(
-            dataset_index["metadata"], data_home, verbose
-        )
+        missing_metadata, invalid_metadata = validate_metadata(dataset_index["metadata"], data_home, verbose)
         missing_files["metadata"] = missing_metadata
         invalid_checksums["metadata"] = invalid_metadata
 
     if "tracks" in dataset_index and dataset_index["tracks"] is not None:
-        missing_tracks, invalid_tracks = validate_files(
-            dataset_index["tracks"], data_home, verbose
-        )
+        missing_tracks, invalid_tracks = validate_files(dataset_index["tracks"], data_home, verbose)
         missing_files["tracks"] = missing_tracks
         invalid_checksums["tracks"] = invalid_tracks
 
     if "multitracks" in dataset_index and dataset_index["multitracks"] is not None:
-        missing_multitracks, invalid_multitracks = validate_files(
-            dataset_index["multitracks"], data_home, verbose
-        )
+        missing_multitracks, invalid_multitracks = validate_files(dataset_index["multitracks"], data_home, verbose)
         missing_files["multitracks"] = missing_multitracks
         invalid_checksums["multitracks"] = invalid_multitracks
 
@@ -217,9 +210,7 @@ def validator(dataset_index, data_home, verbose=True):
             has_any_invalid_checksum = True
 
     if not (has_any_missing_file or has_any_invalid_checksum):
-        log_message(
-            "Success: the dataset is complete and all files are valid.", verbose
-        )
+        log_message("Success: the dataset is complete and all files are valid.", verbose)
         log_message("-" * 20, verbose)
 
     return missing_files, invalid_checksums

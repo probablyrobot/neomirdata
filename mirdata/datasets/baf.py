@@ -60,7 +60,7 @@ BAF Loader
 
     Next, we specify the ownership of all the data included in BAF: Broadcast
     Audio Fingerprinting dataset. For licensing information, please refer to
-    the “License” section.
+    the "License" section.
 
     Reference tracks
 
@@ -100,7 +100,7 @@ BAF Loader
             * Research only, non-commercial purposes
             * No adaptations nor derivative works
             * Attribution to Epidemic Sound and the authors as it is indicated
-                in the ”citation” section.
+                in the "citation" section.
 
     Acknowledgments
 
@@ -188,15 +188,14 @@ LICENSE_INFO = (
     "    * Research only, non-commercial purposes\n"
     "    * No adaptations nor derivative works\n"
     "    * Attribution to Epidemic Sound and the authors as it is indicated "
-    "in the ”citation” section.\n"
+    "in the \"citation\" section.\n"
 )
 
 #: Tag units
 TAG_UNITS = {"open": "no scrict schema or units"}
 
 FILENOTFOUND_MSG = Template(
-    "$fname not found. Check that the file is found in the dataset root "
-    "directory e.g. mir-datasets/baf/$fname"
+    "$fname not found. Check that the file is found in the dataset root " "directory e.g. mir-datasets/baf/$fname"
 )
 
 
@@ -330,33 +329,27 @@ def load_matches(track_metadata: dict) -> Optional[EventDataExtended]:
     tags = []
     if track_metadata["annotations"] == []:
         return None
-    else:
-        for ann in track_metadata["annotations"]:
-            intervals_list.append(
-                [round(ann["query_start"], 3), round(ann["query_end"], 3)]
-            )
-            events.append(ann["reference"])
-            tags.append(ann["tag"])
-        intervals = np.array(
-            intervals_list, dtype=float
-        )  # more efficient than appending to np.array
-        return EventDataExtended(
-            intervals=intervals,
-            interval_unit="s",
-            events=events,
-            event_unit="open",
-            tags=tags,
-            tag_unit="open",
-        )
+    
+    for ann in track_metadata["annotations"]:
+        intervals_list.append([round(ann["query_start"], 3), round(ann["query_end"], 3)])
+        events.append(ann["reference"])
+        tags.append(ann["tag"])
+    intervals = np.array(intervals_list, dtype=float)  # more efficient than appending to np.array
+    return EventDataExtended(
+        intervals=intervals,
+        interval_unit="s",
+        events=events,
+        event_unit="open",
+        tags=tags,
+        tag_unit="open",
+    )
 
 
 def csv_to_pandas(file_path: str) -> pd.DataFrame:
     try:
         df = pd.read_csv(file_path)
     except FileNotFoundError as not_found:
-        raise FileNotFoundError(
-            FILENOTFOUND_MSG.safe_substitute(fname=not_found.filename)
-        )
+        raise FileNotFoundError(FILENOTFOUND_MSG.safe_substitute(fname=not_found.filename))
     return df
 
 

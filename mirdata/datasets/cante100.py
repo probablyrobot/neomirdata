@@ -111,9 +111,7 @@ REMOTES = {
     ),
     "notes": download_utils.RemoteFileMetadata(
         filename="cante100_automaticTranscription.zip",
-        url=(
-            "https://zenodo.org/record/1322542/files/cante100_automaticTranscription.zip?download=1"
-        ),
+        url=("https://zenodo.org/record/1322542/files/cante100_automaticTranscription.zip?download=1"),
         checksum="47fea64c744f9fe678ae5642a8f0ee8e",  # the md5 checksum
         destination_dir="cante100_automaticTranscription",  # relative path for where to unzip the data, or None
     ),
@@ -247,7 +245,6 @@ def load_spectrogram(fhandle: TextIO) -> np.ndarray:
     return parsed_spectrogram.astype(np.float64)
 
 
-
 # no decorator here because of https://github.com/librosa/librosa/issues/1267
 def load_audio(fpath: str) -> Tuple[np.ndarray, float]:
     """Load a cante100 audio file.
@@ -364,8 +361,8 @@ class Dataset(core.Dataset):
                 index = "0" + index
                 indexes.append(index)
                 continue
-            else:
-                indexes.append(index)
+            
+            indexes.append(index)
 
         # musicBrainzID
         identifiers = [ident.text for ident in root.iter("musicBrainzID")]
@@ -400,9 +397,7 @@ class Dataset(core.Dataset):
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.cante100.load_spectrogram", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.cante100.load_spectrogram", version="0.3.4")
     def load_spectrogram(self, *args, **kwargs):
         return load_spectrogram(*args, **kwargs)
 
