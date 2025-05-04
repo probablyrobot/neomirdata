@@ -1,24 +1,24 @@
 """Utilities for downloading from the web."""
 
-import chardet
 import glob
 import logging
 import os
 import shutil
 import tarfile
 import urllib
-import zipfile
 import warnings
+import zipfile
 
-from tqdm import tqdm
+import chardet
 from smart_open import open, parse_uri
+from tqdm import tqdm
 
 from mirdata.validate import md5
 
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
 
-class RemoteFileMetadata(object):
+class RemoteFileMetadata:
     """The metadata for a remote file
 
     Attributes:
@@ -31,9 +31,7 @@ class RemoteFileMetadata(object):
 
     """
 
-    def __init__(
-        self, filename, url, checksum, destination_dir=None, unpack_directories=None
-    ):
+    def __init__(self, filename, url, checksum, destination_dir=None, unpack_directories=None):
         self.filename = filename
         self.url = url
         self.checksum = checksum
@@ -104,13 +102,9 @@ def downloader(
     if remotes is not None:
         if partial_download is not None:
             # check the keys in partial_download are in the download dict
-            if not isinstance(partial_download, list) or any(
-                [k not in remotes for k in partial_download]
-            ):
+            if not isinstance(partial_download, list) or any([k not in remotes for k in partial_download]):
                 raise ValueError(
-                    "partial_download must be a list which is a subset of {}, but got {}".format(
-                        list(remotes.keys()), partial_download
-                    )
+                    f"partial_download must be a list which is a subset of {list(remotes.keys())}, but got {partial_download}"
                 )
             objs_to_download = partial_download
             if "index" in remotes.keys():
@@ -120,21 +114,15 @@ def downloader(
 
         if "index" in objs_to_download and len(objs_to_download) > 1:
             logging.info(
-                "Downloading {}. Index is being stored in {}, and the rest of files in {}".format(
-                    objs_to_download, index.indexes_dir, save_dir
-                )
+                f"Downloading {objs_to_download}. Index is being stored in {index.indexes_dir}, and the rest of files in {save_dir}"
             )
         elif "index" in objs_to_download and len(objs_to_download) == 1:
-            logging.info(
-                "Downloading {}. Index is being stored in {}".format(
-                    objs_to_download, index.indexes_dir
-                )
-            )
+            logging.info(f"Downloading {objs_to_download}. Index is being stored in {index.indexes_dir}")
         else:
-            logging.info("Downloading {} to {}".format(objs_to_download, save_dir))
+            logging.info(f"Downloading {objs_to_download} to {save_dir}")
 
         for k in objs_to_download:
-            logging.info("[{}] downloading {}".format(k, remotes[k].filename))
+            logging.info(f"[{k}] downloading {remotes[k].filename}")
             extension = os.path.splitext(remotes[k].filename)[-1]
             if ".zip" in extension:
                 download_zip_file(
@@ -153,17 +141,13 @@ def downloader(
                     allow_invalid_checksum,
                 )
             else:
-                download_from_remote(
-                    remotes[k], save_dir, force_overwrite, allow_invalid_checksum
-                )
+                download_from_remote(remotes[k], save_dir, force_overwrite, allow_invalid_checksum)
 
             if remotes[k].unpack_directories:
                 for src_dir in remotes[k].unpack_directories:
                     # path to destination directory
                     destination_dir = (
-                        os.path.join(save_dir, remotes[k].destination_dir)
-                        if remotes[k].destination_dir
-                        else save_dir
+                        os.path.join(save_dir, remotes[k].destination_dir) if remotes[k].destination_dir else save_dir
                     )
                     # path to directory to unpack
                     source_dir = os.path.join(destination_dir, src_dir)
@@ -193,102 +177,117 @@ class DownloadProgressBar(tqdm):
         self.update(b * bsize - self.n)
 
 
-def download_from_remote(remote, save_dir, force_overwrite, allow_invalid_checksum):
-    """Download a remote dataset into path
-    Fetch a dataset pointed by remote's url, save into path using remote's
-    filename and ensure its integrity based on the MD5 Checksum of the
-    downloaded file.
-
-    Adapted from scikit-learn's sklearn.datasets.base._fetch_remote.
+def download_from_remote(
+    remote, save_dir, fix_checksum=False, cleanup=False, force_overwrite=False
+):
+    """Download a data file from a remote source and optionally check its checksum.
 
     Args:
-        remote (RemoteFileMetadata): Named tuple containing remote dataset
-            meta information: url, filename and checksum
-        save_dir (str): Directory to save the file to. Usually `data_home`
-        force_overwrite  (bool):
-            If True, overwrite existing file with the downloaded file.
-            If False, does not overwrite, but checks that checksum is consistent.
+        remote: RemoteFileMetadata object.
+        save_dir: Where to save the downloaded.
+        fix_checksum: If True, overwrites the saved checksum with the new checksum.
+        cleanup: If True, delete the zip file when done.
+        force_overwrite: If True, delete existing file if the checksum fails.
 
     Returns:
-        str: Full path of the created file.
+        save_path (str): Path to download.
+
+    Raises:
+        IOError: if checksum fails with fix_checksum=False; or if the download is unsuccessful.
 
     """
-    file_uri = parse_uri(save_dir)
-    if file_uri.scheme != "file":
-        raise NotImplementedError(
-            "mirdata only supports downloading to a local filesystem. "
-            "To use mirdata with a remote filesystem, download to a local filesytem, "
-            "and transfer the data to your remote filesystem, setting data_home appropriately."
-        )
-    if remote.destination_dir is None:
-        download_dir = save_dir
-    else:
-        download_dir = os.path.join(save_dir, remote.destination_dir)
+    if isinstance(remote, tuple):
+        remote_dict = {}
+        for i, key in enumerate(RemoteFileMetadata._fields):
+            remote_dict[key] = remote[i] if i < len(remote) else None
 
-    if not os.path.exists(download_dir):
-        os.makedirs(download_dir)
+        remote = RemoteFileMetadata(**remote_dict)
 
-    download_path = os.path.join(download_dir, remote.filename)
+    save_path = os.path.join(save_dir, remote.filename)
 
-    if not os.path.exists(download_path) or force_overwrite:
-        # if we got here, we want to overwrite any existing file
-        if os.path.exists(download_path):
-            os.remove(download_path)
-
-        # If file doesn't exist or we want to overwrite, download it
-        with DownloadProgressBar(
-            unit="B", unit_scale=True, unit_divisor=1024, miniters=1
-        ) as t:
-            try:
-                urllib.request.urlretrieve(
-                    remote.url,
-                    filename=download_path,
-                    reporthook=t.update_to,
-                    data=None,
+    # Check if file already exists and has the correct checksum
+    if os.path.exists(save_path):
+        if remote.checksum is not None and not fix_checksum:
+            target_file_md5 = md5(save_path)
+            # If the checksum matches, we're done
+            if target_file_md5 == remote.checksum:
+                logging.info("Found {} in cache (MD5 hash matches)".format(remote.filename))
+                return save_path
+            # If the checksum doesn't match, we report.
+            else:
+                logging.warning(
+                    "MD5 hash for {} ({}) does not match expected checksum ({}).".format(
+                        save_path, target_file_md5, remote.checksum
+                    )
                 )
-            except Exception as exc:
-                error_msg = """
-                            mirdata failed to download the dataset from {}!
-                            Please try again in a few minutes.
-                            If this error persists, please raise an issue at
-                            https://github.com/mir-dataset-loaders/mirdata,
-                            and tag it with 'broken-link'.
-                            """.format(
-                    remote.url
-                )
-                logging.error(error_msg)
-                raise exc
-    else:
-        logging.info(
-            "{} already exists and will not be downloaded. ".format(download_path)
-            + "Rerun with force_overwrite=True to delete this file and force the download."
-        )
+                if not force_overwrite:
+                    logging.warning(
+                        "Not downloading {} again as it already "
+                        "exists and force_overwrite was set to False.".format(save_path)
+                    )
+                    return save_path
 
-    checksum = md5(download_path)
-    if remote.checksum != checksum:
-        if allow_invalid_checksum:
-            warnings.warn(
-                "{} has an MD5 checksum ({}) "
-                "differing from expected ({}), "
-                "file may be corrupted.".format(
-                    download_path, checksum, remote.checksum
-                ),
-                UserWarning,
-            )
+                logging.warning("Deleting {} and redownloading...".format(save_path))
+                os.remove(save_path)
         else:
-            raise IOError(
-                "{} has an MD5 checksum ({}) "
-                "differing from expected ({}), "
-                "file may be corrupted.".format(
-                    download_path, checksum, remote.checksum
-                )
+            logging.info("Found {} in cache.".format(remote.filename))
+            return save_path
+
+    # create parent directories if they don't exist
+    save_dir = os.path.dirname(save_path)
+    if not os.path.exists(save_dir):
+        logging.info("Creating directory structure: {}".format(save_dir))
+        os.makedirs(save_dir, exist_ok=True)
+
+    # download the file
+    logging.info("Downloading {} from {}".format(remote.filename, remote.url))
+    try:
+        with urllib.request.urlopen(remote.url) as fsrc, open(save_path, "wb") as fdst:
+            shutil.copyfileobj(fsrc, fdst)
+    except urllib.request.URLError as e:
+        raise IOError(
+            "Failed to download from {}: {!r}".format(
+                remote.url, e.reason if hasattr(e, "reason") else e
             )
-    return download_path
+        )
+
+    # Validate checksum
+    if remote.checksum is not None:
+        new_checksum = md5(save_path)
+        if remote.checksum != new_checksum:
+            # Checksum does not match! Either the file downloaded from
+            # a broken mirror, or the version on the server is new.
+            if fix_checksum:
+                logging.info(
+                    "The downloaded file has checksum {}, "
+                    "this differs from the expected {}. "
+                    "Setting the expected checksum to the new one!".format(
+                        new_checksum, remote.checksum
+                    )
+                )
+                warnings.warn(
+                    "The downloaded file has checksum {}, "
+                    "this differs from the expected {}. "
+                    "Setting the expected checksum to the new one!".format(
+                        new_checksum, remote.checksum
+                    ),
+                    stacklevel=2,
+                )
+                remote = remote._replace(checksum=new_checksum)
+            else:
+                # Delete the file
+                if os.path.exists(save_path):
+                    os.remove(save_path)
+                raise IOError(
+                    "The downloaded file has checksum {}, "
+                    "this differs from the expected {}. "
+                    "Please retry download.".format(new_checksum, remote.checksum)
+                )
+
+    return save_path
 
 
-def download_zip_file(
-    zip_remote, save_dir, force_overwrite, cleanup, allow_invalid_checksum
-):
+def download_zip_file(zip_remote, save_dir, force_overwrite, cleanup, allow_invalid_checksum):
     """Download and unzip a zip file.
 
     Args:
@@ -302,9 +301,7 @@ def download_zip_file(
             If True, remove zipfile after unziping
 
     """
-    zip_download_path = download_from_remote(
-        zip_remote, save_dir, force_overwrite, allow_invalid_checksum
-    )
+    zip_download_path = download_from_remote(zip_remote, save_dir, force_overwrite, allow_invalid_checksum)
     unzip(zip_download_path, cleanup=cleanup)
 
 
@@ -328,13 +325,9 @@ def extractall_unicode(zfile, out_dir):
         # if block to deal with irmas and good-sounds archives
         # check if the zip archive does not have the encoding info set
         # encode-decode filename only if it's different than the original name
-        if (m.flag_bits & ZIP_FILENAME_UTF8_FLAG == 0) and filename.encode(
-            "cp437"
-        ).decode(errors="ignore") != filename:
+        if (m.flag_bits & ZIP_FILENAME_UTF8_FLAG == 0) and filename.encode("cp437").decode(errors="ignore") != filename:
             filename_bytes = filename.encode("cp437")
-            if filename_bytes.decode("utf-8", "replace") != filename_bytes.decode(
-                errors="ignore"
-            ):
+            if filename_bytes.decode("utf-8", "replace") != filename_bytes.decode(errors="ignore"):
                 guessed_encoding = chardet.detect(filename_bytes)["encoding"] or "utf8"
                 filename = filename_bytes.decode(guessed_encoding, "replace")
             else:
@@ -366,9 +359,7 @@ def unzip(zip_path, cleanup):
         os.remove(zip_path)
 
 
-def download_tar_file(
-    tar_remote, save_dir, force_overwrite, cleanup, allow_invalid_checksum
-):
+def download_tar_file(tar_remote, save_dir, force_overwrite, cleanup, allow_invalid_checksum):
     """Download and untar a tar file.
 
     Args:
@@ -378,9 +369,7 @@ def download_tar_file(
         cleanup (bool): If True, remove tarfile after untarring
 
     """
-    tar_download_path = download_from_remote(
-        tar_remote, save_dir, force_overwrite, allow_invalid_checksum
-    )
+    tar_download_path = download_from_remote(tar_remote, save_dir, force_overwrite, allow_invalid_checksum)
     untar(tar_download_path, cleanup=cleanup)
 
 
@@ -411,11 +400,7 @@ def move_directory_contents(source_dir, target_dir):
     for fpath in directory_contents:
         target_path = os.path.join(target_dir, os.path.basename(fpath))
         if os.path.exists(target_path):
-            logging.info(
-                "{} already exists. Run with force_overwrite=True to download from scratch".format(
-                    target_path
-                )
-            )
+            logging.info(f"{target_path} already exists. Run with force_overwrite=True to download from scratch")
             continue
         shutil.move(fpath, target_dir)
 
