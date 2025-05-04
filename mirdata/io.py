@@ -168,25 +168,16 @@ def load_multif0_from_midi(
         for note in instrument.notes:
             has_data = True
             # index into times
-            this_idx = range(
-                _to_idx(note.start, time_hop), _to_idx(note.end, time_hop) + 1
-            )
+            this_idx = range(_to_idx(note.start, time_hop), _to_idx(note.end, time_hop) + 1)
             time_idx.extend(this_idx)
             pitch_val.extend([float(note.pitch) for _ in this_idx])
             conf_val.extend([float(note.velocity) for _ in this_idx])
 
         # look up any pitch bend information
         do_pb = pitch_bend and len(instrument.pitch_bends) > 0
-        pb_idx = (
-            [_to_idx(p.time, time_hop) for p in instrument.pitch_bends] if do_pb else []
-        )
+        pb_idx = [_to_idx(p.time, time_hop) for p in instrument.pitch_bends] if do_pb else []
         pb_shifts = (
-            [
-                pretty_midi.utilities.pitch_bend_to_semitones(p.pitch)
-                for p in instrument.pitch_bends
-            ]
-            if do_pb
-            else []
+            [pretty_midi.utilities.pitch_bend_to_semitones(p.pitch) for p in instrument.pitch_bends] if do_pb else []
         )
 
         # add notes with optional pitch bend to the array
@@ -199,6 +190,4 @@ def load_multif0_from_midi(
     if not has_data:
         return None
 
-    return annotations.MultiF0Data(
-        times, "s", freqs_list, "midi", confidence, "velocity"
-    )
+    return annotations.MultiF0Data(times, "s", freqs_list, "midi", confidence, "velocity")
