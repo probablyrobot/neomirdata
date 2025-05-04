@@ -31,13 +31,13 @@
 
 import csv
 import os
-from typing import Tuple, TextIO, Optional, BinaryIO
+from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 
-from mirdata import download_utils, annotations, io, core
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """@inproceedings{mauch2009beatles,
     title={OMRAS2 metadata project 2009},

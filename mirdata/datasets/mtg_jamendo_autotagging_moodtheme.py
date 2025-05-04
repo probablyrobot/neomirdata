@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """MTG jamendo autotagging moodtheme Dataset Loader
 
 .. admonition:: Dataset Info
@@ -38,13 +37,14 @@
 """
 import csv
 import os
-from typing import Optional, Tuple, BinaryIO
+from typing import BinaryIO, Optional, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
-from mirdata import download_utils, core
+from deprecated.sphinx import deprecated
 from smart_open import open
+
+from mirdata import core, download_utils
 
 BIBTEX = """@conference {bogdanov2019mtg,
     author = "Bogdanov, Dmitry and Won, Minz and Tovstogan, Philip and Porter, Alastair and Serra, Xavier",

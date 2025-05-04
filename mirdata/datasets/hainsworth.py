@@ -27,15 +27,15 @@
 
 """
 
-import os
 import csv
 import logging
-import librosa
-import numpy as np
+import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from mirdata import annotations, core, download_utils, io
+import librosa
+import numpy as np
 
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @article{article,

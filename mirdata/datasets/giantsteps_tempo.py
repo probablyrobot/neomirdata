@@ -66,15 +66,14 @@
 
 """
 
+import json
 from typing import Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
-import json
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 
 from mirdata import annotations, core, download_utils, io
-
 
 BIBTEX = """@inproceedings{knees2015two,
   title={Two data sets for tempo estimation and key detection in electronic dance music annotated from user corrections},

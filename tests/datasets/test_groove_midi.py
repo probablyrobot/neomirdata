@@ -1,9 +1,10 @@
 import os
-import pretty_midi
 import shutil
 
-from mirdata.datasets import groove_midi
+import pretty_midi
+
 from mirdata import annotations, download_utils
+from mirdata.datasets import groove_midi
 from tests.test_utils import run_track_tests
 
 

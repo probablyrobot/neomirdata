@@ -1,7 +1,9 @@
 import os
+
 import numpy as np
-from mirdata.datasets import salami
+
 from mirdata import annotations
+from mirdata.datasets import salami
 from tests.test_utils import run_track_tests
 
 

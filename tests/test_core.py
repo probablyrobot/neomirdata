@@ -1,10 +1,10 @@
-import pytest
 import os
+
 import numpy as np
+import pytest
 
 import mirdata
 from mirdata import core
-from tests.test_utils import DEFAULT_DATA_HOME
 
 
 def test_track():

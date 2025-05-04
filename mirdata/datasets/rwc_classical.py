@@ -54,9 +54,9 @@ import csv
 import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
@@ -281,7 +281,7 @@ def _position_in_bar(beat_positions, beat_times):
         if _beat_positions[b] > _beat_positions[b - 1]:
             beat_positions_corrected[b] = beat_positions_corrected[b - 1] + 1
 
-    if not downbeat_positions[0] == 0:
+    if downbeat_positions[0] != 0:
         timesig_next_bar = beat_positions_corrected[downbeat_positions[1] - 1]
         for b in range(1, downbeat_positions[0] + 1):
             beat_positions_corrected[downbeat_positions[0] - b] = (
@@ -337,11 +337,10 @@ def _duration_to_sec(duration):
                 minutes, secs, _ = duration.split(
                     ":"
                 )  # mistake in annotation in RM-J044
-            total_secs = float(minutes) * 60 + float(secs)
-            return total_secs
+            return float(minutes) * 60 + float(secs)
     else:
         raise ValueError(
-            "Expected duration to have type str, got {}".format(type(duration))
+            f"Expected duration to have type str, got {type(duration)}"
         )
 
 
@@ -385,7 +384,7 @@ class Dataset(core.Dataset):
             if line[0] == "Piece No.":
                 continue
             p = "00" + line[0].split(".")[1][1:]
-            track_id = "RM-C{}".format(p[len(p) - 3 :])
+            track_id = f"RM-C{p[len(p) - 3 :]}"
 
             metadata_index[track_id] = {
                 "piece_number": line[0],

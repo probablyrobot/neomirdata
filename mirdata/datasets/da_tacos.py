@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Da-TACOS Dataset Loader
 
 .. admonition:: Dataset Info
@@ -97,14 +96,14 @@
 """
 import json
 import os
-from typing import Optional, BinaryIO
+from typing import BinaryIO, Optional
 
-from deprecated.sphinx import deprecated
 import h5py
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
-from mirdata import download_utils, core, io
+from mirdata import core, download_utils, io
 
 LICENSE_INFO = """
 Creative Commons Attribution Non Commercial Share Alike 4.0 International
@@ -454,7 +453,7 @@ def load_tags(fhandle: BinaryIO):
     with h5py.File(fhandle, "r") as open_file:
         return [
             (open_file["tags"][k].attrs["i0"], open_file["tags"][k].attrs["i1"])
-            for k in open_file["tags"].keys()
+            for k in open_file["tags"]
         ]
 
 
@@ -490,12 +489,10 @@ class Dataset(core.Dataset):
                     meta = json.load(f)
             except FileNotFoundError:
                 raise FileNotFoundError(
-                    "Metadata file {} not found. Did you run .download()?".format(
-                        path_subset
-                    )
+                    f"Metadata file {path_subset} not found. Did you run .download()?"
                 )
-            for work_id in meta.keys():
-                for performance_id in meta[work_id].keys():
+            for work_id in meta:
+                for performance_id in meta[work_id]:
                     track_id = subset + "#" + work_id + "#" + performance_id
                     metadata_index[track_id] = meta[work_id][performance_id]
 
@@ -539,8 +536,7 @@ class Dataset(core.Dataset):
              dict: {`track_id`: track data}
 
         """
-        data = {k: v for k, v in self._index["tracks"].items() if search_key in k}
-        return data
+        return {k: v for k, v in self._index["tracks"].items() if search_key in k}
 
     def benchmark_tracks(self):
         """Load from Da-TACOS dataset the benchmark subset tracks.

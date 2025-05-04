@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
-import pytest
+import os
+
 import numpy as np
+import pytest
+
 from mirdata import annotations
 from mirdata.datasets import compmusic_carnatic_varnam
 from tests.test_utils import run_track_tests
-import os
 
 
 def test_track():

@@ -267,7 +267,7 @@ class Dataset(core.Dataset):
                 artist_info[artist] = {
                     "tonic": info["tonic"],
                     "gender": info["gender"],
-                    "train": True if subset == "train" else False,
+                    "train": subset == "train",
                 }
 
         metadata = {}

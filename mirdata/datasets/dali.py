@@ -14,23 +14,19 @@
 
 """
 
-import json
 import gzip
+import json
 import logging
 import os
 import pickle
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
-from mirdata import download_utils
-
-from mirdata import core
-from mirdata import annotations
-from mirdata import io
+from mirdata import annotations, core, download_utils, io
 
 # this is the package, needed to load the annotations.
 # DALI-dataset is only installed if the user explicitly declares
@@ -280,7 +276,7 @@ def load_annotations_class(annotations_path):
             output = pickle.load(f)
     except FileNotFoundError:
         raise FileNotFoundError(
-            "annotations_path {} does not exist".format(annotations_path)
+            f"annotations_path {annotations_path} does not exist"
         )
     except Exception as e:
         with gzip.open(annotations_path, "r") as f:

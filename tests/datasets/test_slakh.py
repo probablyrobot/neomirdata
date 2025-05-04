@@ -1,9 +1,10 @@
 import os
+
 import pretty_midi
 
 from mirdata import annotations
 from mirdata.datasets import slakh
-from tests.test_utils import run_track_tests, run_multitrack_tests
+from tests.test_utils import run_multitrack_tests, run_track_tests
 
 
 def test_track():

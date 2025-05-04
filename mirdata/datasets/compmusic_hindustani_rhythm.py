@@ -44,15 +44,15 @@
 
 """
 
-import os
 import csv
 import logging
+import os
+
 import librosa
 import numpy as np
-
-from mirdata import annotations, core, io
 from smart_open import open
 
+from mirdata import annotations, core, io
 
 try:
     from openpyxl import load_workbook as get_xlxs

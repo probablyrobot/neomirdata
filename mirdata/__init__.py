@@ -4,7 +4,6 @@ import pkgutil
 
 from .version import version as __version__
 
-
 DATASETS = [
     d.name
     for d in pkgutil.iter_modules(
@@ -28,8 +27,8 @@ def list_dataset_versions(dataset_name):
         list: a list of available versions
     """
     if dataset_name not in DATASETS:
-        raise ValueError("Invalid dataset {}".format(dataset_name))
-    module = importlib.import_module("mirdata.datasets.{}".format(dataset_name))
+        raise ValueError(f"Invalid dataset {dataset_name}")
+    module = importlib.import_module(f"mirdata.datasets.{dataset_name}")
     return "Available versions for {}: {}. Default version: {}".format(
         dataset_name,
         [
@@ -67,8 +66,8 @@ def initialize(dataset_name, data_home=None, version="default"):
 
     """
     if dataset_name not in DATASETS:
-        raise ValueError("Invalid dataset {}".format(dataset_name))
+        raise ValueError(f"Invalid dataset {dataset_name}")
 
-    module = importlib.import_module("mirdata.datasets.{}".format(dataset_name))
+    module = importlib.import_module(f"mirdata.datasets.{dataset_name}")
 
     return module.Dataset(data_home=data_home, version=version)

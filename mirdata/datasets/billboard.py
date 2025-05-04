@@ -11,18 +11,14 @@
 import csv
 import os
 import re
-from typing import BinaryIO, TextIO, Optional, Tuple, Dict, List
+from typing import BinaryIO, Dict, List, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
-from mirdata import download_utils
-
-from mirdata import core
-from mirdata import annotations
-from mirdata import io
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @inproceedings{burgoyne_billboard,
@@ -266,10 +262,9 @@ def load_chords(fhandle: TextIO):
             end_times.append(float(l[1]))
             chords.append(l[2])
 
-    chord_data = annotations.ChordData(
+    return annotations.ChordData(
         np.array([start_times, end_times]).T, "s", chords, "jams"
     )
-    return chord_data
 
 
 def load_sections(fpath: str):
@@ -326,10 +321,9 @@ def _load_sections(fpath: str, section_type: str):
             end_times.append(timed_sections[-1]["time"])  # end of song
             sections.append(timed_sections_clean[idx]["section"][section_label_idx])
 
-    section_data = annotations.SectionData(
+    return annotations.SectionData(
         np.array([start_times, end_times]).T, "s", sections, "open"
     )
-    return section_data
 
 
 @io.coerce_to_string_io
@@ -356,8 +350,7 @@ def _parse_timed_sections(fhandle: TextIO) -> List:
     lines = fhandle.read().split("\n")
     salami = _parse_salami(lines)
     assert salami is not None
-    timed_sections = _timed_sections(salami)
-    return timed_sections
+    return _timed_sections(salami)
 
 
 def _parse_salami(s: List) -> Dict:
@@ -403,8 +396,7 @@ def _parse_salami(s: List) -> Dict:
                     o["events"].append(event)
         return o
 
-    o = parse(s)
-    return o
+    return parse(s)
 
 
 def _timed_sections(parsed: Dict) -> List:

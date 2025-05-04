@@ -35,14 +35,13 @@ import logging
 import os
 from typing import BinaryIO, Optional, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
 import pretty_midi
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import core, download_utils, io
-
 
 BIBTEX = """@inproceedings{
   hawthorne2018enabling,

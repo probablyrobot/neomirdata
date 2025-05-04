@@ -1,10 +1,10 @@
 import os
-import numpy as np
 
-from tests.test_utils import run_track_tests
+import numpy as np
 
 from mirdata import annotations
 from mirdata.datasets import tonas
+from tests.test_utils import run_track_tests
 
 TEST_DATA_HOME = os.path.normpath("tests/resources/mir_datasets/tonas")
 

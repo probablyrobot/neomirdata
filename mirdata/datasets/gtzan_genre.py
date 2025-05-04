@@ -18,12 +18,11 @@
 
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 
-from mirdata import download_utils, core, io, annotations
-
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """@article{tzanetakis2002gtzan,
   title={GTZAN genre collection},
@@ -137,11 +136,10 @@ def load_beats(fhandle: TextIO) -> annotations.BeatData:
         positions = beats[:, 1]
     except IndexError:
         positions = None
-    beat_data = annotations.BeatData(
+    return annotations.BeatData(
         times=times, time_unit="s", positions=positions, position_unit="bar_index"
     )
 
-    return beat_data
 
 
 @io.coerce_to_string_io

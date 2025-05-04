@@ -1,9 +1,10 @@
 """Base classes for mirdata."""
-from typing import Dict, List, Optional, Any, ClassVar, Type
-from typing_extensions import Annotated
-import numpy as np
-from pydantic import BaseModel, Field, ConfigDict
 from functools import cached_property
+from typing import Any, ClassVar, Dict, List, Optional, Type
+
+import numpy as np
+from pydantic import BaseModel, ConfigDict, Field
+from typing_extensions import Annotated
 
 
 class BaseDataModel(BaseModel):

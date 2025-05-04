@@ -43,13 +43,13 @@
 """
 
 import csv
-from typing import BinaryIO, Optional, TextIO, Tuple, List
+from typing import BinaryIO, List, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 
-from mirdata import download_utils, core, annotations, io
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @article{RosenzweigCWSGM20_DCS_TISMIR,
@@ -414,7 +414,7 @@ def load_f0(fhandle: TextIO) -> annotations.F0Data:
         else:
             confs.append(None)
 
-    if all([not c for c in confs]):
+    if all(not c for c in confs):
         conf_array = None
         conf_unit = None
     else:

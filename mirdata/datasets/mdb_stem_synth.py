@@ -23,7 +23,7 @@ from typing import BinaryIO, Optional, TextIO, Tuple
 import librosa
 import numpy as np
 
-from mirdata import io, core, annotations, download_utils
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @inproceedings{salamon2017analysis,

@@ -4,11 +4,11 @@ import os
 from typing import Tuple
 
 import numpy as np
-
 import pytest
+
 from mirdata import annotations
 from mirdata.datasets import jtd
-from tests.test_utils import run_track_tests, run_multitrack_tests
+from tests.test_utils import run_multitrack_tests, run_track_tests
 
 DATA_HOME = "tests/resources/mir_datasets/jtd"
 DEFAULT_TRACK_ID = "barronk-allgodschildren-drummondrrileyb-1990-8b77c067"

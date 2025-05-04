@@ -41,15 +41,14 @@ Freesound One-Shot Percussive Sounds Dataset Loader
 
 import json
 import os
-from typing import BinaryIO, TextIO, Tuple, Optional
+from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
-from mirdata import download_utils, core, io
-
+from mirdata import core, download_utils, io
 
 BIBTEX = """
 @inproceedings{ramires2020, 
@@ -272,7 +271,7 @@ class Dataset(core.Dataset):
         except FileNotFoundError:
             raise FileNotFoundError("Licenses file not found. Did you run .download()?")
 
-        for track_key in license_dict.keys():
+        for track_key in license_dict:
             metadata[track_key]["username"] = license_dict[track_key].get("username")
             metadata[track_key]["license"] = license_dict[track_key].get("license")
 

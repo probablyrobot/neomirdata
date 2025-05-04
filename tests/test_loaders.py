@@ -3,6 +3,7 @@ import inspect
 import io
 import os
 import sys
+
 import pytest
 import requests
 
@@ -63,28 +64,24 @@ def test_dataset_attributes():
 
         assert (
             dataset.name == dataset_name
-        ), "{}.dataset attribute does not match dataset name".format(dataset_name)
+        ), f"{dataset_name}.dataset attribute does not match dataset name"
         assert (
             dataset.bibtex is not None
-        ), "No BIBTEX information provided for {}".format(dataset_name)
+        ), f"No BIBTEX information provided for {dataset_name}"
         assert (
             dataset._license_info is not None
-        ), "No LICENSE information provided for {}".format(dataset_name)
+        ), f"No LICENSE information provided for {dataset_name}"
         assert (
             isinstance(dataset.remotes, dict) or dataset.remotes is None
-        ), "{}.REMOTES must be a dictionary".format(dataset_name)
-        assert isinstance(dataset._index, dict), "{}.DATA is not properly set".format(
-            dataset_name
-        )
+        ), f"{dataset_name}.REMOTES must be a dictionary"
+        assert isinstance(dataset._index, dict), f"{dataset_name}.DATA is not properly set"
         assert (
             isinstance(dataset._download_info, str) or dataset._download_info is None
-        ), "{}.DOWNLOAD_INFO must be a string".format(dataset_name)
+        ), f"{dataset_name}.DOWNLOAD_INFO must be a string"
         assert type(dataset._track_class) == type(
             core.Track
-        ), "{}.Track must be an instance of core.Track".format(dataset_name)
-        assert callable(dataset.download), "{}.download is not a function".format(
-            dataset_name
-        )
+        ), f"{dataset_name}.Track must be an instance of core.Track"
+        assert callable(dataset.download), f"{dataset_name}.download is not a function"
 
 
 def test_smart_open():
@@ -145,9 +142,7 @@ def test_download(mocker):
         )
 
         # test parameters & defaults
-        assert callable(dataset.download), "{}.download is not callable".format(
-            dataset_name
-        )
+        assert callable(dataset.download), f"{dataset_name}.download is not callable"
         params = inspect.signature(dataset.download).parameters
 
         expected_params = [
@@ -156,14 +151,10 @@ def test_download(mocker):
             ("cleanup", False),
         ]
         for exp in expected_params:
-            assert exp[0] in params, "{}.download must have {} as a parameter".format(
-                dataset_name, exp[0]
-            )
+            assert exp[0] in params, f"{dataset_name}.download must have {exp[0]} as a parameter"
             assert (
                 params[exp[0]].default == exp[1]
-            ), "The default value of {} in {}.download must be {}".format(
-                dataset_name, exp[0], exp[1]
-            )
+            ), f"The default value of {dataset_name} in {exp[0]}.download must be {exp[1]}"
 
         # check that the download method can be called without errors
         if dataset.remotes != {}:
@@ -172,7 +163,7 @@ def test_download(mocker):
                 try:
                     dataset.download()
                 except:
-                    assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+                    assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
                 mocker.resetall()
 
@@ -185,20 +176,16 @@ def test_download(mocker):
                 url = dataset.remotes[key].url
                 try:
                     request = requests.head(url)
-                    assert request.ok, "Link {} for {} does not return OK".format(
-                        url, dataset_name
-                    )
+                    assert request.ok, f"Link {url} for {dataset_name} does not return OK"
                 except requests.exceptions.ConnectionError:
-                    assert False, "Link {} for {} is unreachable".format(
-                        url, dataset_name
-                    )
+                    assert False, f"Link {url} for {dataset_name} is unreachable"
                 except:
-                    assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+                    assert False, f"{dataset_name}: {sys.exc_info()[0]}"
         else:
             try:
                 dataset.download()
             except:
-                assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+                assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
 
 # This is magically skipped by the the remote fixture `skip_local` in conftest.py
@@ -212,12 +199,12 @@ def test_validate(skip_local):
         try:
             dataset.validate()
         except:
-            assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+            assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
         try:
             dataset.validate(verbose=False)
         except:
-            assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+            assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
 
 def test_load_and_trackids():
@@ -229,34 +216,30 @@ def test_load_and_trackids():
         try:
             track_ids = dataset.track_ids
         except:
-            assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
-        assert type(track_ids) is list, "{}.track_ids() should return a list".format(
-            dataset_name
-        )
+            assert False, f"{dataset_name}: {sys.exc_info()[0]}"
+        assert type(track_ids) is list, f"{dataset_name}.track_ids() should return a list"
         trackid_len = len(track_ids)
         # if the dataset has tracks, test the loaders
         if dataset._track_class is not None:
             try:
                 choice_track = dataset.choice_track()
             except:
-                assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+                assert False, f"{dataset_name}: {sys.exc_info()[0]}"
             assert isinstance(
                 choice_track, core.Track
-            ), "{}.choice_track must return an instance of type core.Track".format(
-                dataset_name
-            )
+            ), f"{dataset_name}.choice_track must return an instance of type core.Track"
 
             try:
                 dataset_data = dataset.load_tracks()
             except:
-                assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+                assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
             assert isinstance(
                 dataset_data, dict
-            ), "{}.load should return a dictionary".format(dataset_name)
+            ), f"{dataset_name}.load should return a dictionary"
             assert len(dataset_data.keys()) == trackid_len, (
-                "the dictionary returned {}.load() does not have the same number of elements as"
-                " {}.track_ids()".format(dataset_name, dataset_name)
+                f"the dictionary returned {dataset_name}.load() does not have the same number of elements as"
+                f" {dataset_name}.track_ids()"
             )
 
 
@@ -273,20 +256,17 @@ def test_track():
                 dataset.track("~faketrackid~?!")
             continue
 
-        if dataset_name in CUSTOM_TEST_TRACKS:
-            trackid = CUSTOM_TEST_TRACKS[dataset_name]
-        else:
-            trackid = dataset.track_ids[0]
+        trackid = CUSTOM_TEST_TRACKS[dataset_name] if dataset_name in CUSTOM_TEST_TRACKS else dataset.track_ids[0]
 
         # test data home specified
         try:
             track_test = dataset.track(trackid)
         except:
-            assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+            assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
         assert isinstance(
             track_test, core.Track
-        ), "{}.track must be an instance of type core.Track".format(dataset_name)
+        ), f"{dataset_name}.track must be an instance of type core.Track"
 
         # test calling all attributes, properties and cached properties
         track_data = get_attributes_and_properties(track_test)
@@ -307,7 +287,7 @@ def test_track():
             print(track_test)
             sys.stdout = sys.__stdout__
         except:
-            assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+            assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
         with pytest.raises(ValueError):
             dataset.track("~faketrackid~?!")
@@ -328,15 +308,12 @@ def test_track_placeholder_case():
         if not dataset._track_class:
             continue
 
-        if dataset_name in CUSTOM_TEST_TRACKS:
-            trackid = CUSTOM_TEST_TRACKS[dataset_name]
-        else:
-            trackid = dataset.track_ids[0]
+        trackid = CUSTOM_TEST_TRACKS[dataset_name] if dataset_name in CUSTOM_TEST_TRACKS else dataset.track_ids[0]
 
         try:
             track_test = dataset.track(trackid)
         except:
-            assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+            assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
         track_data = get_attributes_and_properties(track_test)
 
@@ -404,9 +381,7 @@ def test_load_methods():
 
             if load_method.__doc__ is None:
                 raise ValueError(
-                    "mirdata.datasets.{}.Dataset.{} has no documentation".format(
-                        dataset_name, method_name
-                    )
+                    f"mirdata.datasets.{dataset_name}.Dataset.{method_name} has no documentation"
                 )
 
             # add to the EXCEPTIONS dictionary above if your load_* function needs
@@ -442,7 +417,7 @@ def test_multitracks():
         try:
             mtrack_default = dataset.MultiTrack(mtrack_id)
         except:
-            assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+            assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
         # test data home specified
         data_home = os.path.join(data_home_dir, dataset_name)
@@ -450,13 +425,11 @@ def test_multitracks():
         try:
             mtrack_test = dataset_specific.MultiTrack(mtrack_id, data_home=data_home)
         except:
-            assert False, "{}: {}".format(dataset_name, sys.exc_info()[0])
+            assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
         assert isinstance(
             mtrack_test, core.MultiTrack
-        ), "{}.MultiTrack must be an instance of type core.MultiTrack".format(
-            dataset_name
-        )
+        ), f"{dataset_name}.MultiTrack must be an instance of type core.MultiTrack"
 
 
 def test_random_splits():
@@ -501,7 +474,7 @@ def test_predetermined_splits():
             assert isinstance(splits, dict)
             used_tracks = set()
             for k in splits:
-                assert all([t in dataset.track_ids for t in splits[k]])
+                assert all(t in dataset.track_ids for t in splits[k])
                 this_split = set(splits[k])
                 assert not used_tracks.intersection(this_split)
                 used_tracks.update(this_split)
@@ -514,7 +487,7 @@ def test_predetermined_splits():
             assert isinstance(splits, dict)
             used_tracks = set()
             for k in splits:
-                assert all([t in dataset.mtrack_ids for t in splits[k]])
+                assert all(t in dataset.mtrack_ids for t in splits[k])
                 this_split = set(splits[k])
                 assert not used_tracks.intersection(this_split)
                 used_tracks.update(this_split)

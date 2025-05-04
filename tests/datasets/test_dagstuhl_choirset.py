@@ -1,10 +1,10 @@
 import os
-import numpy as np
-import pytest
 
-from mirdata.datasets import dagstuhl_choirset
+import numpy as np
+
 from mirdata import annotations
-from tests.test_utils import run_track_tests, run_multitrack_tests
+from mirdata.datasets import dagstuhl_choirset
+from tests.test_utils import run_multitrack_tests, run_track_tests
 
 
 def test_track():

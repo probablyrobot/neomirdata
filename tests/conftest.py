@@ -1,5 +1,6 @@
-import pytest
 import os
+
+import pytest
 
 
 def pytest_addoption(parser):
@@ -54,7 +55,7 @@ def report_file(request):
 
 
 def pytest_sessionstart(session):
-    session.results = dict()
+    session.results = {}
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -74,9 +75,7 @@ def pytest_sessionfinish(session, exitstatus):
         report += "Running time: " + str(session.config.option.durations_min) + "\n"
         passed_amount = sum(1 for result in session.results.values() if result.passed)
         failed_amount = sum(1 for result in session.results.values() if result.failed)
-        report += "There are {} passed and {} failed tests \n".format(
-            passed_amount, failed_amount
-        )
+        report += f"There are {passed_amount} passed and {failed_amount} failed tests \n"
         print(report)
         file_destination = session.config.option.report_file
         if os.path.isdir(os.path.dirname(file_destination)):
@@ -88,4 +87,4 @@ def pytest_sessionfinish(session, exitstatus):
             with open(file_destination, append_write) as txtfile:
                 txtfile.write(report + "\n")
         else:
-            print("Folder {} does not exist".format(os.path.dirname(file_destination)))
+            print(f"Folder {os.path.dirname(file_destination)} does not exist")

@@ -41,16 +41,15 @@
 
 """
 
-import os
 import csv
 import json
+import os
 
 import librosa
 import numpy as np
-
-from mirdata import annotations, core, download_utils, io
 from smart_open import open
 
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @article{gulati_2016,
@@ -247,8 +246,7 @@ def load_tonic(fhandle):
 
     """
     reader = csv.reader(fhandle, delimiter="\t")
-    tonic = float(next(reader)[0])
-    return tonic
+    return float(next(reader)[0])
 
 
 @io.coerce_to_string_io
@@ -391,10 +389,9 @@ class Dataset(core.Dataset):
         metadata = self.get_metadata(
             metadata, carnatic_metadata_path, carnatic_mapping_path, "carnatic"
         )
-        metadata = self.get_metadata(
+        return self.get_metadata(
             metadata, hindustani_metadata_path, hindustani_mapping_path, "hindustani"
         )
-        return metadata
 
     @staticmethod
     def get_metadata(metadata, metadata_path, mapping_path, tradition):

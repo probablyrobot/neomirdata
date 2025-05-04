@@ -25,12 +25,12 @@
 """
 
 import csv
-import os
 import fnmatch
 import json
+import os
 
-from deprecated.sphinx import deprecated
 import librosa
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import core, download_utils, io
@@ -174,8 +174,7 @@ def load_key(fhandle):
     keys = next(reader)
 
     # standarize 'Unknown'  to 'X'
-    keys = ["x" if k.lower() == "unknown" else k for k in keys]
-    return keys
+    return ["x" if k.lower() == "unknown" else k for k in keys]
 
 
 @io.coerce_to_string_io

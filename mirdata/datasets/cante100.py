@@ -50,17 +50,12 @@ import os
 import xml.etree.ElementTree as ET
 from typing import Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
-from mirdata import download_utils
-
-from mirdata import core
-from mirdata import annotations
-from mirdata import io
-
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """@dataset{nadine_kroher_2018_1322542,
   author       = {Nadine Kroher and
@@ -249,9 +244,8 @@ def load_spectrogram(fhandle: TextIO) -> np.ndarray:
 
     """
     parsed_spectrogram = np.genfromtxt(fhandle, delimiter=" ")
-    spectrogram = parsed_spectrogram.astype(np.float64)
+    return parsed_spectrogram.astype(np.float64)
 
-    return spectrogram
 
 
 # no decorator here because of https://github.com/librosa/librosa/issues/1267
@@ -390,7 +384,7 @@ class Dataset(core.Dataset):
         seconds = [float(second.text) for second in root.iter("duration_s")]
         durations = [m + s for (m, s) in zip(minutes, seconds)]
 
-        metadata = dict()
+        metadata = {}
         for i, j in zip(indexes, range(len(artists))):
             metadata[i] = {
                 "musicBrainzID": identifiers[j],

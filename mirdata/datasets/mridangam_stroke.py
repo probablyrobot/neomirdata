@@ -42,11 +42,11 @@
 """
 
 import os
+from typing import BinaryIO, Optional, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
-from typing import BinaryIO, Optional, Tuple
+from deprecated.sphinx import deprecated
 
 from mirdata import core, download_utils, io
 
@@ -132,13 +132,11 @@ class Track(core.Track):
         self.stroke_name = self.audio_path.split("__")[2].split("-")[0]
         assert (
             self.stroke_name in STROKE_DICT
-        ), "Stroke {} not in stroke dictionary".format(self.stroke_name)
+        ), f"Stroke {self.stroke_name} not in stroke dictionary"
 
         # Parse tonic annotation from audio file name
         self.tonic = os.path.basename(os.path.dirname(self.audio_path))
-        assert self.tonic in TONIC_DICT, "Tonic {} not in tonic dictionary".format(
-            self.tonic
-        )
+        assert self.tonic in TONIC_DICT, f"Tonic {self.tonic} not in tonic dictionary"
 
     @property
     def audio(self) -> Optional[Tuple[np.ndarray, float]]:

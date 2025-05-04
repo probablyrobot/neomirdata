@@ -85,9 +85,9 @@
 
 import csv
 import os
-from typing import BinaryIO, Optional, Tuple
-from ast import literal_eval
 import re
+from ast import literal_eval
+from typing import BinaryIO, Optional, Tuple
 
 import librosa
 import numpy as np

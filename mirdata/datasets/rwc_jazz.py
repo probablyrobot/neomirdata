@@ -45,19 +45,19 @@ import csv
 import os
 from typing import Optional, Tuple
 
-from deprecated.sphinx import deprecated
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, download_utils
 
 # these functions are identical for all rwc datasets
 from mirdata.datasets.rwc_classical import (
+    LICENSE_INFO,
+    _duration_to_sec,
+    load_audio,
     load_beats,
     load_sections,
-    load_audio,
-    _duration_to_sec,
-    LICENSE_INFO,
 )
 
 BIBTEX = """@inproceedings{goto2002rwc,
@@ -238,7 +238,7 @@ class Dataset(core.Dataset):
             if line[0] == "Piece No.":
                 continue
             p = "00" + line[0].split(".")[1][1:]
-            track_id = "RM-J{}".format(p[len(p) - 3 :])
+            track_id = f"RM-J{p[len(p) - 3 :]}"
 
             metadata_index[track_id] = {
                 "piece_number": line[0],

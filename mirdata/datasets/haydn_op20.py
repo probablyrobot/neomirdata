@@ -12,12 +12,12 @@
 
 import logging
 import os
-from typing import Optional, TextIO, List
+from typing import List, Optional, TextIO
 
-from deprecated.sphinx import deprecated
 import numpy as np
+from deprecated.sphinx import deprecated
 
-from mirdata import core, io, download_utils
+from mirdata import core, download_utils, io
 
 try:
     import music21
@@ -28,7 +28,7 @@ except ImportError:
     )
     raise ImportError
 
-from mirdata.annotations import KeyData, ChordData
+from mirdata.annotations import ChordData, KeyData
 
 BIBTEX = """
 @dataset{nestor_napoles_lopez_2017_1095630,

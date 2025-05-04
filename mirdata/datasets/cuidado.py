@@ -33,12 +33,12 @@
 """
 
 import csv
+from typing import List, Optional, TextIO, Tuple
+
 import librosa
 import numpy as np
-from typing import Optional, TextIO, Tuple, List
 
 from mirdata import annotations, core, io
-
 
 BIBTEX = """
 @article{1678001,

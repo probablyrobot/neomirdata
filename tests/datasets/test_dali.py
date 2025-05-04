@@ -10,10 +10,11 @@ except ImportError:
     )
     raise ImportError
 
-from mirdata.datasets import dali
-from mirdata import annotations
-from tests.test_utils import run_track_tests
 import numpy as np
+
+from mirdata import annotations
+from mirdata.datasets import dali
+from tests.test_utils import run_track_tests
 
 
 def test_track():

@@ -34,11 +34,10 @@
 """
 
 import csv
+from typing import BinaryIO, Optional, Tuple
 
 import librosa
 import numpy as np
-from typing import BinaryIO, Optional, Tuple
-
 from deprecated.sphinx import deprecated
 
 from mirdata import annotations, core, download_utils, io
@@ -111,7 +110,7 @@ class Track(core.Track):
         self.onsets_rb_path = self.get_path("onsets_rb")
         self.onsets_rt_path = self.get_path("onsets_rt")
 
-        self.train = True if "train" in self.audio_path else False
+        self.train = "train" in self.audio_path
 
     @property
     def audio(self) -> Optional[Tuple[np.ndarray, float]]:

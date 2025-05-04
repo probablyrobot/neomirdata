@@ -1,8 +1,9 @@
 import os
+
 import numpy as np
 
-from mirdata.datasets import rwc_classical
 from mirdata import annotations
+from mirdata.datasets import rwc_classical
 from tests.test_utils import run_track_tests
 
 
@@ -76,7 +77,7 @@ def test_load_sections():
 
     section_data = rwc_classical.load_sections(section_path)
 
-    assert section_data == None
+    assert section_data is None
 
 
 def test_position_in_bar():

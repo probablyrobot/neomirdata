@@ -13,16 +13,11 @@ import csv
 import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 
-from mirdata import download_utils
-
-from mirdata import core
-from mirdata import annotations
-from mirdata import io
-
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """@inproceedings{mauch2009beatles,
     title={OMRAS2 metadata project 2009},
@@ -167,14 +162,13 @@ def load_beats(fhandle: TextIO) -> annotations.BeatData:
 
     beat_positions = _fix_newpoint(np.array(beat_positions))  # type: ignore
     # After fixing New Point labels convert positions to int
-    beat_data = annotations.BeatData(
+    return annotations.BeatData(
         np.array(beat_times),
         "s",
         np.array([int(b) for b in beat_positions]),
         "bar_index",
     )
 
-    return beat_data
 
 
 @io.coerce_to_string_io
@@ -257,10 +251,10 @@ def _fix_newpoint(beat_positions: np.ndarray) -> np.ndarray:
         idxs = np.where(beat_positions == "New Point")[0]
         for i in idxs:
             if i < len(beat_positions) - 1:
-                if not beat_positions[i + 1] == "New Point":
+                if beat_positions[i + 1] != "New Point":
                     beat_positions[i] = str(np.mod(int(beat_positions[i + 1]) - 1, 4))
             if i == len(beat_positions) - 1:
-                if not beat_positions[i - 1] == "New Point":
+                if beat_positions[i - 1] != "New Point":
                     beat_positions[i] = str(np.mod(int(beat_positions[i - 1]) + 1, 4))
     beat_positions[beat_positions == "0"] = "4"
 

@@ -29,14 +29,14 @@
 import os
 from typing import BinaryIO, Optional, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
 import pretty_midi
-from smart_open import open
 import yaml
+from deprecated.sphinx import deprecated
+from smart_open import open
 
-from mirdata import io, download_utils, core, annotations
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @inproceedings{manilow2019cutting,
@@ -154,7 +154,7 @@ class Track(core.Track):
             )[1]
             assert (
                 self.split in SPLITS
-            ), "{} not a valid split - should be one of {}.".format(self.split, SPLITS)
+            ), f"{self.split} not a valid split - should be one of {SPLITS}."
 
         self.data_split = self.split  # deprecated in 0.3.6
 
@@ -275,7 +275,7 @@ class MultiTrack(core.MultiTrack):
             self.split = os.path.normpath(self._multitrack_paths["mix"][0]).split(
                 os.sep
             )[1]
-            assert self.split in SPLITS, "{} not in SPLITS".format(self.split)
+            assert self.split in SPLITS, f"{self.split} not in SPLITS"
 
         self.data_split = self.split  # deprecated in 0.3.6
 

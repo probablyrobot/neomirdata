@@ -24,7 +24,7 @@ from typing import BinaryIO, Optional, TextIO, Tuple
 import librosa
 import numpy as np
 
-from mirdata import download_utils, core, annotations, io
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @inproceedings{Nunes2015,
@@ -143,13 +143,12 @@ def load_beats(fhandle: TextIO) -> annotations.BeatData:
         times.append(float(line[0]))
         beats.append(int(line[1].split(".")[1]))
 
-    beat_data = annotations.BeatData(
+    return annotations.BeatData(
         times=np.array(times),
         time_unit="s",
         positions=np.array(beats),
         position_unit="bar_index",
     )
-    return beat_data
 
 
 @core.docstring_inherit(core.Dataset)

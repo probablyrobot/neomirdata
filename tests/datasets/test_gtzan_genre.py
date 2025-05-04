@@ -1,8 +1,10 @@
 import os
+
 import numpy as np
-from tests.test_utils import run_track_tests
+
 from mirdata import annotations
 from mirdata.datasets import gtzan_genre
+from tests.test_utils import run_track_tests
 
 TEST_DATA_HOME = os.path.normpath("tests/resources/mir_datasets/gtzan_genre")
 

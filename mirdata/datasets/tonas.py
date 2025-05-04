@@ -45,15 +45,14 @@ TONAS Loader
 import csv
 import logging
 import os
-from typing import TextIO, Tuple, Optional
+from typing import Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, io
-
 
 BIBTEX = """
 Music material:
@@ -267,7 +266,7 @@ def load_notes(fhandle: TextIO) -> Optional[annotations.NoteData]:
         pitches.append(note_hz)
         energy.append(float(line[3]))
 
-    note_data = annotations.NoteData(
+    return annotations.NoteData(
         np.array(intervals, dtype="float"),
         "s",
         np.array(pitches, dtype="float"),
@@ -276,7 +275,6 @@ def load_notes(fhandle: TextIO) -> Optional[annotations.NoteData]:
         "energy",
     )
 
-    return note_data
 
 
 @io.coerce_to_string_io
@@ -293,11 +291,10 @@ def _load_tuning_frequency(fhandle: TextIO) -> float:
 
     # Compute tuning frequency
     cents_deviation = float(next(csv.reader(fhandle, delimiter=","))[0])
-    tuning_frequency = 440 * (
+    return 440 * (
         2 ** (cents_deviation / 1200)
     )  # Frequency of A (common value is 440Hz)
 
-    return tuning_frequency
 
 
 def _midi_to_hz(midi_note, tuning_deviation):

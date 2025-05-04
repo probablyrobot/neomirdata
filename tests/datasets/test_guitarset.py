@@ -1,8 +1,10 @@
 import os
+
 import numpy as np
 import pytest
-from mirdata.datasets import guitarset
+
 from mirdata import annotations
+from mirdata.datasets import guitarset
 from tests.test_utils import run_track_tests
 
 TEST_DATA_HOME = os.path.normpath("tests/resources/mir_datasets/guitarset")

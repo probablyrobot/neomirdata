@@ -40,12 +40,11 @@ import json
 import os
 from typing import TextIO
 
-from deprecated.sphinx import deprecated
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
-
 
 BIBTEX = """
 @software{sertan_senturk_2016_58413,
@@ -171,7 +170,7 @@ def load_mb_tags(fhandle: TextIO) -> dict:
 
     """
     mb_tags = json.load(fhandle)
-    if "duration" not in mb_tags.keys():
+    if "duration" not in mb_tags:
         mb_tags["duration"] = 0.0  # Few tracks have no duration information
     return mb_tags
 

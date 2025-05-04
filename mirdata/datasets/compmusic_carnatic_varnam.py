@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """CompMusic Carnatic Varnam Dataset Loader
 
 .. admonition:: Dataset Info
@@ -37,14 +36,14 @@
     availability of a machine readable notation files allows the dataset to be used for audio-score alignment.
 """
 
-import os
 import csv
 import glob
-import librosa
+import os
 from typing import TextIO
-
-import numpy as np
 from xml.dom import minidom
+
+import librosa
+import numpy as np
 from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
@@ -240,9 +239,7 @@ def load_notation(note_path: TextIO, taala_path: str, structure_path: str):
         note_reader = csv.reader(note_path, delimiter="-")
     except FileNotFoundError:
         raise FileNotFoundError(
-            "note_path {} does not exist, have you run .download()?".format(
-                note_path.name
-            )
+            f"note_path {note_path.name} does not exist, have you run .download()?"
         )
 
     try:
@@ -250,7 +247,7 @@ def load_notation(note_path: TextIO, taala_path: str, structure_path: str):
         taala_reader = minidom.parse(taala_file)
     except FileNotFoundError:
         raise FileNotFoundError(
-            "taala_path {} does not exist, have you run .download()?".format(taala_path)
+            f"taala_path {taala_path} does not exist, have you run .download()?"
         )
 
     try:
@@ -258,9 +255,7 @@ def load_notation(note_path: TextIO, taala_path: str, structure_path: str):
         structure_reader = csv.reader(structure_file, delimiter=":")
     except FileNotFoundError:
         raise FileNotFoundError(
-            "structure_path {} does not exist, have you run .download()?".format(
-                structure_path
-            )
+            f"structure_path {structure_path} does not exist, have you run .download()?"
         )
 
     start_times = []
@@ -432,9 +427,7 @@ class Dataset(core.Dataset):
             reader = csv.reader(f, delimiter=":")
         except FileNotFoundError:
             raise FileNotFoundError(
-                "tonics_path {} does not exist, have you run .download()?".format(
-                    tonics_path
-                )
+                f"tonics_path {tonics_path} does not exist, have you run .download()?"
             )
         for line in reader:
             tonics_dict[line[0]] = float(line[1])

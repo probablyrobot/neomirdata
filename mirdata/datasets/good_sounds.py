@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Good-Sounds Dataset Loader
 
 .. admonition:: Dataset Info
@@ -29,14 +28,14 @@
 """
 import json
 import os
-from typing import Optional, Tuple, BinaryIO
+from typing import BinaryIO, Optional, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
-from mirdata import download_utils, core, io
+from mirdata import core, download_utils, io
 
 BIBTEX = """@inproceedings{romani2015real,
   title={A Real-Time System for Measuring Sound Goodness in Instrumental Sounds},

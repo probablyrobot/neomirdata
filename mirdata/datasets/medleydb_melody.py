@@ -21,9 +21,9 @@ import json
 import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, io
@@ -215,10 +215,9 @@ def load_melody3(fhandle: TextIO) -> annotations.MultiF0Data:
         conf_list.append([1.0 for v in line[1:] if float(v) != 0])
 
     times = np.array(times)  # type: ignore
-    melody_data = annotations.MultiF0Data(
+    return annotations.MultiF0Data(
         times, "s", freqs_list, "hz", conf_list, "binary"
     )
-    return melody_data
 
 
 @core.docstring_inherit(core.Dataset)

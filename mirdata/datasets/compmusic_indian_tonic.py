@@ -49,12 +49,11 @@
 
 """
 
-import os
 import glob
 import json
+import os
 
 import librosa
-
 from smart_open import open
 
 from mirdata import core, download_utils

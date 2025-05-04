@@ -1,8 +1,8 @@
-import pytest
 import numpy as np
+import pytest
 
-from mirdata.datasets import scms
 from mirdata import annotations
+from mirdata.datasets import scms
 from tests.test_utils import run_track_tests
 
 

@@ -34,14 +34,15 @@
 """
 
 import os
+import xml.etree.ElementTree as ET
+from typing import BinaryIO, Optional, Tuple
+
 import librosa
 import numpy as np
-import xml.etree.ElementTree as ET
-
 from deprecated.sphinx import deprecated
-from typing import BinaryIO, Tuple, Optional
-from mirdata import download_utils, core, io
 from smart_open import open
+
+from mirdata import core, download_utils, io
 
 BIBTEX = """
 @dataset{stein_michael_2023_7544032,
@@ -237,7 +238,7 @@ class Dataset(core.Dataset):
             ValueError: If there's an error parsing the XML file.
             Exception: For unexpected errors during processing.
         """
-        metadata = dict()
+        metadata = {}
         metadata = {
             "fileID": {
                 "list_id": str,

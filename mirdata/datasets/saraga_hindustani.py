@@ -30,13 +30,13 @@
 
 """
 
-import os
 import csv
 import json
+import os
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
@@ -206,8 +206,7 @@ def load_tonic(fhandle):
 
     """
     reader = csv.reader(fhandle, delimiter="\t")
-    tonic = float(next(reader)[0])
-    return tonic
+    return float(next(reader)[0])
 
 
 @io.coerce_to_string_io

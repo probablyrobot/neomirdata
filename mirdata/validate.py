@@ -3,8 +3,8 @@
 import hashlib
 import logging
 import os
-import tqdm
 
+import tqdm
 from smart_open import open
 
 
@@ -53,14 +53,11 @@ def validate(local_path, checksum):
     try:
         with open(local_path):
             pass
-    except IOError:
+    except OSError:
         return False, False
 
     # validate that the checksum matches
-    if md5(local_path) != checksum:
-        valid = False
-    else:
-        valid = True
+    valid = False if md5(local_path) != checksum else True
 
     return True, valid
 
@@ -81,7 +78,7 @@ def validate_files(file_dict, data_home, verbose):
     missing = {}
     invalid = {}
     for file_id, file in tqdm.tqdm(file_dict.items(), disable=not verbose):
-        for tracks in file.keys():
+        for tracks in file:
             # multitrack case
             if tracks == "tracks":
                 continue
@@ -93,11 +90,11 @@ def validate_files(file_dict, data_home, verbose):
                     local_path = os.path.join(data_home, filepath)
                     exists, valid = validate(local_path, checksum)
                     if not exists:
-                        if file_id not in missing.keys():
+                        if file_id not in missing:
                             missing[file_id] = []
                         missing[file_id].append(local_path)
                     elif not valid:
-                        if file_id not in invalid.keys():
+                        if file_id not in invalid:
                             invalid[file_id] = []
                         invalid[file_id].append(local_path)
 
@@ -126,11 +123,11 @@ def validate_metadata(file_dict, data_home, verbose):
             local_path = os.path.join(data_home, filepath)
             exists, valid = validate(local_path, checksum)
             if not exists:
-                if file_id not in missing.keys():
+                if file_id not in missing:
                     missing[file_id] = []
                 missing[file_id].append(local_path)
             elif not valid:
-                if file_id not in invalid.keys():
+                if file_id not in invalid:
                     invalid[file_id] = []
                 invalid[file_id].append(local_path)
 
@@ -203,7 +200,7 @@ def validator(dataset_index, data_home, verbose=True):
     has_any_missing_file = False
     for file_id in missing_files:
         if len(missing_files[file_id]) > 0:
-            log_message("Files missing for {}:".format(file_id), verbose)
+            log_message(f"Files missing for {file_id}:", verbose)
             for fpath in missing_files[file_id]:
                 log_message(fpath, verbose)
             log_message("-" * 20, verbose)
@@ -213,7 +210,7 @@ def validator(dataset_index, data_home, verbose=True):
     has_any_invalid_checksum = False
     for file_id in invalid_checksums:
         if len(invalid_checksums[file_id]) > 0:
-            log_message("Invalid checksums for {}:".format(file_id), verbose)
+            log_message(f"Invalid checksums for {file_id}:", verbose)
             for fpath in invalid_checksums[file_id]:
                 log_message(fpath, verbose)
             log_message("-" * 20, verbose)

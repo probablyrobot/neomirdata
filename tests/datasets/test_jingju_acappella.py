@@ -1,8 +1,10 @@
+import os
+
 import numpy as np
+
 from mirdata import annotations
 from mirdata.datasets import compmusic_jingju_acappella
 from tests.test_utils import run_track_tests
-import os
 
 
 def test_track():

@@ -3,11 +3,11 @@ import json
 import os
 import types
 
-import mirdata
-from mirdata import validate
+import pytest
 from smart_open import open
 
-import pytest
+import mirdata
+from mirdata import validate
 
 DEFAULT_DATA_HOME = os.path.normpath(
     os.path.join(os.getenv("HOME", "/tmp"), "mir_datasets")
@@ -19,12 +19,12 @@ def run_track_tests(track, expected_attributes, expected_property_types):
 
     # test track attributes
     for attr in track_attr["attributes"]:
-        print("{}: {}".format(attr, getattr(track, attr)))
+        print(f"{attr}: {getattr(track, attr)}")
         assert expected_attributes[attr] == getattr(track, attr)
 
     # test track property types
     for prop in track_attr["cached_properties"] + track_attr["properties"]:
-        print("{}: {}".format(prop, type(getattr(track, prop))))
+        print(f"{prop}: {type(getattr(track, prop))}")
         if prop in expected_property_types:
             assert isinstance(getattr(track, prop), expected_property_types[prop])
         elif prop in expected_attributes:
@@ -32,7 +32,7 @@ def run_track_tests(track, expected_attributes, expected_property_types):
         else:
             assert (
                 False
-            ), "{} not in expected_property_types or expected_attributes".format(prop)
+            ), f"{prop} not in expected_property_types or expected_attributes"
 
 
 def run_multitrack_tests(mtrack):
@@ -63,7 +63,7 @@ def get_attributes_and_properties(class_instance):
             # Skip the construct and from_orm methods from BaseModel
             continue
         else:
-            raise ValueError("Unknown type {}".format(attr))
+            raise ValueError(f"Unknown type {attr}")
 
     non_attributes = list(
         itertools.chain.from_iterable([properties, cached_properties, functions])

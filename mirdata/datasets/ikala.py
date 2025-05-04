@@ -18,13 +18,12 @@ import csv
 import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
-
 
 BIBTEX = """@inproceedings{chan2015vocal,
     title={Vocal activity informed singing voice separation with the iKala dataset},
@@ -245,8 +244,7 @@ def load_f0(fhandle: TextIO) -> annotations.F0Data:
     voicing = (f0_hz > 0).astype(float)
     f0_hz = np.abs(f0_hz)
     times = (np.arange(len(f0_midi)) * TIME_STEP) + (TIME_STEP / 2.0)
-    f0_data = annotations.F0Data(times, "s", f0_hz, "hz", voicing, "binary")
-    return f0_data
+    return annotations.F0Data(times, "s", f0_hz, "hz", voicing, "binary")
 
 
 @io.coerce_to_string_io
@@ -304,10 +302,9 @@ def load_lyrics(fhandle: TextIO) -> annotations.LyricData:
         else:
             pronunciations.append("")
 
-    lyrics_data = annotations.LyricData(
+    return annotations.LyricData(
         np.array([start_times, end_times]).T, "s", lyrics, "words"
     )
-    return lyrics_data
 
 
 @io.coerce_to_string_io
@@ -338,10 +335,9 @@ def load_pronunciations(fhandle: TextIO) -> annotations.LyricData:
         else:
             pronunciations.append("")
 
-    lyrics_data = annotations.LyricData(
+    return annotations.LyricData(
         np.array([start_times, end_times]).T, "s", pronunciations, "pronunciations_open"
     )
-    return lyrics_data
 
 
 @core.docstring_inherit(core.Dataset)

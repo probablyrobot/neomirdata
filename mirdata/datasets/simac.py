@@ -19,12 +19,12 @@
 """
 
 import csv
-import librosa
-import numpy as np
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from mirdata import annotations, core, io
+import librosa
+import numpy as np
 
+from mirdata import annotations, core, io
 
 BIBTEX = """
 @INPROCEEDINGS{1576040,

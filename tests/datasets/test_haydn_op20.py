@@ -10,11 +10,11 @@ except ImportError:
     )
     raise ImportError
 
-from mirdata.annotations import KeyData, ChordData
+import numpy as np
+
+from mirdata.annotations import ChordData, KeyData
 from mirdata.datasets import haydn_op20
 from tests.test_utils import run_track_tests
-
-import numpy as np
 
 
 def test_track():

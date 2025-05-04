@@ -16,9 +16,9 @@ import csv
 import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
@@ -219,10 +219,9 @@ def load_melody(fhandle: TextIO) -> annotations.F0Data:
         freqs.append(float(line[1]))
         voicing.append(0.0 if line[1] == "0" else 1.0)
 
-    melody_data = annotations.F0Data(
+    return annotations.F0Data(
         np.array(times), "s", np.array(freqs), "hz", np.array(voicing), "binary"
     )
-    return melody_data
 
 
 @core.docstring_inherit(core.Dataset)
@@ -280,7 +279,7 @@ class Dataset(core.Dataset):
                     melodic_instruments[i] = "strings"
                 elif inst == "winds (solo)":
                     melodic_instruments[i] = "winds"
-            melodic_instruments = sorted(list(set(melodic_instruments)))
+            melodic_instruments = sorted(set(melodic_instruments))
 
             metadata_index[track_id] = {
                 "predominant_melodic_instruments-raw": line[1],

@@ -32,15 +32,15 @@
     [3] Dixon, S., F. Gouyon & G. Widmer. Towards Characterisation of Music via Rhythmic Patterns. In Proceedings of the 5th International Society for Music Information Retrieval Conference (ISMIR). 2004.
 """
 
-import os
 import csv
 import logging
-import librosa
-import numpy as np
+import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from mirdata import annotations, core, download_utils, io
+import librosa
+import numpy as np
 
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @ARTICLE{1678001,

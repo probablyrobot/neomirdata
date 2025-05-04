@@ -1,8 +1,9 @@
 import os
+
 import numpy as np
 
-from mirdata.datasets import beatles
 from mirdata import annotations
+from mirdata.datasets import beatles
 from tests.test_utils import run_track_tests
 
 
@@ -48,16 +49,12 @@ def test_track():
     run_track_tests(track, expected_attributes, expected_property_types)
 
     audio, sr = track.audio
-    assert sr == 44100, "sample rate {} is not 44100".format(sr)
-    assert audio.shape == (44100 * 2,), "audio shape {} was not (88200,)".format(
-        audio.shape
-    )
+    assert sr == 44100, f"sample rate {sr} is not 44100"
+    assert audio.shape == (44100 * 2,), f"audio shape {audio.shape} was not (88200,)"
 
     track = dataset.track("10212")
-    assert track.beats is None, "expected track.beats to be None, got {}".format(
-        track.beats
-    )
-    assert track.key is None, "expected track.key to be None, got {}".format(track.key)
+    assert track.beats is None, f"expected track.beats to be None, got {track.beats}"
+    assert track.key is None, f"expected track.key to be None, got {track.key}"
 
 
 def test_load_beats():

@@ -4,11 +4,12 @@ validated successfully, and loaded.
 """
 
 import os
+
 import pytest
 import tqdm
 
-from tests.test_utils import get_attributes_and_properties
 import mirdata
+from tests.test_utils import get_attributes_and_properties
 
 
 @pytest.fixture()
@@ -16,7 +17,7 @@ def dataset(test_dataset, dataset_version):
     if test_dataset == "":
         return None
     elif test_dataset not in mirdata.DATASETS:
-        raise ValueError("{} is not a dataset in mirdata".format(test_dataset))
+        raise ValueError(f"{test_dataset} is not a dataset in mirdata")
     data_home = os.path.join("tests/resources/mir_datasets_full", test_dataset)
     return mirdata.initialize(test_dataset, data_home, version=dataset_version)
 
@@ -46,10 +47,10 @@ def test_validation(skip_remote, dataset):
     missing_files, invalid_checksums = dataset.validate(verbose=True)
 
     assert missing_files == {
-        key: {} for key in dataset._index.keys() if not key == "version"
+        key: {} for key in dataset._index if key != "version"
     }
     assert invalid_checksums == {
-        key: {} for key in dataset._index.keys() if not key == "version"
+        key: {} for key in dataset._index if key != "version"
     }
 
 
@@ -113,14 +114,12 @@ def test_index(skip_remote, dataset):
 
     okeys = ["tracks", "multitracks", "records"]
 
-    if "version" not in dataset._index.keys():
+    if "version" not in dataset._index:
         raise NotImplementedError("The top-level key 'version' is missing in the index")
 
-    if not any(key in dataset._index.keys() for key in okeys):
+    if not any(key in dataset._index for key in okeys):
         raise NotImplementedError(
-            "At least one of the optional top-level keys {} should be in the index".format(
-                okeys
-            )
+            f"At least one of the optional top-level keys {okeys} should be in the index"
         )
 
 
@@ -134,7 +133,7 @@ def test_predetermined_splits(dataset):
         assert isinstance(splits, dict)
         used_tracks = set()
         for k in splits:
-            assert all([t in dataset.track_ids for t in splits[k]])
+            assert all(t in dataset.track_ids for t in splits[k])
             this_split = set(splits[k])
             assert not used_tracks.intersection(this_split)
             used_tracks.update(this_split)
@@ -148,7 +147,7 @@ def test_predetermined_splits(dataset):
         assert isinstance(splits, dict)
         used_tracks = set()
         for k in splits:
-            assert all([t in dataset.mtrack_ids for t in splits[k]])
+            assert all(t in dataset.mtrack_ids for t in splits[k])
             this_split = set(splits[k])
             assert not used_tracks.intersection(this_split)
             used_tracks.update(this_split)

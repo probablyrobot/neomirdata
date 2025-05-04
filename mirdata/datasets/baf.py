@@ -113,15 +113,13 @@ BAF Loader
 
 import os
 from string import Template
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import librosa
 import numpy as np
 import pandas as pd
 
-from mirdata import annotations
-from mirdata import core
-
+from mirdata import annotations, core
 
 BIBTEX = """@inproceedings{cortes2022BAF,
   author       = {Guillem Cortès and
@@ -391,7 +389,7 @@ class Dataset(core.Dataset):
         metadata_df.rename(columns={"filename": "query"}, inplace=True)
         df = pd.merge(metadata_df, xannotations_df, on="query", how="outer")
         df = df.replace(np.nan, "")
-        metadata = dict()
+        metadata = {}
         for _, row in df.iterrows():
             identifier = row.get("query").split(".wav")[0]
             md = metadata.get(identifier)

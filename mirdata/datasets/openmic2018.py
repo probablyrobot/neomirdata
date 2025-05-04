@@ -38,14 +38,14 @@
 import json
 import re
 from pathlib import Path
-from typing import BinaryIO, Optional, Tuple, Dict, List
+from typing import BinaryIO, Dict, List, Optional, Tuple
 
 import librosa
 import numpy as np
 import pandas as pd
 from smart_open import open
 
-from mirdata import download_utils, core, io
+from mirdata import core, download_utils, io
 
 BIBTEX = """
 @inproceedings{DBLP:conf/ismir/HumphreyDM18,
@@ -181,7 +181,7 @@ class Track(core.Track):
             * dict : instrument name -> confidence score
         """
 
-        scores = dict()
+        scores = {}
         for k in INSTRUMENTS:
             inst_score = self._track_metadata.get(k, np.nan)
             if not np.isnan(inst_score):
@@ -196,9 +196,7 @@ class Track(core.Track):
             * genres: list of genre strings
         """
 
-        return list(
-            [g["genre_title"] for g in self._track_metadata.get("track_genres")]
-        )
+        return [g["genre_title"] for g in self._track_metadata.get("track_genres")]
 
     @property
     def artist(self) -> Optional[str]:

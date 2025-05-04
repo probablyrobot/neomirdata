@@ -1,8 +1,9 @@
 import os
+
 import numpy as np
 
-from mirdata.datasets import giantsteps_tempo
 from mirdata import annotations
+from mirdata.datasets import giantsteps_tempo
 from tests.test_utils import run_track_tests
 
 
@@ -39,7 +40,7 @@ def test_track():
     run_track_tests(track, expected_attributes, expected_property_types)
 
     audio, sr = track.audio
-    assert sr == 22050, "sample rate {} is not 22050".format(sr)
+    assert sr == 22050, f"sample rate {sr} is not 22050"
     print(audio.shape)
 
 

@@ -3,12 +3,10 @@ Tests for Filosax_Lite
 """
 
 import os
-import numpy as np
-import pytest
 
-from mirdata import annotations
+
 from mirdata.datasets import filosax
-from tests.test_utils import run_track_tests, run_multitrack_tests
+from tests.test_utils import run_multitrack_tests, run_track_tests
 
 
 def test_track():

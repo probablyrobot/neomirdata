@@ -52,17 +52,16 @@
 
 """
 
-import logging
-from typing import BinaryIO, Optional, TextIO, Tuple, Dict, List
-
-from deprecated.sphinx import deprecated
 import json
+import logging
+from typing import BinaryIO, Dict, List, Optional, TextIO, Tuple
+
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
-
 
 BIBTEX = """@inproceedings{xi2018guitarset,
 title={GuitarSet: A Dataset for Guitar Transcription},

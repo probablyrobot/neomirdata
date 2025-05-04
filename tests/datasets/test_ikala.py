@@ -1,9 +1,10 @@
-import os
 import math
+import os
+
 import numpy as np
 
-from mirdata.datasets import ikala
 from mirdata import annotations
+from mirdata.datasets import ikala
 from tests.test_utils import run_track_tests
 
 

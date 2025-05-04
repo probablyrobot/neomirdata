@@ -50,17 +50,13 @@ import csv
 import os
 from typing import BinaryIO, Optional, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
 import pretty_midi
+from deprecated.sphinx import deprecated
 from smart_open import open
 
-from mirdata import annotations
-from mirdata import core
-from mirdata import download_utils
-from mirdata import io
-
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """@inproceedings{groove2019,
     Author = {Jon Gillick and Adam Roberts and Jesse Engel and Douglas Eck
@@ -425,7 +421,7 @@ class Dataset(core.Dataset):
                 for row in csv_reader:
                     track_id = row["id"]
                     metadata_index[track_id] = {
-                        key: row[key] for key in row.keys() if key != "id"
+                        key: row[key] for key in row if key != "id"
                     }
                     metadata_index[track_id]["tempo"] = int(
                         metadata_index[track_id].pop("bpm")

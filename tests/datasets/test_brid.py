@@ -1,9 +1,11 @@
+import io
 import os
+
 import numpy as np
+
 from mirdata import annotations
 from mirdata.datasets import brid
 from tests.test_utils import run_track_tests
-import io
 
 
 def test_track():

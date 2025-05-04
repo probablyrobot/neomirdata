@@ -37,12 +37,11 @@ import csv
 import json
 from typing import Any, BinaryIO, Dict, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 
 from mirdata import core, download_utils, io
-
 
 BIBTEX = """@article{gomez2006tonal,
   title={Tonal description of music audio signals},

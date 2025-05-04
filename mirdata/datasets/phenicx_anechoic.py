@@ -47,12 +47,11 @@
 
 from typing import BinaryIO, Optional, TextIO, Tuple, cast
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 
 from mirdata import annotations, core, download_utils, io
-
 
 BIBTEX = """
 @article{miron2016score,
@@ -200,7 +199,7 @@ class Track(core.Track):
 
         """
         if id_voice >= self.n_voices:
-            raise ValueError("id_voice={} is out of range".format(id_voice))
+            raise ValueError(f"id_voice={id_voice} is out of range")
         return load_audio(self.audio_paths[id_voice])
 
 
@@ -253,11 +252,9 @@ class MultiTrack(core.MultiTrack):
             np.ndarray: instrument audio with shape (n_samples, n_channels)
 
         """
-        if instrument not in self.instruments.keys():
+        if instrument not in self.instruments:
             raise ValueError(
-                "instrument={} is not in this multitrack. Must be one of {}".format(
-                    instrument, self.instruments.keys()
-                )
+                f"instrument={instrument} is not in this multitrack. Must be one of {self.instruments.keys()}"
             )
 
         return getattr(
@@ -274,11 +271,9 @@ class MultiTrack(core.MultiTrack):
             np.ndarray: section audio with shape (n_samples, n_channels)
 
         """
-        if section not in self.sections.keys():
+        if section not in self.sections:
             raise ValueError(
-                "section={} is not valid for this multitrack, must be one of {}".format(
-                    section, self.sections.keys()
-                )
+                f"section={section} is not valid for this multitrack, must be one of {self.sections.keys()}"
             )
         return self.get_target(self.sections[section])
 

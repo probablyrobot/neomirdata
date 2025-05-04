@@ -93,9 +93,9 @@ import csv
 import os
 from typing import BinaryIO, List, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 
 from mirdata import core, download_utils, io
 
@@ -209,7 +209,7 @@ class Track(core.Track):
             "dru" in self._audio_filename or "nod" in self._audio_filename
         ):
             self.genre = self._audio_filename.split(".")[0].split("[")[3].split("]")[0]
-            self.drum = [True if "dru" in self._audio_filename else False][0]
+            self.drum = ["dru" in self._audio_filename][0]
         elif self.split == "train" and not (
             "dru" in self._audio_filename or "nod" in self._audio_filename
         ):
@@ -219,7 +219,7 @@ class Track(core.Track):
             self.genre = None
             self.drum = None
 
-        self.train = True if self.split == "train" else False
+        self.train = self.split == "train"
 
     @core.cached_property
     def instrument(self):
@@ -271,7 +271,7 @@ def load_pred_inst(fhandle: TextIO) -> List[str]:
         inst_code = line[0][:3]
         assert (
             inst_code in INST_DICT
-        ), "Instrument {} not in instrument dictionary".format(inst_code)
+        ), f"Instrument {inst_code} not in instrument dictionary"
         pred_inst.append(inst_code)
 
     return pred_inst

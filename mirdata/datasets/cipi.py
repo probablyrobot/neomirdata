@@ -25,10 +25,9 @@
 import json
 import logging
 import os
-from typing import Optional, List
+from typing import List, Optional
 
 from smart_open import open
-
 
 from mirdata import core
 
@@ -117,25 +116,21 @@ class Track(core.Track):
     @property
     def title(self) -> Optional[str]:
         return (
-            self._track_metadata["work_name"]
-            if "work_name" in self._track_metadata
-            else None
+            self._track_metadata.get("work_name", None)
         )
 
     @property
     def book(self) -> Optional[str]:
-        return self._track_metadata["book"] if "book" in self._track_metadata else None
+        return self._track_metadata.get("book", None)
 
     @property
     def URI(self) -> Optional[str]:
-        return self._track_metadata["URI"] if "URI" in self._track_metadata else None
+        return self._track_metadata.get("URI", None)
 
     @property
     def composer(self) -> Optional[str]:
         return (
-            self._track_metadata["composer"]
-            if "composer" in self._track_metadata
-            else None
+            self._track_metadata.get("composer", None)
         )
 
     @property
@@ -149,7 +144,7 @@ class Track(core.Track):
     @property
     def difficulty_annotation(self) -> Optional[int]:
         return (
-            self._track_metadata["henle"] if "henle" in self._track_metadata else None
+            self._track_metadata.get("henle", None)
         )
 
     @core.cached_property
@@ -158,10 +153,8 @@ class Track(core.Track):
             scores = [load_score(path, self._data_home) for path in self.musicxml_paths]
         except FileNotFoundError:
             raise FileNotFoundError(
-                "Some MusicXML files for track id {} not found. "
-                "Did you request, download, and store the files as indicated?".format(
-                    self.track_id
-                )
+                f"Some MusicXML files for track id {self.track_id} not found. "
+                "Did you request, download, and store the files as indicated?"
             )
         return scores
 
@@ -181,7 +174,7 @@ def load_score(
     try:
         score = music21.converter.parse(os.path.join(data_home, fhandle))
     except:
-        raise FileNotFoundError("File {} not found.".format(fhandle))
+        raise FileNotFoundError(f"File {fhandle} not found.")
     return score
 
 

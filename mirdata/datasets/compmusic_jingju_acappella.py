@@ -51,13 +51,12 @@ import csv
 import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
+from deprecated.sphinx import deprecated
 from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
-
 
 BIBTEX = """
 @dataset{rong_gong_2018_1323561,

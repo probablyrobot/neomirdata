@@ -44,8 +44,7 @@ import os
 
 from deprecated.sphinx import deprecated
 
-from mirdata import download_utils, core, io
-
+from mirdata import core, download_utils, io
 
 NAME = "acousticbrainz_genre"
 
@@ -398,10 +397,9 @@ class Dataset(core.Dataset):
 
         """
 
-        acousticbrainz_genre_data = {
+        return {
             k: v for k, v in self._index["tracks"].items() if search_key in k
         }
-        return acousticbrainz_genre_data
 
     def load_all_train(self):
         """Load from AcousticBrainz genre dataset the tracks that are used for training across the four different datasets.

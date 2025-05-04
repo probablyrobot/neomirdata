@@ -1,8 +1,9 @@
 import os
+
 import numpy as np
 
-from mirdata.datasets import medleydb_pitch
 from mirdata import annotations
+from mirdata.datasets import medleydb_pitch
 from tests.test_utils import run_track_tests
 
 

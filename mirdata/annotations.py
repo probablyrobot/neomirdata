@@ -4,10 +4,10 @@ import logging
 import re
 from typing import List, Optional, Tuple
 
-from deprecated.sphinx import deprecated
 import librosa
 import numpy as np
 import scipy
+from deprecated.sphinx import deprecated
 
 # Regex pattern needed to validate chords and keys
 KEY_MODE_PATTERN = r"^N|([A-G][b#]?)(:(major|minor|ionian|dorian|phrygian|lydian|mixolydian|aeolian|locrian))?$"
@@ -76,8 +76,7 @@ class Annotation(object):
 
     def __repr__(self):
         attributes = [v for v in dir(self) if not v.startswith("_")]
-        repr_str = f"{self.__class__.__name__}({', '.join(attributes)})"
-        return repr_str
+        return f"{self.__class__.__name__}({', '.join(attributes)})"
 
 
 class BeatData(Annotation):
@@ -261,7 +260,7 @@ class F0Data(Annotation):
         times = convert_time_units(self.times, self.time_unit, times_new_unit)
         if self.frequency_unit not in ["hz", "midi"]:
             raise NotImplementedError(
-                "resampling is not supported for {}".format(self.frequency_unit)
+                f"resampling is not supported for {self.frequency_unit}"
             )
         frequencies = self.frequencies
         voicing = self.voicing
@@ -525,7 +524,7 @@ class MultiF0Data(Annotation):
             other = other.to_multif0()
 
         if not isinstance(other, MultiF0Data):
-            raise TypeError("Unable to add type {} to MultiF0 data".format(type(other)))
+            raise TypeError(f"Unable to add type {type(other)} to MultiF0 data")
 
         other_times = convert_time_units(other.times, other.time_unit, self.time_unit)
         if np.max(other_times) > np.max(self.times):
@@ -831,7 +830,7 @@ class NoteData(Annotation):
             return self
 
         if not isinstance(other, NoteData):
-            raise TypeError("Unable to add type {} to NoteData".format(type(other)))
+            raise TypeError(f"Unable to add type {type(other)} to NoteData")
         # convert to the current units
         intervals = convert_time_units(
             other.intervals, other.interval_unit, self.interval_unit
@@ -1001,9 +1000,7 @@ class NoteData(Annotation):
         max_time = note_time_max if not max_time else max_time
         if max_time < note_time_max:
             raise ValueError(
-                "max_time = {} cannot be smaller than the last note interval = {}".format(
-                    max_time, note_time_max
-                )
+                f"max_time = {max_time} cannot be smaller than the last note interval = {note_time_max}"
             )
         times = np.arange(0, max_time + time_hop, time_hop)
         frequency_list: List[List[float]] = [[] for _ in times]
@@ -1230,9 +1227,7 @@ def convert_time_units(times, time_unit, target_time_unit):
         return _from_seconds(_to_seconds(times, time_unit), target_time_unit)
     except NotImplementedError:
         raise NotImplementedError(
-            "Conversion of time in units {} to {} is not supported".format(
-                time_unit, target_time_unit
-            )
+            f"Conversion of time in units {time_unit} to {target_time_unit} is not supported"
         )
 
 
@@ -1302,9 +1297,7 @@ def convert_pitch_units(pitches, pitch_unit, target_pitch_unit):
         return _from_hz(_to_hz(pitches, pitch_unit), target_pitch_unit)
     except NotImplementedError:
         raise NotImplementedError(
-            "Conversion of pitch in units {} to {} is not supported".format(
-                pitch_unit, target_pitch_unit
-            )
+            f"Conversion of pitch in units {pitch_unit} to {target_pitch_unit} is not supported"
         )
 
 
@@ -1359,9 +1352,7 @@ def convert_amplitude_units(amplitude, amplitude_unit, target_amplitude_unit):
         )
     except NotImplementedError:
         raise NotImplementedError(
-            "Conversion of amplitude in units {} to {} is not supported".format(
-                amplitude_unit, target_amplitude_unit
-            )
+            f"Conversion of amplitude in units {amplitude_unit} to {target_amplitude_unit} is not supported"
         )
 
 
@@ -1536,33 +1527,30 @@ def validate_confidence(confidence, confidence_unit):
         return
 
     validate_unit(confidence_unit, AMPLITUDE_UNITS)
-    if isinstance(confidence[0], list):
-        confidence_flat = [c for subconf in confidence for c in subconf]
-    else:
-        confidence_flat = confidence
+    confidence_flat = [c for subconf in confidence for c in subconf] if isinstance(confidence[0], list) else confidence
 
     if confidence_unit == "likelihood" and (
-        any([c < 0 for c in confidence_flat]) or any([c > 1 for c in confidence_flat])
+        any(c < 0 for c in confidence_flat) or any(c > 1 for c in confidence_flat)
     ):
         raise ValueError(
             "confidence with unit 'likelihood' should be between 0 and 1. "
             + "Found values outside [0, 1]."
         )
 
-    if confidence_unit == "energy" and any([c < 0 for c in confidence_flat]):
+    if confidence_unit == "energy" and any(c < 0 for c in confidence_flat):
         raise ValueError(
             "confidence with unit 'energy' should be nonnegative. "
             + "Found negative values."
         )
 
-    if confidence_unit == "binary" and any([c not in [0, 1] for c in confidence_flat]):
+    if confidence_unit == "binary" and any(c not in [0, 1] for c in confidence_flat):
         raise ValueError(
             "confidence with unit 'binary' should only have values of 0 or 1. "
             + "Found non-binary values."
         )
 
     if confidence_unit == "velocity" and (
-        any([c < 0 for c in confidence_flat]) or any([c > 127 for c in confidence_flat])
+        any(c < 0 for c in confidence_flat) or any(c > 127 for c in confidence_flat)
     ):
         raise ValueError(
             "confidence with unit 'velocity' should be between 0 and 127. "
@@ -1588,14 +1576,14 @@ def validate_voicing(voicing, voicing_unit):
         raise ValueError(f"voicings should be 1d, but array has shape {voicing_shape}")
 
     if voicing_unit == "likelihood" and (
-        any([c < 0 for c in voicing]) or any([c > 1 for c in voicing])
+        any(c < 0 for c in voicing) or any(c > 1 for c in voicing)
     ):
         raise ValueError(
             "voicing with unit 'likelihood' should be between 0 and 1. "
             + "Found values outside [0, 1]."
         )
 
-    if voicing_unit == "binary" and any([c not in [0, 1] for c in voicing]):
+    if voicing_unit == "binary" and any(c not in [0, 1] for c in voicing):
         raise ValueError(
             "voicing with unit 'binary' should only have values of 0 or 1. "
             + "Found non-binary values."
@@ -1655,9 +1643,7 @@ def validate_chord_labels(chords, chord_unit):
         if not all(matches):
             non_matches = [c for c, m in zip(chords, matches) if not m]
             raise ValueError(
-                "chords {} don't conform to chord_unit {}".format(
-                    non_matches, chord_unit
-                )
+                f"chords {non_matches} don't conform to chord_unit {chord_unit}"
             )
 
 
@@ -1679,7 +1665,7 @@ def validate_key_labels(keys, key_unit):
         if not all(matches):
             non_matches = [k for k, m in zip(keys, matches) if not m]
             raise ValueError(
-                "keys {} don't conform to key_unit key-mode".format(non_matches)
+                f"keys {non_matches} don't conform to key_unit key-mode"
             )
 
 
@@ -1762,7 +1748,7 @@ def validate_unit(unit, unit_values, allow_none=False):
         return
 
     if unit not in unit_values:
-        raise ValueError("unit={} is not one of {}".format(unit, unit_values))
+        raise ValueError(f"unit={unit} is not one of {unit_values}")
 
 
 def validate_uniform_times(times):

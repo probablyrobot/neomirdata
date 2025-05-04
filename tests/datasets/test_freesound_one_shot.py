@@ -1,8 +1,9 @@
 import os
+
 import numpy as np
 
-from tests.test_utils import run_track_tests
 from mirdata.datasets import freesound_one_shot_percussive_sounds
+from tests.test_utils import run_track_tests
 
 TEST_DATA_HOME = os.path.normpath(
     "tests/resources/mir_datasets/freesound_one_shot_percussive_sounds"

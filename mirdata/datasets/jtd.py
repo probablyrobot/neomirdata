@@ -57,13 +57,12 @@
 import csv
 import json
 from typing import BinaryIO, Optional, TextIO, Tuple
-from smart_open import open
 
 import librosa
 import numpy as np
+from smart_open import open
 
-from mirdata import download_utils, core, annotations, io
-
+from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @article{jazz-trio-database
@@ -588,10 +587,7 @@ def load_beats(fhandle: TextIO, col_idx: int) -> Optional[annotations.BeatData]:
         # Get the required data from the row
         desired_data = [beat, piano, bass, drums][col_idx]
         # Coerce empty strings to NaN values
-        if desired_data == "":
-            desired_data_fmt = np.nan
-        else:
-            desired_data_fmt = float(desired_data)
+        desired_data_fmt = np.nan if desired_data == "" else float(desired_data)
         # Append everything to the list with the required datatypes
         timestamps.append(desired_data_fmt)
         positions.append(int(float(metre)))  # coerce string to float and then to int

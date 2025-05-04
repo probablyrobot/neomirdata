@@ -1,5 +1,5 @@
 import os
-import numpy as np
+
 import pytest
 
 from mirdata.datasets import mtg_jamendo_autotagging_moodtheme
@@ -37,10 +37,8 @@ def test_track():
     run_track_tests(track, expected_attributes, expected_property_types)
 
     audio, sr = track.audio
-    assert sr == 44100, "sample rate {} is not 44100".format(sr)
-    assert audio.shape == (2, 88200), "audio shape {} was not (2, 88200)".format(
-        audio.shape
-    )
+    assert sr == 44100, f"sample rate {sr} is not 44100"
+    assert audio.shape == (2, 88200), f"audio shape {audio.shape} was not (2, 88200)"
 
 
 def test_track_properties_and_attributes():

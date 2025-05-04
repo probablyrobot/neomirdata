@@ -1,10 +1,9 @@
 import os
-from typing import List
 
 import numpy as np
 
-from mirdata.datasets import mdb_stem_synth
 from mirdata import annotations
+from mirdata.datasets import mdb_stem_synth
 from tests.test_utils import run_track_tests
 
 DEFAULT_TRACK_ID = "AClassicEducation_NightOwl_STEM_08"

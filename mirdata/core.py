@@ -9,8 +9,7 @@ from typing import Any, List, Optional
 import numpy as np
 from smart_open import open
 
-from mirdata import download_utils
-from mirdata import validate
+from mirdata import download_utils, validate
 
 MAX_STR_LEN = 100
 DOCS_URL = "https://mirdata.readthedocs.io/en/stable/source/mirdata.html"
@@ -119,7 +118,7 @@ class Dataset(object):
 
         if version not in indexes:
             raise ValueError(
-                "Invalid version {}. Must be one of {}.".format(version, indexes.keys())
+                f"Invalid version {version}. Must be one of {indexes.keys()}."
             )
 
         if isinstance(indexes[version], str):
@@ -136,7 +135,7 @@ class Dataset(object):
         self.remotes = remotes
         self._download_info = download_info
         self._license_info = license_info
-        self.readme = "{}#module-mirdata.datasets.{}".format(DOCS_URL, self.name)
+        self.readme = f"{DOCS_URL}#module-mirdata.datasets.{self.name}"
 
         # this is a hack to be able to have dataset-specific docstrings
         self.track = lambda track_id: self._track(track_id)
@@ -145,7 +144,7 @@ class Dataset(object):
         self.multitrack.__doc__ = self._multitrack_class.__doc__  # set the docstring
 
     def __repr__(self):
-        repr_string = "The {} dataset\n".format(self.name)
+        repr_string = f"The {self.name} dataset\n"
         repr_string += "-" * MAX_STR_LEN
         repr_string += "\n\n\n"
         repr_string += "Call the .cite method for bibtex citations.\n"
@@ -293,9 +292,7 @@ class Dataset(object):
         """
         if not np.isclose(np.sum(splits), 1):
             raise ValueError(
-                "Splits values should sum up to 1. Given {} sums {}".format(
-                    splits, np.sum(splits)
-                )
+                f"Splits values should sum up to 1. Given {splits} sums {np.sum(splits)}"
             )
 
         if partition_names and len(partition_names) != len(splits):
@@ -529,7 +526,7 @@ class Track(object):
         """
         if track_id not in index["tracks"]:
             raise ValueError(
-                "{} is not a valid track_id in {}".format(track_id, dataset_name)
+                f"{track_id} is not a valid track_id in {dataset_name}"
             )
         self._metadata = metadata
         self.track_id = track_id
@@ -559,22 +556,19 @@ class Track(object):
             val = getattr(self, attr)
             if isinstance(val, str):
                 if len(val) > MAX_STR_LEN:
-                    val = "...{}".format(val[-MAX_STR_LEN:])
-                val = '"{}"'.format(val)
-            repr_str += "  {}={},\n".format(attr, val)
+                    val = f"...{val[-MAX_STR_LEN:]}"
+                val = f'"{val}"'
+            repr_str += f"  {attr}={val},\n"
 
         for prop in properties:
             val = getattr(self.__class__, prop)
             if isinstance(val, types.FunctionType):
                 continue
 
-            if val.__doc__ is None:
-                doc = ""
-            else:
-                doc = val.__doc__
+            doc = "" if val.__doc__ is None else val.__doc__
 
             val_type_str = doc.split(":")[0]
-            repr_str += "  {}: {},\n".format(prop, val_type_str)
+            repr_str += f"  {prop}: {val_type_str},\n"
 
         repr_str += ")"
         return repr_str
@@ -627,7 +621,7 @@ class MultiTrack(Track):
         """
         if mtrack_id not in index["multitracks"]:
             raise ValueError(
-                "{} is not a valid mtrack_id in {}".format(mtrack_id, dataset_name)
+                f"{mtrack_id} is not a valid mtrack_id in {dataset_name}"
             )
 
         self.mtrack_id = mtrack_id
@@ -714,17 +708,15 @@ class MultiTrack(Track):
 
         if len(set(sample_rates)) > 1:
             raise ValueError(
-                "Sample rates for tracks {} are not equal: {}".format(
-                    track_keys, sample_rates
-                )
+                f"Sample rates for tracks {track_keys} are not equal: {sample_rates}"
             )
 
         max_length = np.max(lengths)
-        if any([l != max_length for l in lengths]):
+        if any(l != max_length for l in lengths):
             if enforce_length:
                 raise ValueError(
-                    "Track's {} audio are not the same length {}. Use enforce_length=False to pad"
-                    " with zeros.".format(track_keys, lengths)
+                    f"Track's {track_keys} audio are not the same length {lengths}. Use enforce_length=False to pad"
+                    " with zeros."
                 )
             else:
                 # pad signals to the max length
