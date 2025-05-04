@@ -10,7 +10,7 @@ import warnings
 import zipfile
 
 import chardet
-from smart_open import open, parse_uri
+from smart_open import open
 from tqdm import tqdm
 
 from mirdata.validate import md5
@@ -102,19 +102,21 @@ def downloader(
     if remotes is not None:
         if partial_download is not None:
             # check the keys in partial_download are in the download dict
-            if not isinstance(partial_download, list) or any([k not in remotes for k in partial_download]):
+            if not isinstance(partial_download, list) or any(k not in remotes for k in partial_download):
                 raise ValueError(
-                    f"partial_download must be a list which is a subset of {list(remotes.keys())}, but got {partial_download}"
+                    f"partial_download must be a list which is a subset of {list(remotes.keys())}, "
+                    f"but got {partial_download}"
                 )
             objs_to_download = partial_download
-            if "index" in remotes.keys():
+            if "index" in remotes:
                 objs_to_download.append("index")
         else:
             objs_to_download = list(remotes.keys())
 
         if "index" in objs_to_download and len(objs_to_download) > 1:
             logging.info(
-                f"Downloading {objs_to_download}. Index is being stored in {index.indexes_dir}, and the rest of files in {save_dir}"
+                f"Downloading {objs_to_download}. Index is being stored in {index.indexes_dir}, "
+                f"and the rest of files in {save_dir}"
             )
         elif "index" in objs_to_download and len(objs_to_download) == 1:
             logging.info(f"Downloading {objs_to_download}. Index is being stored in {index.indexes_dir}")
@@ -155,8 +157,8 @@ def downloader(
                     if not os.path.exists(source_dir):
                         logging.info(
                             "Data not downloaded, because it probably already exists on your computer. "
-                            + "Run .validate() to check, or rerun with force_overwrite=True to delete any "
-                            + "existing files and download from scratch"
+                            "Run .validate() to check, or rerun with force_overwrite=True to delete any "
+                            "existing files and download from scratch"
                         )
                         return
 
@@ -177,9 +179,7 @@ class DownloadProgressBar(tqdm):
         self.update(b * bsize - self.n)
 
 
-def download_from_remote(
-    remote, save_dir, fix_checksum=False, cleanup=False, force_overwrite=False
-):
+def download_from_remote(remote, save_dir, fix_checksum=False, cleanup=False, force_overwrite=False):
     """Download a data file from a remote source and optionally check its checksum.
 
     Args:
@@ -211,45 +211,37 @@ def download_from_remote(
             target_file_md5 = md5(save_path)
             # If the checksum matches, we're done
             if target_file_md5 == remote.checksum:
-                logging.info("Found {} in cache (MD5 hash matches)".format(remote.filename))
+                logging.info(f"Found {remote.filename} in cache (MD5 hash matches)")
                 return save_path
             # If the checksum doesn't match, we report.
-            else:
+            logging.warning(
+                f"MD5 hash for {save_path} ({target_file_md5}) does not match expected checksum ({remote.checksum})."
+            )
+            if not force_overwrite:
                 logging.warning(
-                    "MD5 hash for {} ({}) does not match expected checksum ({}).".format(
-                        save_path, target_file_md5, remote.checksum
-                    )
+                    f"Not downloading {save_path} again as it already " "exists and force_overwrite was set to False."
                 )
-                if not force_overwrite:
-                    logging.warning(
-                        "Not downloading {} again as it already "
-                        "exists and force_overwrite was set to False.".format(save_path)
-                    )
-                    return save_path
+                return save_path
 
-                logging.warning("Deleting {} and redownloading...".format(save_path))
-                os.remove(save_path)
+            logging.warning(f"Deleting {save_path} and redownloading...")
+            os.remove(save_path)
         else:
-            logging.info("Found {} in cache.".format(remote.filename))
+            logging.info(f"Found {remote.filename} in cache.")
             return save_path
 
     # create parent directories if they don't exist
     save_dir = os.path.dirname(save_path)
     if not os.path.exists(save_dir):
-        logging.info("Creating directory structure: {}".format(save_dir))
+        logging.info(f"Creating directory structure: {save_dir}")
         os.makedirs(save_dir, exist_ok=True)
 
     # download the file
-    logging.info("Downloading {} from {}".format(remote.filename, remote.url))
+    logging.info(f"Downloading {remote.filename} from {remote.url}")
     try:
         with urllib.request.urlopen(remote.url) as fsrc, open(save_path, "wb") as fdst:
             shutil.copyfileobj(fsrc, fdst)
     except urllib.request.URLError as e:
-        raise IOError(
-            "Failed to download from {}: {!r}".format(
-                remote.url, e.reason if hasattr(e, "reason") else e
-            )
-        )
+        raise OSError(f"Failed to download from {remote.url}: {e.reason if hasattr(e, 'reason') else e}") from e
 
     # Validate checksum
     if remote.checksum is not None:
@@ -259,18 +251,14 @@ def download_from_remote(
             # a broken mirror, or the version on the server is new.
             if fix_checksum:
                 logging.info(
-                    "The downloaded file has checksum {}, "
-                    "this differs from the expected {}. "
-                    "Setting the expected checksum to the new one!".format(
-                        new_checksum, remote.checksum
-                    )
+                    f"The downloaded file has checksum {new_checksum}, "
+                    f"this differs from the expected {remote.checksum}. "
+                    "Setting the expected checksum to the new one!"
                 )
                 warnings.warn(
-                    "The downloaded file has checksum {}, "
-                    "this differs from the expected {}. "
-                    "Setting the expected checksum to the new one!".format(
-                        new_checksum, remote.checksum
-                    ),
+                    f"The downloaded file has checksum {new_checksum}, "
+                    f"this differs from the expected {remote.checksum}. "
+                    "Setting the expected checksum to the new one!",
                     stacklevel=2,
                 )
                 remote = remote._replace(checksum=new_checksum)
@@ -278,10 +266,10 @@ def download_from_remote(
                 # Delete the file
                 if os.path.exists(save_path):
                     os.remove(save_path)
-                raise IOError(
-                    "The downloaded file has checksum {}, "
-                    "this differs from the expected {}. "
-                    "Please retry download.".format(new_checksum, remote.checksum)
+                raise OSError(
+                    f"The downloaded file has checksum {new_checksum}, "
+                    f"this differs from the expected {remote.checksum}. "
+                    "Please retry download."
                 )
 
     return save_path
@@ -315,7 +303,7 @@ def extractall_unicode(zfile, out_dir):
         out_dir (str): Output folder
 
     """
-    ZIP_FILENAME_UTF8_FLAG = 0x800
+    zip_filename_utf8_flag = 0x800
 
     for m in zfile.infolist():
         data = zfile.read(m)  # extract zipped data into memory
@@ -325,7 +313,7 @@ def extractall_unicode(zfile, out_dir):
         # if block to deal with irmas and good-sounds archives
         # check if the zip archive does not have the encoding info set
         # encode-decode filename only if it's different than the original name
-        if (m.flag_bits & ZIP_FILENAME_UTF8_FLAG == 0) and filename.encode("cp437").decode(errors="ignore") != filename:
+        if (m.flag_bits & zip_filename_utf8_flag == 0) and filename.encode("cp437").decode(errors="ignore") != filename:
             filename_bytes = filename.encode("cp437")
             if filename_bytes.decode("utf-8", "replace") != filename_bytes.decode(errors="ignore"):
                 guessed_encoding = chardet.detect(filename_bytes)["encoding"] or "utf8"
