@@ -36,14 +36,12 @@ smart_open = {extras = ["all"], version = ">=5.0.0"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
-pytest-cov = ">=4.1.0"
 pytest-pep8 = ">=1.0.6"
 pytest-mock = ">=3.10.0"
 pytest-localserver = ">=0.7.1"
 pytest-xdist = ">=3.3.1"
 testcontainers = ">=2.3"
 future = ">=0.18.3"
-coveralls = ">=3.3.1"
 black = ">=23.3.0"
 flake8 = ">=5.0.4"
 mypy = ">=0.982"
@@ -84,7 +82,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-n auto -vv --cov=mirdata --cov-report=term-missing --cov-report=xml"
+addopts = "-n auto -vv"
 
 [tool.coverage.run]
 source = ["mirdata"]
