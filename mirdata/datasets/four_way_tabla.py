@@ -33,7 +33,6 @@
 
 """
 
-import csv
 from typing import BinaryIO, Optional, Tuple
 
 import librosa
@@ -189,9 +188,12 @@ def load_onsets(fhandle):
 
     """
     onsets = []
-    reader = csv.reader(fhandle, delimiter="\n")
-    for line in reader:
-        onsets.append(float(line[0]))
+    # Read the file line by line rather than using csv with \n delimiter
+    # which is not allowed in Python 3.13
+    for line in fhandle:
+        line = line.strip()
+        if line:  # Skip empty lines
+            onsets.append(float(line))
 
     if not onsets:
         return None

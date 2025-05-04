@@ -33,7 +33,6 @@
 
 """
 
-import csv
 import json
 from typing import Any, BinaryIO, Dict, Optional, TextIO, Tuple
 
@@ -187,9 +186,7 @@ def load_key(fhandle: TextIO) -> str:
     Returns:
         str: musical key data
     """
-    reader = csv.reader(fhandle, delimiter="\n")
-    key = next(reader)[0]
-
+    key = fhandle.readline().strip()
     return key.replace("\t", " ")
 
 
