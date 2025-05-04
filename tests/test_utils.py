@@ -59,6 +59,9 @@ def get_attributes_and_properties(class_instance):
             properties.append(val)
         elif isinstance(attr, types.FunctionType):
             functions.append(val)
+        elif val in ["construct", "from_orm"]:
+            # Skip the construct and from_orm methods from BaseModel
+            continue
         else:
             raise ValueError("Unknown type {}".format(attr))
 
