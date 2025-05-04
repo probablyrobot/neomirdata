@@ -38,6 +38,25 @@ class RemoteFileMetadata:
         self.destination_dir = destination_dir
         self.unpack_directories = unpack_directories
 
+    def _replace(self, **kwargs):
+        """Create a new instance with replaced attributes.
+
+        Args:
+            **kwargs: Attributes to replace
+
+        Returns:
+            RemoteFileMetadata: A new instance with replaced attributes
+        """
+        params = {
+            "filename": self.filename,
+            "url": self.url,
+            "checksum": self.checksum,
+            "destination_dir": self.destination_dir,
+            "unpack_directories": self.unpack_directories,
+        }
+        params.update(kwargs)
+        return RemoteFileMetadata(**params)
+
 
 def downloader(
     save_dir,
@@ -143,7 +162,9 @@ def downloader(
                     allow_invalid_checksum,
                 )
             else:
-                download_from_remote(remotes[k], save_dir, force_overwrite, allow_invalid_checksum)
+                download_from_remote(
+                    remotes[k], save_dir, force_overwrite=force_overwrite, allow_invalid_checksum=allow_invalid_checksum
+                )
 
             if remotes[k].unpack_directories:
                 for src_dir in remotes[k].unpack_directories:
@@ -179,7 +200,9 @@ class DownloadProgressBar(tqdm):
         self.update(b * bsize - self.n)
 
 
-def download_from_remote(remote, save_dir, fix_checksum=False, cleanup=False, force_overwrite=False):
+def download_from_remote(
+    remote, save_dir, fix_checksum=False, cleanup=False, force_overwrite=False, allow_invalid_checksum=False
+):
     """Download a data file from a remote source and optionally check its checksum.
 
     Args:
@@ -188,6 +211,7 @@ def download_from_remote(remote, save_dir, fix_checksum=False, cleanup=False, fo
         fix_checksum: If True, overwrites the saved checksum with the new checksum.
         cleanup: If True, delete the zip file when done.
         force_overwrite: If True, delete existing file if the checksum fails.
+        allow_invalid_checksum: If True, invalid checksums are allowed with a warning.
 
     Returns:
         save_path (str): Path to download.
@@ -198,10 +222,16 @@ def download_from_remote(remote, save_dir, fix_checksum=False, cleanup=False, fo
     """
     if isinstance(remote, tuple):
         remote_dict = {}
-        for i, key in enumerate(RemoteFileMetadata._fields):
+        for i, key in enumerate(["filename", "url", "checksum", "destination_dir", "unpack_directories"]):
             remote_dict[key] = remote[i] if i < len(remote) else None
 
         remote = RemoteFileMetadata(**remote_dict)
+
+    # Handle destination_dir if specified
+    if remote.destination_dir:
+        save_dir = os.path.join(save_dir, remote.destination_dir)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir, exist_ok=True)
 
     save_path = os.path.join(save_dir, remote.filename)
 
@@ -262,6 +292,18 @@ def download_from_remote(remote, save_dir, fix_checksum=False, cleanup=False, fo
                     stacklevel=2,
                 )
                 remote = remote._replace(checksum=new_checksum)
+            elif allow_invalid_checksum:
+                logging.warning(
+                    f"The downloaded file has checksum {new_checksum}, "
+                    f"this differs from the expected {remote.checksum}. "
+                    "Allowing invalid checksum as requested."
+                )
+                warnings.warn(
+                    f"The downloaded file has checksum {new_checksum}, "
+                    f"this differs from the expected {remote.checksum}. "
+                    "Allowing invalid checksum as requested.",
+                    stacklevel=2,
+                )
             else:
                 # Delete the file
                 if os.path.exists(save_path):
@@ -287,9 +329,13 @@ def download_zip_file(zip_remote, save_dir, force_overwrite, cleanup, allow_inva
             If True, overwrites existing files
         cleanup (bool):
             If True, remove zipfile after unziping
+        allow_invalid_checksum (bool):
+            If True, invalid checksums are allowed with a warning.
 
     """
-    zip_download_path = download_from_remote(zip_remote, save_dir, force_overwrite, allow_invalid_checksum)
+    zip_download_path = download_from_remote(
+        zip_remote, save_dir, force_overwrite=force_overwrite, allow_invalid_checksum=allow_invalid_checksum
+    )
     unzip(zip_download_path, cleanup=cleanup)
 
 
@@ -355,9 +401,12 @@ def download_tar_file(tar_remote, save_dir, force_overwrite, cleanup, allow_inva
         save_dir (str): Path to save downloaded file
         force_overwrite (bool): If True, overwrites existing files
         cleanup (bool): If True, remove tarfile after untarring
+        allow_invalid_checksum (bool): If True, invalid checksums are allowed with a warning.
 
     """
-    tar_download_path = download_from_remote(tar_remote, save_dir, force_overwrite, allow_invalid_checksum)
+    tar_download_path = download_from_remote(
+        tar_remote, save_dir, force_overwrite=force_overwrite, allow_invalid_checksum=allow_invalid_checksum
+    )
     untar(tar_download_path, cleanup=cleanup)
 
 
