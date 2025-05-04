@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neomirdata"
-version = "0.1.0"
+version = "0.1.4"
 description = "Common loaders for MIR datasets."
 authors = ["Igor Bogicevic <igor.bogicevic@gmail.com>"]
 maintainers = ["Igor Bogicevic <igor.bogicevic@gmail.com>"]
