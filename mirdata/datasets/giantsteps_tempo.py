@@ -218,9 +218,7 @@ def load_tempo(fhandle: TextIO) -> annotations.TempoData:
     annotation = json.load(fhandle)
     tempo = annotation["annotations"][0]["data"]
     return annotations.TempoData(
-        np.array(
-            [[t["time"] for t in tempo], [t["time"] + t["duration"] for t in tempo]]
-        ).T,
+        np.array([[t["time"] for t in tempo], [t["time"] + t["duration"] for t in tempo]]).T,
         "s",
         np.array([t["value"] for t in tempo]),
         "bpm",
@@ -248,20 +246,14 @@ class Dataset(core.Dataset):
             license_info=LICENSE_INFO,
         )
 
-    @deprecated(
-        reason="Use mirdata.datasets.giantsteps_tempo.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.giantsteps_tempo.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.giantsteps_tempo.load_genre", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.giantsteps_tempo.load_genre", version="0.3.4")
     def load_genre(self, *args, **kwargs):
         return load_genre(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.giantsteps_tempo.load_tempo", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.giantsteps_tempo.load_tempo", version="0.3.4")
     def load_tempo(self, *args, **kwargs):
         return load_tempo(*args, **kwargs)

@@ -291,9 +291,7 @@ class Dataset(core.Dataset):
             cleanup=cleanup,
         )
 
-        self._find_replace(
-            os.path.join(self.data_home, "meta"), ": nan", ": null", "*.json"
-        )
+        self._find_replace(os.path.join(self.data_home, "meta"), ": nan", ": null", "*.json")
 
     def _find_replace(self, directory, find, replace, pattern):
         """Replace all the files with the format pattern "find" by "replace"

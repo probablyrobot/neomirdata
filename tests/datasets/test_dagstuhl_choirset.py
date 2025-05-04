@@ -112,7 +112,9 @@ def test_mtrack_no_notes():
 
 
 def test_load_f0():
-    f0_path = "tests/resources/mir_datasets/dagstuhl_choirset/annotations_csv_F0_CREPE/DCS_LI_QuartetB_Take04_B2_DYN.csv"
+    f0_path = (
+        "tests/resources/mir_datasets/dagstuhl_choirset/annotations_csv_F0_CREPE/DCS_LI_QuartetB_Take04_B2_DYN.csv"
+    )
     f0 = dagstuhl_choirset.load_f0(f0_path)
     assert isinstance(f0, annotations.F0Data)
 
@@ -142,7 +144,9 @@ def test_load_f0():
         ),
     )
 
-    f0_path = "tests/resources/mir_datasets/dagstuhl_choirset/annotations_csv_F0_manual/DCS_LI_QuartetB_Take04_B2_LRX.csv"
+    f0_path = (
+        "tests/resources/mir_datasets/dagstuhl_choirset/annotations_csv_F0_manual/DCS_LI_QuartetB_Take04_B2_LRX.csv"
+    )
     f0 = dagstuhl_choirset.load_f0(f0_path)
     assert isinstance(f0, annotations.F0Data)
 
@@ -150,9 +154,7 @@ def test_load_f0():
         f0.times,
         np.array([0.400544218, 0.406349206, 0.412154195, 0.417959184, 0.423764172]),
     )
-    assert np.array_equal(
-        f0.frequencies, np.array([129.387, 126.634, 125.182, 124.943, 124.491])
-    )
+    assert np.array_equal(f0.frequencies, np.array([129.387, 126.634, 125.182, 124.943, 124.491]))
     assert np.array_equal(f0.voicing, np.array([1, 1, 1, 1, 1]))
 
 
@@ -176,15 +178,15 @@ def test_load_score():
 
     assert np.allclose(
         score.pitches,
-        np.array(
-            [130.81278265, 130.81278265, 130.81278265, 130.81278265, 130.81278265]
-        ),
+        np.array([130.81278265, 130.81278265, 130.81278265, 130.81278265, 130.81278265]),
     )
     assert score.confidence is None
 
 
 def test_load_beat():
-    beat_path = "tests/resources/mir_datasets/dagstuhl_choirset/annotations_csv_beat/DCS_LI_QuartetB_Take04_Stereo_STM.csv"
+    beat_path = (
+        "tests/resources/mir_datasets/dagstuhl_choirset/annotations_csv_beat/DCS_LI_QuartetB_Take04_Stereo_STM.csv"
+    )
     beat = dagstuhl_choirset.load_beat(beat_path)
     assert isinstance(beat, annotations.BeatData)
 

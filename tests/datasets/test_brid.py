@@ -84,9 +84,7 @@ def test_load_audio():
     assert brid.load_audio(None) is None
 
     # Check for None case
-    assert (
-        brid.load_beats(None) is None
-    ), "The function should return None when the input is None."
+    assert brid.load_beats(None) is None, "The function should return None when the input is None."
 
     # Case: beat_times[0] == -1.0
     invalid_beats_file = io.StringIO("-1.0\t2\n")
@@ -96,6 +94,4 @@ def test_load_audio():
 
     # Case: empty beat_times
     empty_beats_file = io.StringIO("")
-    assert (
-        brid.load_beats(empty_beats_file) is None
-    ), "The function should return None when the beat times are empty."
+    assert brid.load_beats(empty_beats_file) is None, "The function should return None when the beat times are empty."

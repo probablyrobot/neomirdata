@@ -94,6 +94,7 @@
         }
 
 """
+
 import json
 import os
 from typing import BinaryIO, Optional
@@ -129,9 +130,7 @@ REMOTES = {
     ),
     "benchmark_crema": download_utils.RemoteFileMetadata(
         filename="da-tacos_benchmark_subset_crema.zip",
-        url=(
-            "https://zenodo.org/record/3520368/files/da-tacos_benchmark_subset_crema.zip?download=1"
-        ),
+        url=("https://zenodo.org/record/3520368/files/da-tacos_benchmark_subset_crema.zip?download=1"),
         checksum="c702a3b97a60081311bf8e7fae7b433b",
     ),
     "benchmark_hpcp": download_utils.RemoteFileMetadata(
@@ -451,10 +450,7 @@ def load_tags(fhandle: BinaryIO):
 
     """
     with h5py.File(fhandle, "r") as open_file:
-        return [
-            (open_file["tags"][k].attrs["i0"], open_file["tags"][k].attrs["i1"])
-            for k in open_file["tags"]
-        ]
+        return [(open_file["tags"][k].attrs["i0"], open_file["tags"][k].attrs["i1"]) for k in open_file["tags"]]
 
 
 @core.docstring_inherit(core.Dataset)
@@ -488,9 +484,7 @@ class Dataset(core.Dataset):
                 with open(path_subset) as f:
                     meta = json.load(f)
             except FileNotFoundError:
-                raise FileNotFoundError(
-                    f"Metadata file {path_subset} not found. Did you run .download()?"
-                )
+                raise FileNotFoundError(f"Metadata file {path_subset} not found. Did you run .download()?")
             for work_id in meta:
                 for performance_id in meta[work_id]:
                     track_id = subset + "#" + work_id + "#" + performance_id

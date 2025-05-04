@@ -128,12 +128,8 @@ def test_load_lyrics():
     assert np.array_equal(lyrics_data_simple.intervals[:, 0], np.array([0.027, 0.232]))
     assert np.array_equal(lyrics_data_simple.intervals[:, 1], np.array([0.232, 0.968]))
     assert np.array_equal(lyrics_data_simple.lyrics, ["JUST", "WANNA"])
-    assert np.array_equal(
-        pronunciation_data_simple.intervals[:, 0], np.array([0.027, 0.232])
-    )
-    assert np.array_equal(
-        pronunciation_data_simple.intervals[:, 1], np.array([0.232, 0.968])
-    )
+    assert np.array_equal(pronunciation_data_simple.intervals[:, 0], np.array([0.027, 0.232]))
+    assert np.array_equal(pronunciation_data_simple.intervals[:, 1], np.array([0.232, 0.968]))
     assert np.array_equal(pronunciation_data_simple.lyrics, ["", ""])
 
     # load a file with pronunciations

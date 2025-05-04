@@ -83,9 +83,7 @@ INDEXES = {
     "sample": core.Index(filename="compmusic_carnatic_varnam_index_1.1_sample.json"),
 }
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial No Derivatives 4.0 International"
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial No Derivatives 4.0 International"
 
 
 class Track(core.Track):
@@ -130,15 +128,11 @@ class Track(core.Track):
 
     @core.cached_property
     def notation(self):
-        return load_notation(self.notation_path, self.taala_path, self.structure_path)[
-            0
-        ]
+        return load_notation(self.notation_path, self.taala_path, self.structure_path)[0]
 
     @core.cached_property
     def sections(self):
-        return load_notation(self.notation_path, self.taala_path, self.structure_path)[
-            1
-        ]
+        return load_notation(self.notation_path, self.taala_path, self.structure_path)[1]
 
     @core.cached_property
     def mbid(self):
@@ -214,9 +208,7 @@ def load_taala(fhandle):
         beat_times.append(float(points[beat].getAttribute("frame")) / fs)
         beat_positions.append(0)
 
-    return annotations.BeatData(
-        np.array(beat_times), "s", np.array(beat_positions), "global_index"
-    )
+    return annotations.BeatData(np.array(beat_times), "s", np.array(beat_positions), "global_index")
 
 
 @io.coerce_to_string_io
@@ -238,25 +230,19 @@ def load_notation(note_path: TextIO, taala_path: str, structure_path: str):
     try:
         note_reader = csv.reader(note_path, delimiter="-")
     except FileNotFoundError:
-        raise FileNotFoundError(
-            f"note_path {note_path.name} does not exist, have you run .download()?"
-        )
+        raise FileNotFoundError(f"note_path {note_path.name} does not exist, have you run .download()?")
 
     try:
         taala_file = open(taala_path, "r")
         taala_reader = minidom.parse(taala_file)
     except FileNotFoundError:
-        raise FileNotFoundError(
-            f"taala_path {taala_path} does not exist, have you run .download()?"
-        )
+        raise FileNotFoundError(f"taala_path {taala_path} does not exist, have you run .download()?")
 
     try:
         structure_file = open(structure_path, "r")
         structure_reader = csv.reader(structure_file, delimiter=":")
     except FileNotFoundError:
-        raise FileNotFoundError(
-            f"structure_path {structure_path} does not exist, have you run .download()?"
-        )
+        raise FileNotFoundError(f"structure_path {structure_path} does not exist, have you run .download()?")
 
     start_times = []
     end_times = []
@@ -289,9 +275,7 @@ def load_notation(note_path: TextIO, taala_path: str, structure_path: str):
         events.append(row[-1].replace("'", "").replace(" ", "").replace(":", ""))
 
     notation_dict = {}
-    section_dict = {
-        events.index(x): x for x in list(np.unique([x[0] for x in structure]))
-    }
+    section_dict = {events.index(x): x for x in list(np.unique([x[0] for x in structure]))}
     start_idxs = sorted(section_dict.keys())
     end_idxs = sorted(section_dict.keys())[1:] + [len(events)]
     for start, end in zip(start_idxs, end_idxs):
@@ -312,23 +296,14 @@ def load_notation(note_path: TextIO, taala_path: str, structure_path: str):
         if section[1] == 4:
             for x in range(0, len(not_per_sec), 4):
                 # notes = [not_per_sec[x], not_per_sec[x+1], not_per_sec[x+2], not_per_sec[x+3]]
-                notes = (
-                    not_per_sec[x]
-                    + not_per_sec[x + 1]
-                    + not_per_sec[x + 2]
-                    + not_per_sec[x + 3]
-                )
+                notes = not_per_sec[x] + not_per_sec[x + 1] + not_per_sec[x + 2] + not_per_sec[x + 3]
                 events.append(notes)
         section_end = end_times[len(events) - 1]
         intervals.append([section_start, section_end])
         section_labels.append(section[0])
 
-    notes_ = annotations.EventData(
-        np.array([start_times, end_times]).T, "s", events, "open"
-    )
-    sections_ = annotations.SectionData(
-        np.array(intervals), "s", section_labels, "open"
-    )
+    notes_ = annotations.EventData(np.array([start_times, end_times]).T, "s", events, "open")
+    sections_ = annotations.SectionData(np.array(intervals), "s", section_labels, "open")
     return notes_, sections_
 
 
@@ -369,12 +344,8 @@ def load_moorchanas(fhandle):
             break
         notes.append(str(row[-1].replace(" ", "")))
 
-    arohanam_ind = (
-        notes.index("arohana:") + 1
-    )  # Get left boundary of arohanam notations
-    avarohanam_ind = (
-        notes.index("avarohana:") + 1
-    )  # Get left boundary of avarohanam notations
+    arohanam_ind = notes.index("arohana:") + 1  # Get left boundary of arohanam notations
+    avarohanam_ind = notes.index("avarohana:") + 1  # Get left boundary of avarohanam notations
 
     arohanam = notes[arohanam_ind : avarohanam_ind - 1]  # Get arohanam
     avarohanam = notes[avarohanam_ind:]  # Get avarohanam
@@ -426,9 +397,7 @@ class Dataset(core.Dataset):
             f = open(tonics_path, "r")
             reader = csv.reader(f, delimiter=":")
         except FileNotFoundError:
-            raise FileNotFoundError(
-                f"tonics_path {tonics_path} does not exist, have you run .download()?"
-            )
+            raise FileNotFoundError(f"tonics_path {tonics_path} does not exist, have you run .download()?")
         for line in reader:
             tonics_dict[line[0]] = float(line[1])
 

@@ -69,8 +69,8 @@ Transcriptions:
 @inproceedings{tonas_annotations,
     author = {E. {Gómez} and J. {Bonada}},
     journal = {Computer Music Journal},
-    title = {Towards Computer-Assisted Flamenco Transcription: An Experimental 
-           Comparison of Automatic Transcription Algorithms as Applied to A 
+    title = {Towards Computer-Assisted Flamenco Transcription: An Experimental
+           Comparison of Automatic Transcription Algorithms as Applied to A
            Cappella Singing},
     year = {2013},
     volume = {37},
@@ -97,13 +97,13 @@ DOWNLOAD_INFO = """
         explanation of what your are going to use the dataset for:
         ==> https://zenodo.org/record/1290722
         Then, unzip the dataset, change the dataset name to: "tonas" (with lowercase),
-        and locate it to {}. If you unzip it into a different path, please remember to set the 
+        and locate it to {}. If you unzip it into a different path, please remember to set the
         right data_home when initializing the dataset.
 """
 
 LICENSE_INFO = """
-The TONAS dataset is offered free of charge for internal non-commercial use only. You can not redistribute it nor 
-modify it. Dataset by COFLA team. Copyright © 2012 COFLA project, Universidad de Sevilla. Distribution rights granted 
+The TONAS dataset is offered free of charge for internal non-commercial use only. You can not redistribute it nor
+modify it. Dataset by COFLA team. Copyright © 2012 COFLA project, Universidad de Sevilla. Distribution rights granted
 to Music Technology Group, Universitat Pompeu Fabra. All Rights Reserved.
 """
 
@@ -276,7 +276,6 @@ def load_notes(fhandle: TextIO) -> Optional[annotations.NoteData]:
     )
 
 
-
 @io.coerce_to_string_io
 def _load_tuning_frequency(fhandle: TextIO) -> float:
     """Load tuning frequency of the track with re
@@ -291,10 +290,7 @@ def _load_tuning_frequency(fhandle: TextIO) -> float:
 
     # Compute tuning frequency
     cents_deviation = float(next(csv.reader(fhandle, delimiter=","))[0])
-    return 440 * (
-        2 ** (cents_deviation / 1200)
-    )  # Frequency of A (common value is 440Hz)
-
+    return 440 * (2 ** (cents_deviation / 1200))  # Frequency of A (common value is 440Hz)
 
 
 def _midi_to_hz(midi_note, tuning_deviation):
@@ -308,9 +304,7 @@ def _midi_to_hz(midi_note, tuning_deviation):
         (float): note in Hz considering the new tuning frequency
 
     """
-    tuning_frequency = 440 * (
-        2 ** (tuning_deviation / 1200)
-    )  # Frequency of A (common value is 440Hz)
+    tuning_frequency = 440 * (2 ** (tuning_deviation / 1200))  # Frequency of A (common value is 440Hz)
     return (tuning_frequency / 32) * (2 ** ((midi_note - 9) / 12))
 
 
@@ -339,9 +333,7 @@ class Dataset(core.Dataset):
         metadata = {}
         try:
             with open(metadata_path, "r", errors="ignore") as f:
-                reader = csv.reader(
-                    (x.replace("\0", "") for x in f), delimiter="\t"
-                )  # Fix wrong byte
+                reader = csv.reader((x.replace("\0", "") for x in f), delimiter="\t")  # Fix wrong byte
                 for line in reader:
                     if line:  # Do not consider empty lines
                         index = line[0].replace(".wav", "")

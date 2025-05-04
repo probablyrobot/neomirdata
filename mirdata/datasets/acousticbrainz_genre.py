@@ -143,13 +143,13 @@ REMOTES = {
 }
 
 LICENSE_INFO = """
-This dataset is composed of 4 subdatasets. Three of them are Creative Commons Attribution 
-Non Commercial Share Alike 4.0 International and the other one is non-comercial. Details 
+This dataset is composed of 4 subdatasets. Three of them are Creative Commons Attribution
+Non Commercial Share Alike 4.0 International and the other one is non-comercial. Details
 about which license correspond to each subdataset can be found in the following websites:
 
-* https://zenodo.org/record/2553414#.X_nxnOn7RUI 
+* https://zenodo.org/record/2553414#.X_nxnOn7RUI
 * https://zenodo.org/record/2554044#.X_nw2en7RUI
- 
+
  """
 
 
@@ -397,9 +397,7 @@ class Dataset(core.Dataset):
 
         """
 
-        return {
-            k: v for k, v in self._index["tracks"].items() if search_key in k
-        }
+        return {k: v for k, v in self._index["tracks"].items() if search_key in k}
 
     def load_all_train(self):
         """Load from AcousticBrainz genre dataset the tracks that are used for training across the four different datasets.

@@ -248,9 +248,7 @@ class Dataset(core.Dataset):
     def _metadata(self):
         metadata_path = os.path.join(
             self.data_home,
-            os.path.join(
-                "salami-data-public-hierarchy-corrections", "metadata", "metadata.csv"
-            ),
+            os.path.join("salami-data-public-hierarchy-corrections", "metadata", "metadata.csv"),
         )
 
         try:

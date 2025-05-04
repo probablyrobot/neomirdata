@@ -29,7 +29,7 @@ booktitle={Proceedings of the 12th International Society for Music Information R
 }
 
 @phdthesis{phdthesis,
-  author       = {Burgoyne, John Ashley}, 
+  author       = {Burgoyne, John Ashley},
   title        = {Stochastic {Processes} and {Database}-{Driven} {Musicology}},
   school       = {McGill University, Montréal, Québec},
   year         = 2012,
@@ -183,7 +183,7 @@ class Track(core.Track):
         """
         # removed the first column since it contains metadata.
         with open(self.bothchroma_path, "r") as f:
-            return np.array([l for l in csv.reader(f)])[:, 1:].astype(np.float32)
+            return np.array(list(csv.reader(f)))[:, 1:].astype(np.float32)
 
     @core.cached_property
     def tuning(self):
@@ -197,21 +197,15 @@ class Track(core.Track):
 
     @core.cached_property
     def sections(self):
-        return load_sections(
-            os.path.join(self._data_home, self._track_paths["salami"][0])
-        )
+        return load_sections(os.path.join(self._data_home, self._track_paths["salami"][0]))
 
     @core.cached_property
     def named_sections(self):
-        return load_named_sections(
-            os.path.join(self._data_home, self._track_paths["salami"][0])
-        )
+        return load_named_sections(os.path.join(self._data_home, self._track_paths["salami"][0]))
 
     @core.cached_property
     def salami_metadata(self):
-        return _parse_salami_metadata(
-            os.path.join(self._data_home, self._track_paths["salami"][0])
-        )
+        return _parse_salami_metadata(os.path.join(self._data_home, self._track_paths["salami"][0]))
 
     @property
     def audio(self) -> Optional[Tuple[np.ndarray, float]]:
@@ -262,9 +256,7 @@ def load_chords(fhandle: TextIO):
             end_times.append(float(l[1]))
             chords.append(l[2])
 
-    return annotations.ChordData(
-        np.array([start_times, end_times]).T, "s", chords, "jams"
-    )
+    return annotations.ChordData(np.array([start_times, end_times]).T, "s", chords, "jams")
 
 
 def load_sections(fpath: str):
@@ -321,9 +313,7 @@ def _load_sections(fpath: str, section_type: str):
             end_times.append(timed_sections[-1]["time"])  # end of song
             sections.append(timed_sections_clean[idx]["section"][section_label_idx])
 
-    return annotations.SectionData(
-        np.array([start_times, end_times]).T, "s", sections, "open"
-    )
+    return annotations.SectionData(np.array([start_times, end_times]).T, "s", sections, "open")
 
 
 @io.coerce_to_string_io
@@ -426,9 +416,7 @@ def _timed_sections(parsed: Dict) -> List:
         if len(sections):
             seconds_per_chord = dt / float(len(sections))
             for c in sections:
-                timed_sections.append(
-                    {"time": tic, "section": c, "length": seconds_per_chord}
-                )
+                timed_sections.append({"time": tic, "section": c, "length": seconds_per_chord})
                 tic = tic + seconds_per_chord
     return timed_sections
 
@@ -485,9 +473,7 @@ class Dataset(core.Dataset):
     def load_sections(self, *args, **kwargs):
         return load_sections(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.billboard.load_named_sections", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.billboard.load_named_sections", version="0.3.4")
     def load_named_sections(self, *args, **kwargs):
         return load_named_sections(*args, **kwargs)
 

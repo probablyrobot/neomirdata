@@ -77,9 +77,7 @@ def test_get_audio_voice():
 
 def test_load_score():
     # load a file which exists
-    score_path = (
-        "tests/resources/mir_datasets/phenicx_anechoic/annotations/beethoven/violin.txt"
-    )
+    score_path = "tests/resources/mir_datasets/phenicx_anechoic/annotations/beethoven/violin.txt"
     note_data = phenicx_anechoic.load_score(score_path)
 
     # check types
@@ -218,9 +216,7 @@ def test_get_notes_for_instrument():
     dataset = phenicx_anechoic.Dataset(data_home, version="test")
     mtrack = dataset.multitrack(default_trackid)
 
-    note_data = mtrack.get_notes_for_instrument(
-        instrument="violin", notes_property="notes"
-    )
+    note_data = mtrack.get_notes_for_instrument(instrument="violin", notes_property="notes")
 
     # check types
     assert type(note_data) == annotations.NoteData

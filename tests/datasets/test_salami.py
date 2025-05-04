@@ -15,9 +15,7 @@ def test_track():
 
     expected_attributes = {
         "track_id": "2",
-        "audio_path": os.path.join(
-            os.path.normpath("tests/resources/mir_datasets/salami/"), "audio/2.mp3"
-        ),
+        "audio_path": os.path.join(os.path.normpath("tests/resources/mir_datasets/salami/"), "audio/2.mp3"),
         "sections_annotator1_uppercase_path": os.path.join(
             os.path.normpath("tests/resources/mir_datasets/salami/"),
             "salami-data-public-hierarchy-corrections/annotations/2/parsed/textfile1_uppercase.txt",
@@ -144,9 +142,7 @@ def test_load_sections():
         section_data.intervals[:, 1],
         np.array([0.464399092, 14.379863945, 263.205419501, 264.885215419]),
     )
-    assert np.array_equal(
-        section_data.labels, np.array(["Silence", "A", "B", "Silence"])
-    )
+    assert np.array_equal(section_data.labels, np.array(["Silence", "A", "B", "Silence"]))
 
     # load none
     section_data_none = salami.load_sections(None)

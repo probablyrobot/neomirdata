@@ -302,9 +302,7 @@ def load_lyrics(fhandle: TextIO) -> annotations.LyricData:
         else:
             pronunciations.append("")
 
-    return annotations.LyricData(
-        np.array([start_times, end_times]).T, "s", lyrics, "words"
-    )
+    return annotations.LyricData(np.array([start_times, end_times]).T, "s", lyrics, "words")
 
 
 @io.coerce_to_string_io
@@ -335,9 +333,7 @@ def load_pronunciations(fhandle: TextIO) -> annotations.LyricData:
         else:
             pronunciations.append("")
 
-    return annotations.LyricData(
-        np.array([start_times, end_times]).T, "s", pronunciations, "pronunciations_open"
-    )
+    return annotations.LyricData(np.array([start_times, end_times]).T, "s", pronunciations, "pronunciations_open")
 
 
 @core.docstring_inherit(core.Dataset)
@@ -379,9 +375,7 @@ class Dataset(core.Dataset):
     def load_vocal_audio(self, *args, **kwargs):
         return load_vocal_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.ikala.load_instrumental_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.ikala.load_instrumental_audio", version="0.3.4")
     def load_instrumental_audio(self, *args, **kwargs):
         return load_instrumental_audio(*args, **kwargs)
 
@@ -401,8 +395,6 @@ class Dataset(core.Dataset):
     def load_lyrics(self, *args, **kwargs):
         return load_lyrics(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.ikala.load_pronunciations", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.ikala.load_pronunciations", version="0.3.4")
     def load_pronunciations(self, *args, **kwargs):
         return load_pronunciations(*args, **kwargs)

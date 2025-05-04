@@ -306,9 +306,7 @@ class Dataset(core.Dataset):
                 # index column is second to last
                 metadata = pd.read_csv(fdesc, index_col=-2)
         except FileNotFoundError as exc:
-            raise FileNotFoundError(
-                f"Metadata file {metadata_path} not found. " "Did you run .download?"
-            ) from exc
+            raise FileNotFoundError(f"Metadata file {metadata_path} not found. " "Did you run .download?") from exc
 
         # genres column is a json object: expand it
         # the raw CSV file is not actually valid json, so we'll fix that with a
@@ -334,9 +332,7 @@ class Dataset(core.Dataset):
         with open(label_path, "r") as fdesc:
             labels = pd.read_csv(fdesc, index_col=0)
         # Pivot the labels into its own dataframe
-        labels = labels.pivot_table(
-            columns="instrument", values="relevance", index=labels.index
-        )
+        labels = labels.pivot_table(columns="instrument", values="relevance", index=labels.index)
 
         # Join to metadata
         metadata = metadata.join(labels)
@@ -353,8 +349,6 @@ class Dataset(core.Dataset):
             with open(class_path, "r") as fd:
                 classes = json.load(fd)
         except FileNotFoundError as exc:
-            raise FileNotFoundError(
-                f"Metadata file {class_path} not found. " "Did you run .download?"
-            ) from exc
+            raise FileNotFoundError(f"Metadata file {class_path} not found. " "Did you run .download?") from exc
 
         return classes

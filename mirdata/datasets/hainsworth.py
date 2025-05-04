@@ -28,14 +28,12 @@
 """
 
 import csv
-import logging
-import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
 import librosa
 import numpy as np
 
-from mirdata import annotations, core, download_utils, io
+from mirdata import annotations, core, io
 
 BIBTEX = """
 @article{article,
@@ -58,9 +56,7 @@ INDEXES = {
 
 REMOTES = None
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 DOWNLOAD_INFO = """
     Unfortunately the Hainsworth dataset is not available for download.
@@ -170,9 +166,7 @@ def load_beats(fhandle: TextIO):
     if not beat_times or beat_times[0] == -1.0:
         return None
 
-    return annotations.BeatData(
-        np.array(beat_times), "s", np.array(beat_positions), "bar_index"
-    )
+    return annotations.BeatData(np.array(beat_times), "s", np.array(beat_positions), "bar_index")
 
 
 @io.coerce_to_string_io

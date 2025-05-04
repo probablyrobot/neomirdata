@@ -79,16 +79,12 @@ REMOTES = {
     ),
     "metadata": download_utils.RemoteFileMetadata(
         filename="maestro-v2.0.0.json",
-        url=(
-            "https://storage.googleapis.com/magentadata/datasets/maestro/v2.0.0/maestro-v2.0.0.json"
-        ),
+        url=("https://storage.googleapis.com/magentadata/datasets/maestro/v2.0.0/maestro-v2.0.0.json"),
         checksum="576172af1cdc4efddcf0be7d260d48f7",
     ),
 }
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non-Commercial Share-Alike 4.0 (CC BY-NC-SA 4.0)."
-)
+LICENSE_INFO = "Creative Commons Attribution Non-Commercial Share-Alike 4.0 (CC BY-NC-SA 4.0)."
 
 
 class Track(core.Track):

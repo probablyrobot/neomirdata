@@ -149,9 +149,7 @@ def test_load_pitch():
             ]
         ),
     )
-    assert np.array_equal(
-        parsed_pitch.voicing, np.array([0.0, 1.0, 1.0, 1.0, 1.0, 1.0])
-    )
+    assert np.array_equal(parsed_pitch.voicing, np.array([0.0, 1.0, 1.0, 1.0, 1.0, 1.0]))
 
     pitch_vocal_path = track.pitch_vocal_path
     parsed_vocal_pitch = saraga_carnatic.load_pitch(pitch_vocal_path)
@@ -189,9 +187,7 @@ def test_load_pitch():
             ]
         ),
     )
-    assert np.array_equal(
-        parsed_vocal_pitch.voicing, np.array([0.0, 1.0, 1.0, 1.0, 1.0, 0.0])
-    )
+    assert np.array_equal(parsed_vocal_pitch.voicing, np.array([0.0, 1.0, 1.0, 1.0, 1.0, 0.0]))
 
     assert saraga_carnatic.load_pitch(None) is None
 
@@ -313,9 +309,7 @@ def test_load_metadata():
     ]
     assert parsed_metadata["form"] == [{"name": "Kriti"}]
     assert parsed_metadata["title"] == "Bhuvini Dasudane"
-    assert parsed_metadata["work"] == [
-        {"mbid": "4d05ce9b-c45e-4c85-9eca-941d68b61132", "title": "Bhuvini Dasudane"}
-    ]
+    assert parsed_metadata["work"] == [{"mbid": "4d05ce9b-c45e-4c85-9eca-941d68b61132", "title": "Bhuvini Dasudane"}]
     assert parsed_metadata["length"] == 309000
     assert parsed_metadata["taala"] == [
         {

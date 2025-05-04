@@ -51,7 +51,7 @@ from smart_open import open
 from mirdata import core, download_utils, io
 
 BIBTEX = """
-@inproceedings{ramires2020, 
+@inproceedings{ramires2020,
     author = "Antonio Ramires and Pritish Chandna and Xavier Favory and Emilia Gómez and Xavier Serra",
     title = "Neural Percussive Synthesis Parametrerised by High-Level Timbral Features",
     booktitle = "Proc. of the IEEE Int. Conf. on Acoustics, Speech and Signal Processing (ICASSP)",
@@ -67,9 +67,7 @@ INDEXES = {
         url="https://zenodo.org/records/13930469/files/freesound_one_shot_percussive_sounds_index_1.0.json?download=1",
         checksum="5992d20ef9b2a9eadff0f7324d902003",
     ),
-    "sample": core.Index(
-        filename="freesound_one_shot_percussive_sounds_index_1.0_sample.json"
-    ),
+    "sample": core.Index(filename="freesound_one_shot_percussive_sounds_index_1.0_sample.json"),
 }
 
 REMOTES = {

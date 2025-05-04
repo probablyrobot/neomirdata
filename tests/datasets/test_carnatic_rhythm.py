@@ -9,9 +9,7 @@ from tests.test_utils import run_track_tests
 
 def test_track():
     default_trackid = "10003"
-    data_home = os.path.normpath(
-        "tests/resources/mir_datasets/compmusic_carnatic_rhythm"
-    )
+    data_home = os.path.normpath("tests/resources/mir_datasets/compmusic_carnatic_rhythm")
     dataset = compmusic_carnatic_rhythm.Dataset(data_home, version="test")
     track = dataset.track(default_trackid)
 

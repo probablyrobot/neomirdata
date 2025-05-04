@@ -163,9 +163,7 @@ INST_DICT = [
 
 GENRE_DICT = ["cou_fol", "cla", "pop_roc", "lat_sou", "jaz_blu"]
 
-LICENSE_INFO = (
-    "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License."
-)
+LICENSE_INFO = "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License."
 
 
 class Track(core.Track):
@@ -201,18 +199,12 @@ class Track(core.Track):
 
         # Dataset attributes
         self.predominant_instrument = (
-            os.path.basename(os.path.dirname(self.audio_path))
-            if self.split == "train"
-            else None
+            os.path.basename(os.path.dirname(self.audio_path)) if self.split == "train" else None
         )
-        if self.split == "train" and (
-            "dru" in self._audio_filename or "nod" in self._audio_filename
-        ):
+        if self.split == "train" and ("dru" in self._audio_filename or "nod" in self._audio_filename):
             self.genre = self._audio_filename.split(".")[0].split("[")[3].split("]")[0]
             self.drum = ["dru" in self._audio_filename][0]
-        elif self.split == "train" and not (
-            "dru" in self._audio_filename or "nod" in self._audio_filename
-        ):
+        elif self.split == "train" and not ("dru" in self._audio_filename or "nod" in self._audio_filename):
             self.genre = self._audio_filename.split(".")[0].split("[")[2].split("]")[0]
             self.drum = None
         else:
@@ -269,9 +261,7 @@ def load_pred_inst(fhandle: TextIO) -> List[str]:
     reader = csv.reader(fhandle, delimiter=" ")
     for line in reader:
         inst_code = line[0][:3]
-        assert (
-            inst_code in INST_DICT
-        ), f"Instrument {inst_code} not in instrument dictionary"
+        assert inst_code in INST_DICT, f"Instrument {inst_code} not in instrument dictionary"
         pred_inst.append(inst_code)
 
     return pred_inst

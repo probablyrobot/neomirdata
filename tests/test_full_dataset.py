@@ -46,12 +46,8 @@ def test_validation(skip_remote, dataset):
     # run validation
     missing_files, invalid_checksums = dataset.validate(verbose=True)
 
-    assert missing_files == {
-        key: {} for key in dataset._index if key != "version"
-    }
-    assert invalid_checksums == {
-        key: {} for key in dataset._index if key != "version"
-    }
+    assert missing_files == {key: {} for key in dataset._index if key != "version"}
+    assert invalid_checksums == {key: {} for key in dataset._index if key != "version"}
 
 
 def test_load_tracks(skip_remote, dataset):
@@ -118,9 +114,7 @@ def test_index(skip_remote, dataset):
         raise NotImplementedError("The top-level key 'version' is missing in the index")
 
     if not any(key in dataset._index for key in okeys):
-        raise NotImplementedError(
-            f"At least one of the optional top-level keys {okeys} should be in the index"
-        )
+        raise NotImplementedError(f"At least one of the optional top-level keys {okeys} should be in the index")
 
 
 def test_predetermined_splits(dataset):

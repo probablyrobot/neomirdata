@@ -5,29 +5,21 @@ import numpy as np
 from mirdata.datasets import freesound_one_shot_percussive_sounds
 from tests.test_utils import run_track_tests
 
-TEST_DATA_HOME = os.path.normpath(
-    "tests/resources/mir_datasets/freesound_one_shot_percussive_sounds"
-)
+TEST_DATA_HOME = os.path.normpath("tests/resources/mir_datasets/freesound_one_shot_percussive_sounds")
 
 
 def test_track():
     default_trackid = "183"
-    dataset = freesound_one_shot_percussive_sounds.Dataset(
-        TEST_DATA_HOME, version="test"
-    )
+    dataset = freesound_one_shot_percussive_sounds.Dataset(TEST_DATA_HOME, version="test")
     track = dataset.track(default_trackid)
 
     expected_attributes = {
         "audio_path": os.path.join(
-            os.path.normpath(
-                "tests/resources/mir_datasets/freesound_one_shot_percussive_sounds/"
-            ),
+            os.path.normpath("tests/resources/mir_datasets/freesound_one_shot_percussive_sounds/"),
             "one_shot_percussive_sounds/1/183.wav",
         ),
         "file_metadata_path": os.path.join(
-            os.path.normpath(
-                "tests/resources/mir_datasets/freesound_one_shot_percussive_sounds/"
-            ),
+            os.path.normpath("tests/resources/mir_datasets/freesound_one_shot_percussive_sounds/"),
             "analysis/1/183_analysis.json",
         ),
         "track_id": "183",
@@ -50,14 +42,10 @@ def test_track():
 
 def test_load_analysis():
     default_trackid = "183"
-    dataset = freesound_one_shot_percussive_sounds.Dataset(
-        TEST_DATA_HOME, version="test"
-    )
+    dataset = freesound_one_shot_percussive_sounds.Dataset(TEST_DATA_HOME, version="test")
     track = dataset.track(default_trackid)
     file_metadata_path = track.file_metadata_path
-    file_metadata = freesound_one_shot_percussive_sounds.load_file_metadata(
-        file_metadata_path
-    )
+    file_metadata = freesound_one_shot_percussive_sounds.load_file_metadata(file_metadata_path)
 
     # check file metadata elements
     assert type(file_metadata) is dict
@@ -73,9 +61,7 @@ def test_load_analysis():
 
 def test_load_audio():
     default_trackid = "183"
-    dataset = freesound_one_shot_percussive_sounds.Dataset(
-        TEST_DATA_HOME, version="test"
-    )
+    dataset = freesound_one_shot_percussive_sounds.Dataset(TEST_DATA_HOME, version="test")
     track = dataset.track(default_trackid)
     audio_path = track.audio_path
     audio, sr = freesound_one_shot_percussive_sounds.load_audio(audio_path)
@@ -85,18 +71,13 @@ def test_load_audio():
 
 def test_metadata():
     default_trackid = "183"
-    dataset = freesound_one_shot_percussive_sounds.Dataset(
-        TEST_DATA_HOME, version="test"
-    )
+    dataset = freesound_one_shot_percussive_sounds.Dataset(TEST_DATA_HOME, version="test")
     metadata = dataset._metadata
 
     assert type(metadata) is dict
     assert metadata[default_trackid].get("name") == "1.wav"
     assert metadata[default_trackid].get("username") == "plagasul"
-    assert (
-        metadata[default_trackid].get("license")
-        == "http://creativecommons.org/licenses/by/3.0/"
-    )
+    assert metadata[default_trackid].get("license") == "http://creativecommons.org/licenses/by/3.0/"
     assert metadata[default_trackid].get("duration") == 0.34575000405311584
 
     # Check tags

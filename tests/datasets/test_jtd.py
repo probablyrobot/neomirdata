@@ -25,9 +25,7 @@ def test_track():
             "processed",
             DEFAULT_TRACK_ID + "_piano.wav",
         ),
-        "midi_path": os.path.join(
-            DATA_HOME, "annotations", DEFAULT_TRACK_ID, "piano_midi.mid"
-        ),
+        "midi_path": os.path.join(DATA_HOME, "annotations", DEFAULT_TRACK_ID, "piano_midi.mid"),
         "onsets_path": os.path.join(
             DATA_HOME,
             "annotations",
@@ -147,9 +145,7 @@ def test_timestamp_to_seconds():
 
 def test_load_onsets():
     # load an onsets file which exists
-    annotation_path = os.path.join(
-        DATA_HOME, "annotations", DEFAULT_TRACK_ID, "bass_onsets.csv"
-    )
+    annotation_path = os.path.join(DATA_HOME, "annotations", DEFAULT_TRACK_ID, "bass_onsets.csv")
     annotation_data = jtd.load_onsets(annotation_path)
     # check types
     assert isinstance(annotation_data, annotations.EventData)
@@ -169,9 +165,7 @@ def test_load_onsets():
 
 def test_load_beats():
     # load a beats file which exists
-    annotation_path = os.path.join(
-        DATA_HOME, "annotations", DEFAULT_TRACK_ID, "beats.csv"
-    )
+    annotation_path = os.path.join(DATA_HOME, "annotations", DEFAULT_TRACK_ID, "beats.csv")
     # get the beats for the overall mixture
     annotation_data = jtd.load_beats(annotation_path, 0)
     # check types

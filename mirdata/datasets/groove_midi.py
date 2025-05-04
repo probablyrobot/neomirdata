@@ -370,9 +370,7 @@ def load_drum_events(midi_path, midi=None):
         end_times.append(note.end)
         events.append(DRUM_MAPPING[note.pitch]["Roland"])
 
-    return annotations.EventData(
-        np.array([start_times, end_times]).T, "s", events, "open"
-    )
+    return annotations.EventData(np.array([start_times, end_times]).T, "s", events, "open")
 
 
 @core.docstring_inherit(core.Dataset)
@@ -405,9 +403,7 @@ class Dataset(core.Dataset):
     def load_beats(self, *args, **kwargs):
         return load_beats(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.groove_midi.load_drum_events", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.groove_midi.load_drum_events", version="0.3.4")
     def load_drum_events(self, *args, **kwargs):
         return load_drum_events(*args, **kwargs)
 
@@ -420,15 +416,9 @@ class Dataset(core.Dataset):
                 csv_reader = csv.DictReader(fhandle, delimiter=",")
                 for row in csv_reader:
                     track_id = row["id"]
-                    metadata_index[track_id] = {
-                        key: row[key] for key in row if key != "id"
-                    }
-                    metadata_index[track_id]["tempo"] = int(
-                        metadata_index[track_id].pop("bpm")
-                    )
-                    metadata_index[track_id]["duration"] = float(
-                        metadata_index[track_id]["duration"]
-                    )
+                    metadata_index[track_id] = {key: row[key] for key in row if key != "id"}
+                    metadata_index[track_id]["tempo"] = int(metadata_index[track_id].pop("bpm"))
+                    metadata_index[track_id]["duration"] = float(metadata_index[track_id]["duration"])
                     metadata_index[track_id]["track_id"] = track_id
 
         except FileNotFoundError:

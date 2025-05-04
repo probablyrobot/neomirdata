@@ -188,7 +188,7 @@ LICENSE_INFO = (
     "    * Research only, non-commercial purposes\n"
     "    * No adaptations nor derivative works\n"
     "    * Attribution to Epidemic Sound and the authors as it is indicated "
-    "in the \"citation\" section.\n"
+    'in the "citation" section.\n'
 )
 
 #: Tag units
@@ -329,7 +329,7 @@ def load_matches(track_metadata: dict) -> Optional[EventDataExtended]:
     tags = []
     if track_metadata["annotations"] == []:
         return None
-    
+
     for ann in track_metadata["annotations"]:
         intervals_list.append([round(ann["query_start"], 3), round(ann["query_end"], 3)])
         events.append(ann["reference"])

@@ -69,9 +69,7 @@ def test_load_beats():
     assert hainsworth.load_beats(None) is None
 
     # Check for None case
-    assert (
-        hainsworth.load_beats(None) is None
-    ), "The function should return None when the input is None."
+    assert hainsworth.load_beats(None) is None, "The function should return None when the input is None."
 
     # Case: beat_times[0] == -1.0
     invalid_beats_file = io.StringIO("-1.0\t2\n")

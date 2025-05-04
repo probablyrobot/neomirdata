@@ -67,9 +67,7 @@ DOWNLOAD_INFO = """
     {}
 """
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non-Commercial Share-Alike 4.0 (CC BY-NC-SA 4.0)."
-)
+LICENSE_INFO = "Creative Commons Attribution Non-Commercial Share-Alike 4.0 (CC BY-NC-SA 4.0)."
 
 
 class Track(core.Track):
@@ -177,9 +175,7 @@ def load_pitch(fhandle: TextIO) -> annotations.F0Data:
         freqs.append(freq_val)
         voicing.append(float(freq_val > 0))
 
-    return annotations.F0Data(
-        np.array(times), "s", np.array(freqs), "hz", np.array(voicing), "binary"
-    )
+    return annotations.F0Data(np.array(times), "s", np.array(freqs), "hz", np.array(voicing), "binary")
 
 
 @io.coerce_to_string_io
@@ -242,20 +238,14 @@ class Dataset(core.Dataset):
 
         return metadata
 
-    @deprecated(
-        reason="Use mirdata.datasets.medleydb_pitch.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.medleydb_pitch.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.medleydb_pitch.load_pitch", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.medleydb_pitch.load_pitch", version="0.3.4")
     def load_pitch(self, *args, **kwargs):
         return load_pitch(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.medleydb_pitch.load_notes", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.medleydb_pitch.load_notes", version="0.3.4")
     def load_notes(self, *args, **kwargs):
         return load_notes(*args, **kwargs)

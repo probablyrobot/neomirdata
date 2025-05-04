@@ -58,9 +58,7 @@ DOWNLOAD_INFO = """
     {}
 """
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non-Commercial Share-Alike 4.0 (CC BY-NC-SA 4.0)."
-)
+LICENSE_INFO = "Creative Commons Attribution Non-Commercial Share-Alike 4.0 (CC BY-NC-SA 4.0)."
 
 
 class Track(core.Track):
@@ -215,9 +213,7 @@ def load_melody3(fhandle: TextIO) -> annotations.MultiF0Data:
         conf_list.append([1.0 for v in line[1:] if float(v) != 0])
 
     times = np.array(times)  # type: ignore
-    return annotations.MultiF0Data(
-        times, "s", freqs_list, "hz", conf_list, "binary"
-    )
+    return annotations.MultiF0Data(times, "s", freqs_list, "hz", conf_list, "binary")
 
 
 @core.docstring_inherit(core.Dataset)
@@ -250,20 +246,14 @@ class Dataset(core.Dataset):
 
         return metadata
 
-    @deprecated(
-        reason="Use mirdata.datasets.medleydb_melody.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.medleydb_melody.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.medleydb_melody.load_melody", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.medleydb_melody.load_melody", version="0.3.4")
     def load_melody(self, *args, **kwargs):
         return load_melody(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.medleydb_melody.load_melody3", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.medleydb_melody.load_melody3", version="0.3.4")
     def load_melody3(self, *args, **kwargs):
         return load_melody3(*args, **kwargs)

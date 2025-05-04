@@ -49,7 +49,9 @@ def test_track():
 
 
 def test_load_chords():
-    chords_path = "tests/resources/mir_datasets/queen/annotations/chordlab/Queen/Greatest Hits I/01 Bohemian Rhapsody.lab"
+    chords_path = (
+        "tests/resources/mir_datasets/queen/annotations/chordlab/Queen/Greatest Hits I/01 Bohemian Rhapsody.lab"
+    )
     chord_data = queen.load_chords(chords_path)
 
     assert type(chord_data) == annotations.ChordData
@@ -78,21 +80,17 @@ def test_load_key():
 
 
 def test_load_sections():
-    sections_path = "tests/resources/mir_datasets/queen/annotations/seglab/Queen/Greatest Hits I/01 Bohemian Rhapsody.lab"
+    sections_path = (
+        "tests/resources/mir_datasets/queen/annotations/seglab/Queen/Greatest Hits I/01 Bohemian Rhapsody.lab"
+    )
     section_data = queen.load_sections(sections_path)
 
     assert type(section_data) == annotations.SectionData
     assert type(section_data.intervals) == np.ndarray
     assert type(section_data.labels) == list
 
-    assert np.array_equal(
-        section_data.intervals[:, 0], np.array([0.0, 0.4, 49.072, 108.392])
-    )
-    assert np.array_equal(
-        section_data.intervals[:, 1], np.array([0.4, 49.072, 108.392, 156.32])
-    )
-    assert np.array_equal(
-        section_data.labels, np.array(["silence", "intro", "verse", "verse"])
-    )
+    assert np.array_equal(section_data.intervals[:, 0], np.array([0.0, 0.4, 49.072, 108.392]))
+    assert np.array_equal(section_data.intervals[:, 1], np.array([0.4, 49.072, 108.392, 156.32]))
+    assert np.array_equal(section_data.labels, np.array(["silence", "intro", "verse", "verse"]))
 
     assert queen.load_sections(None) is None

@@ -52,13 +52,7 @@ from smart_open import open
 from mirdata import annotations, core, download_utils
 
 # these functions are identical for all rwc datasets
-from mirdata.datasets.rwc_classical import (
-    LICENSE_INFO,
-    _duration_to_sec,
-    load_audio,
-    load_beats,
-    load_sections,
-)
+from mirdata.datasets.rwc_classical import LICENSE_INFO, _duration_to_sec, load_audio, load_beats, load_sections
 
 BIBTEX = """@inproceedings{goto2002rwc,
   title={RWC Music Database: Popular, Classical and Jazz Music Databases.},
@@ -93,9 +87,7 @@ REMOTES = {
     ),
     "annotations_sections": download_utils.RemoteFileMetadata(
         filename="AIST.RWC-MDB-J-2001.CHORUS.zip",
-        url=(
-            "https://staff.aist.go.jp/m.goto/RWC-MDB/AIST-Annotation/AIST.RWC-MDB-J-2001.CHORUS.zip"
-        ),
+        url=("https://staff.aist.go.jp/m.goto/RWC-MDB/AIST-Annotation/AIST.RWC-MDB-J-2001.CHORUS.zip"),
         checksum="44afcf7f193d7e48a7d99e7a6f3ed39d",
         destination_dir="annotations",
     ),

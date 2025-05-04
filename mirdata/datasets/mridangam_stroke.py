@@ -130,9 +130,7 @@ class Track(core.Track):
 
         # Parse stroke name annotation from audio file name
         self.stroke_name = self.audio_path.split("__")[2].split("-")[0]
-        assert (
-            self.stroke_name in STROKE_DICT
-        ), f"Stroke {self.stroke_name} not in stroke dictionary"
+        assert self.stroke_name in STROKE_DICT, f"Stroke {self.stroke_name} not in stroke dictionary"
 
         # Parse tonic annotation from audio file name
         self.tonic = os.path.basename(os.path.dirname(self.audio_path))
@@ -182,8 +180,6 @@ class Dataset(core.Dataset):
             license_info=LICENSE_INFO,
         )
 
-    @deprecated(
-        reason="Use mirdata.datasets.mridangam_stroke.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.mridangam_stroke.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)

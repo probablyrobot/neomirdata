@@ -149,12 +149,8 @@ class Track(core.Track):
         # split (train/validation/test/omitted) is part of the relative filepath in the index
         self.split = None  # for baby_slakh, there are no data splits - set to None
         if "2100-redux" in index["version"]:  # Adding also option for test
-            self.split = os.path.normpath(self._track_paths["metadata"][0]).split(
-                os.sep
-            )[1]
-            assert (
-                self.split in SPLITS
-            ), f"{self.split} not a valid split - should be one of {SPLITS}."
+            self.split = os.path.normpath(self._track_paths["metadata"][0]).split(os.sep)[1]
+            assert self.split in SPLITS, f"{self.split} not a valid split - should be one of {SPLITS}."
 
         self.data_split = self.split  # deprecated in 0.3.6
 
@@ -164,9 +160,7 @@ class Track(core.Track):
             with open(self.metadata_path, "r") as fhandle:
                 metadata = yaml.safe_load(fhandle)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                f"track metadata for {self.track_id} not found. Did you run .download()?"
-            )
+            raise FileNotFoundError(f"track metadata for {self.track_id} not found. Did you run .download()?")
         return metadata["stems"][self.track_id.split("-")[1]]
 
     @property
@@ -210,9 +204,7 @@ class Track(core.Track):
 
     @core.cached_property
     def multif0(self) -> Optional[annotations.MultiF0Data]:
-        return io.load_multif0_from_midi(
-            self.midi_path, self.midi, skip_drums=True, pitch_bend=False
-        )
+        return io.load_multif0_from_midi(self.midi_path, self.midi, skip_drums=True, pitch_bend=False)
 
     @property
     def audio(self) -> Optional[Tuple[np.ndarray, float]]:
@@ -254,9 +246,7 @@ class MultiTrack(core.MultiTrack):
 
     """
 
-    def __init__(
-        self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-    ):
+    def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
         super().__init__(
             mtrack_id=mtrack_id,
             data_home=data_home,
@@ -272,9 +262,7 @@ class MultiTrack(core.MultiTrack):
         # split (train/validation/test) is determined by the relative filepath in the index
         self.split = None  # for baby_slakh, there are no data splits - set to None
         if "2100-redux" in index["version"]:  # Adding also option for test
-            self.split = os.path.normpath(self._multitrack_paths["mix"][0]).split(
-                os.sep
-            )[1]
+            self.split = os.path.normpath(self._multitrack_paths["mix"][0]).split(os.sep)[1]
             assert self.split in SPLITS, f"{self.split} not in SPLITS"
 
         self.data_split = self.split  # deprecated in 0.3.6
@@ -320,9 +308,7 @@ class MultiTrack(core.MultiTrack):
     def multif0(self) -> Optional[annotations.MultiF0Data]:
         # TODO: setting pitch_bend to False by default, but there are some
         # patches that render pitch bend in the audio.
-        return io.load_multif0_from_midi(
-            self.midi_path, self.midi, skip_drums=True, pitch_bend=False
-        )
+        return io.load_multif0_from_midi(self.midi_path, self.midi, skip_drums=True, pitch_bend=False)
 
     @property
     def audio(self) -> Optional[Tuple[np.ndarray, float]]:
@@ -351,30 +337,16 @@ class MultiTrack(core.MultiTrack):
         """
         groups = {}
         submixes = {}
-        tracks_with_audio = [
-            track for track in self.tracks.values() if track.audio_path
-        ]
+        tracks_with_audio = [track for track in self.tracks.values() if track.audio_path]
         in_group = []
         for group in target_groups:
-            groups[group] = [
-                track.track_id
-                for track in tracks_with_audio
-                if track.mixing_group == group
-            ]
+            groups[group] = [track.track_id for track in tracks_with_audio if track.mixing_group == group]
             in_group.extend(groups[group])
 
-            submixes[group] = (
-                None if len(groups[group]) == 0 else self.get_target(groups[group])
-            )
+            submixes[group] = None if len(groups[group]) == 0 else self.get_target(groups[group])
 
-        groups["other"] = [
-            track.track_id
-            for track in tracks_with_audio
-            if track.track_id not in in_group
-        ]
-        submixes["other"] = (
-            None if len(groups["other"]) == 0 else self.get_target(groups["other"])
-        )
+        groups["other"] = [track.track_id for track in tracks_with_audio if track.track_id not in in_group]
+        submixes["other"] = None if len(groups["other"]) == 0 else self.get_target(groups["other"])
         return submixes, groups
 
 

@@ -9,9 +9,7 @@ from smart_open import open
 import mirdata
 from mirdata import validate
 
-DEFAULT_DATA_HOME = os.path.normpath(
-    os.path.join(os.getenv("HOME", "/tmp"), "mir_datasets")
-)
+DEFAULT_DATA_HOME = os.path.normpath(os.path.join(os.getenv("HOME", "/tmp"), "mir_datasets"))
 
 
 def run_track_tests(track, expected_attributes, expected_property_types):
@@ -30,9 +28,7 @@ def run_track_tests(track, expected_attributes, expected_property_types):
         elif prop in expected_attributes:
             assert expected_attributes[prop] == getattr(track, prop)
         else:
-            assert (
-                False
-            ), f"{prop} not in expected_property_types or expected_attributes"
+            assert False, f"{prop} not in expected_property_types or expected_attributes"
 
 
 def run_multitrack_tests(mtrack):
@@ -65,9 +61,7 @@ def get_attributes_and_properties(class_instance):
         else:
             raise ValueError(f"Unknown type {attr}")
 
-    non_attributes = list(
-        itertools.chain.from_iterable([properties, cached_properties, functions])
-    )
+    non_attributes = list(itertools.chain.from_iterable([properties, cached_properties, functions]))
     for val in dir(class_instance):
         if val.startswith("_"):
             continue
@@ -81,17 +75,17 @@ def get_attributes_and_properties(class_instance):
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_validated(mocker):
     return mocker.patch.object(validate, "check_validated")
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_validator(mocker):
     return mocker.patch.object(validate, "validator")
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_validate_index(mocker):
     return mocker.patch.object(validate, "validate_index")
 
@@ -110,25 +104,13 @@ def test_md5(mocker):
         ("test_index_valid.json", {"tracks": {}}, {"tracks": {}}),
         (
             "test_index_missing_file.json",
-            {
-                "tracks": {
-                    "10161_chorus": [
-                        os.path.normpath("tests/resources/10162_chorus.wav")
-                    ]
-                }
-            },
+            {"tracks": {"10161_chorus": [os.path.normpath("tests/resources/10162_chorus.wav")]}},
             {"tracks": {}},
         ),
         (
             "test_index_invalid_checksum.json",
             {"tracks": {}},
-            {
-                "tracks": {
-                    "10161_chorus": [
-                        os.path.normpath("tests/resources/10161_chorus.wav")
-                    ]
-                }
-            },
+            {"tracks": {"10161_chorus": [os.path.normpath("tests/resources/10161_chorus.wav")]}},
         ),
     ],
 )
@@ -137,9 +119,7 @@ def test_validate_index(test_index, expected_missing, expected_inv_checksum):
     with open(index_path, "r") as index_file:
         test_index = json.load(index_file)
 
-    missing_files, invalid_checksums = validate.validate_index(
-        test_index, os.path.normpath("tests/resources/")
-    )
+    missing_files, invalid_checksums = validate.validate_index(test_index, os.path.normpath("tests/resources/"))
 
     assert expected_missing == missing_files
     assert expected_inv_checksum == invalid_checksums
@@ -149,24 +129,12 @@ def test_validate_index(test_index, expected_missing, expected_inv_checksum):
     "missing_files,invalid_checksums",
     [
         (
-            {
-                "tracks": {
-                    "10161_chorus": [
-                        os.path.normpath("tests/resources/10162_chorus.wav")
-                    ]
-                }
-            },
+            {"tracks": {"10161_chorus": [os.path.normpath("tests/resources/10162_chorus.wav")]}},
             {"tracks": {}},
         ),
         (
             {"tracks": {}},
-            {
-                "tracks": {
-                    "10161_chorus": [
-                        os.path.normpath("tests/resources/10161_chorus.wav")
-                    ]
-                }
-            },
+            {"tracks": {"10161_chorus": [os.path.normpath("tests/resources/10161_chorus.wav")]}},
         ),
         ({"tracks": {}}, {"tracks": {}}),
     ],

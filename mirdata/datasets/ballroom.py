@@ -33,7 +33,6 @@
 """
 
 import csv
-import logging
 import os
 from typing import BinaryIO, Optional, TextIO, Tuple
 
@@ -45,8 +44,8 @@ from mirdata import annotations, core, download_utils, io
 BIBTEX = """
 @ARTICLE{1678001,
     author={Gouyon, F. and Klapuri, A. and Dixon, S. and Alonso, M. and Tzanetakis, G. and Uhle, C. and Cano, P.},
-    journal={IEEE Transactions on Audio, Speech, and Language Processing}, 
-    title={An experimental comparison of audio tempo induction algorithms}, 
+    journal={IEEE Transactions on Audio, Speech, and Language Processing},
+    title={An experimental comparison of audio tempo induction algorithms},
     year={2006},
     volume={14},
     number={5},
@@ -89,9 +88,7 @@ REMOTES = {
     ),
 }
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 
 class Track(core.Track):
@@ -200,9 +197,7 @@ def load_beats(fhandle: TextIO):
     if not beat_times or beat_times[0] == -1.0:
         return None
 
-    return annotations.BeatData(
-        np.array(beat_times), "s", np.array(beat_positions), "bar_index"
-    )
+    return annotations.BeatData(np.array(beat_times), "s", np.array(beat_positions), "bar_index")
 
 
 @io.coerce_to_string_io

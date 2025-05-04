@@ -213,9 +213,7 @@ def test_load_pitch():
         parsed_pitch.frequencies,
         np.array([208.5, 209.1, 209.6, 0.0, 0.0, 0.0, 232.5, 234.3, 235.1]),
     )
-    assert np.array_equal(
-        parsed_pitch.voicing, np.array([1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0])
-    )
+    assert np.array_equal(parsed_pitch.voicing, np.array([1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0]))
 
     assert compmusic_otmm_makam.load_pitch(None) is None
 
@@ -231,9 +229,7 @@ def test_load_metadata():
     assert metadata[track_id]["tonic"] == 260.0
     assert metadata[track_id]["makam"] == "Kurdilihicazkar"
     assert metadata[track_id]["mbid"] == "cafcdeaf-e966-4ff0-84fb-f660d2b68365"
-    assert metadata["data_home"] == os.path.normpath(
-        "tests/resources/mir_datasets/compmusic_otmm_makam"
-    )
+    assert metadata["data_home"] == os.path.normpath("tests/resources/mir_datasets/compmusic_otmm_makam")
 
 
 def test_load_mb_tags():
@@ -276,10 +272,7 @@ def test_load_mb_tags():
         }
     ]
     assert mb_tags["title"] == "A\u015fka Merak\u0131m Ezelden"
-    assert (
-        mb_tags["url"]
-        == "http://musicbrainz.org/work/cafcdeaf-e966-4ff0-84fb-f660d2b68365"
-    )
+    assert mb_tags["url"] == "http://musicbrainz.org/work/cafcdeaf-e966-4ff0-84fb-f660d2b68365"
     assert mb_tags["artist_credits"] == [
         {
             "mbid": "fd8bceee-b3a4-4870-851a-0374f5542751",
@@ -436,10 +429,7 @@ def test_load_mb_tags():
         },
     ]
     assert mb_tags["duration"] == 275
-    assert (
-        mb_tags["path"]
-        == "../data/Kurdilihicazkar/cafcdeaf-e966-4ff0-84fb-f660d2b68365.mp3"
-    )
+    assert mb_tags["path"] == "../data/Kurdilihicazkar/cafcdeaf-e966-4ff0-84fb-f660d2b68365.mp3"
     assert mb_tags["works"] == [
         {
             "mbid": "753ff394-dec1-422b-991f-227d8f848532",
@@ -463,9 +453,7 @@ def test_special_turkish_characters():
     dataset = compmusic_otmm_makam.Dataset(data_home, version="test")
     track = dataset.track(track_id)
     mb_tags_path = track.mb_tags_path
-    special_characters = compmusic_otmm_makam.load_mb_tags(mb_tags_path)[
-        "special_turkish_characters"
-    ]
+    special_characters = compmusic_otmm_makam.load_mb_tags(mb_tags_path)["special_turkish_characters"]
 
     assert special_characters == [
         "ç",

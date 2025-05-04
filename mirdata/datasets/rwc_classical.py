@@ -89,9 +89,7 @@ REMOTES = {
     ),
     "annotations_sections": download_utils.RemoteFileMetadata(
         filename="AIST.RWC-MDB-C-2001.CHORUS.zip",
-        url=(
-            "https://staff.aist.go.jp/m.goto/RWC-MDB/AIST-Annotation/AIST.RWC-MDB-C-2001.CHORUS.zip"
-        ),
+        url=("https://staff.aist.go.jp/m.goto/RWC-MDB/AIST-Annotation/AIST.RWC-MDB-C-2001.CHORUS.zip"),
         checksum="f77bd527510376f59f5a2eed8fd7feb3",
         destination_dir="annotations",
     ),
@@ -284,9 +282,7 @@ def _position_in_bar(beat_positions, beat_times):
     if downbeat_positions[0] != 0:
         timesig_next_bar = beat_positions_corrected[downbeat_positions[1] - 1]
         for b in range(1, downbeat_positions[0] + 1):
-            beat_positions_corrected[downbeat_positions[0] - b] = (
-                timesig_next_bar - b + 1
-            )
+            beat_positions_corrected[downbeat_positions[0] - b] = timesig_next_bar - b + 1
 
     return beat_positions_corrected, beat_times_corrected
 
@@ -310,13 +306,9 @@ def load_beats(fhandle: TextIO) -> annotations.BeatData:
     for line in reader:
         beat_times.append(float(line[0]) / 100.0)
         beat_positions.append(int(line[2]))
-    beat_positions_in_bar, beat_times = _position_in_bar(
-        np.array(beat_positions), np.array(beat_times)
-    )
+    beat_positions_in_bar, beat_times = _position_in_bar(np.array(beat_positions), np.array(beat_times))
 
-    return annotations.BeatData(
-        beat_times, "s", beat_positions_in_bar.astype(int), "bar_index"
-    )
+    return annotations.BeatData(beat_times, "s", beat_positions_in_bar.astype(int), "bar_index")
 
 
 def _duration_to_sec(duration):
@@ -334,14 +326,10 @@ def _duration_to_sec(duration):
             if len(duration.split(":")) <= 2:
                 minutes, secs = duration.split(":")
             else:
-                minutes, secs, _ = duration.split(
-                    ":"
-                )  # mistake in annotation in RM-J044
+                minutes, secs, _ = duration.split(":")  # mistake in annotation in RM-J044
             return float(minutes) * 60 + float(secs)
     else:
-        raise ValueError(
-            f"Expected duration to have type str, got {type(duration)}"
-        )
+        raise ValueError(f"Expected duration to have type str, got {type(duration)}")
 
 
 @core.docstring_inherit(core.Dataset)
@@ -403,9 +391,7 @@ class Dataset(core.Dataset):
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.rwc_classical.load_sections", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.rwc_classical.load_sections", version="0.3.4")
     def load_sections(self, *args, **kwargs):
         return load_sections(*args, **kwargs)
 

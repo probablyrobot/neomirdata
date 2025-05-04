@@ -223,9 +223,7 @@ class Dataset(core.Dataset):
 
     @core.cached_property
     def _metadata(self):
-        metadata_path = os.path.join(
-            self.data_home, "annotation", "TinySOL_metadata.csv"
-        )
+        metadata_path = os.path.join(self.data_home, "annotation", "TinySOL_metadata.csv")
 
         metadata_index = {}
         try:

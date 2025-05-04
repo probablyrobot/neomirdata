@@ -28,7 +28,7 @@ from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @techreport{bittner2021vocadito,
-      title={vocadito: A dataset of solo vocals with $f_0$, note, and lyric annotations}, 
+      title={vocadito: A dataset of solo vocals with $f_0$, note, and lyric annotations},
       author={Rachel M. Bittner and Katherine Pasalo and Juan José Bosch and Gabriel Meseguer-Brocal and David Rubinstein},
       year={2021},
       institution={Spotify},

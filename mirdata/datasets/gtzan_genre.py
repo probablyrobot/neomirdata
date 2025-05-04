@@ -136,10 +136,7 @@ def load_beats(fhandle: TextIO) -> annotations.BeatData:
         positions = beats[:, 1]
     except IndexError:
         positions = None
-    return annotations.BeatData(
-        times=times, time_unit="s", positions=positions, position_unit="bar_index"
-    )
-
+    return annotations.BeatData(times=times, time_unit="s", positions=positions, position_unit="bar_index")
 
 
 @io.coerce_to_string_io

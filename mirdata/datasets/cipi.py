@@ -63,14 +63,12 @@ INDEXES = {
     "sample": core.Index(filename="cipi_index_1.0_sample.json"),
 }
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 DOWNLOAD_INFO = """
     Unfortunately the files of the CIPI dataset are available
     for download upon request here: https://zenodo.org/records/8037327.
-    After requesting the dataset, you will receive a link to download the 
+    After requesting the dataset, you will receive a link to download the
     dataset. You must download scores.zip, embeddings.zip and index.json
     copy the files into the folder:
         > cipi/
@@ -115,9 +113,7 @@ class Track(core.Track):
 
     @property
     def title(self) -> Optional[str]:
-        return (
-            self._track_metadata.get("work_name", None)
-        )
+        return self._track_metadata.get("work_name", None)
 
     @property
     def book(self) -> Optional[str]:
@@ -129,23 +125,15 @@ class Track(core.Track):
 
     @property
     def composer(self) -> Optional[str]:
-        return (
-            self._track_metadata.get("composer", None)
-        )
+        return self._track_metadata.get("composer", None)
 
     @property
     def musicxml_paths(self) -> List[str]:
-        return (
-            list(self._track_metadata["path"].values())
-            if "path" in self._track_metadata
-            else []
-        )
+        return list(self._track_metadata["path"].values()) if "path" in self._track_metadata else []
 
     @property
     def difficulty_annotation(self) -> Optional[int]:
-        return (
-            self._track_metadata.get("henle", None)
-        )
+        return self._track_metadata.get("henle", None)
 
     @core.cached_property
     def scores(self) -> list:
@@ -159,9 +147,7 @@ class Track(core.Track):
         return scores
 
 
-def load_score(
-    fhandle: str, data_home: str = "tests/resources/mir_datasets/cipi"
-) -> music21.stream.Score:
+def load_score(fhandle: str, data_home: str = "tests/resources/mir_datasets/cipi") -> music21.stream.Score:
     """Load cipi score in music21 stream
 
     Args:
@@ -203,7 +189,5 @@ class Dataset(core.Dataset):
             with open(metadata_path, "r") as fhandle:
                 metadata_index = json.load(fhandle)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                f"Metadata {metadata_path} not found. Did you download the files?"
-            )
+            raise FileNotFoundError(f"Metadata {metadata_path} not found. Did you download the files?")
         return dict(metadata_index)

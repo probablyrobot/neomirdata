@@ -53,12 +53,12 @@ from mirdata import annotations, core, download_utils, io
 
 BIBTEX = """
 @article{gulati_2016,
-  author       = {Gulati, Sankalp and Serrà, Joan and Kaustuv Kani, Ganguli 
+  author       = {Gulati, Sankalp and Serrà, Joan and Kaustuv Kani, Ganguli
                     and Sentürk, Sertan and Serra, Xavier},
   title        = {{Time-delayed melody surfaces for raga recognition}},
   year         = 2016,
   pages        = 751--757,
-  journal      = {In Proceedings of the 17th International Society for Music Information 
+  journal      = {In Proceedings of the 17th International Society for Music Information
                     Retrieval Conference (ISMIR), New York, USA},
 }
 """
@@ -82,12 +82,12 @@ REMOTES = {
     )
 }
 
-DOWNLOAD_INFO = """While annotations and metadata are freely downloadable, the audio of this 
-    dataset has restricted access. Please access: https://zenodo.org/record/7278511 and request 
-    access to the audio, specifying your purpose. The audio will be shared for research purposes. 
-    In such case, when access to the audio is granted, please organize the dataset as specified 
+DOWNLOAD_INFO = """While annotations and metadata are freely downloadable, the audio of this
+    dataset has restricted access. Please access: https://zenodo.org/record/7278511 and request
+    access to the audio, specifying your purpose. The audio will be shared for research purposes.
+    In such case, when access to the audio is granted, please organize the dataset as specified
     in the ``directory_structure.txt`` file found when you download the features and metadata using
-    the .download() method of this dataloader. 
+    the .download() method of this dataloader.
 """
 
 LICENSE_INFO = "Creative Commons Attribution 4.0 International"
@@ -386,12 +386,8 @@ class Dataset(core.Dataset):
         )
 
         metadata = {}
-        metadata = self.get_metadata(
-            metadata, carnatic_metadata_path, carnatic_mapping_path, "carnatic"
-        )
-        return self.get_metadata(
-            metadata, hindustani_metadata_path, hindustani_mapping_path, "hindustani"
-        )
+        metadata = self.get_metadata(metadata, carnatic_metadata_path, carnatic_mapping_path, "carnatic")
+        return self.get_metadata(metadata, hindustani_metadata_path, hindustani_mapping_path, "hindustani")
 
     @staticmethod
     def get_metadata(metadata, metadata_path, mapping_path, tradition):

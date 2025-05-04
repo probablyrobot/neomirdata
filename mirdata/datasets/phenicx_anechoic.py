@@ -139,9 +139,7 @@ class Track(core.Track):
         self.instrument = self.track_id.split("-")[1]
         self.piece = self.track_id.split("-")[0]
 
-        self.audio_paths = [
-            self.get_path(key) for key in self._track_paths if "audio_" in key
-        ]
+        self.audio_paths = [self.get_path(key) for key in self._track_paths if "audio_" in key]
 
         self.n_voices = len(self.audio_paths)
 
@@ -221,16 +219,11 @@ class MultiTrack(core.MultiTrack):
 
     """
 
-    def __init__(
-        self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-    ):
+    def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
         super().__init__(mtrack_id, data_home, dataset_name, index, Track, metadata)
 
         #### parse the keys for the dictionary of instruments and strings
-        self.instruments = {
-            source.replace(self.mtrack_id + "-", ""): source
-            for source in self.track_ids
-        }
+        self.instruments = {source.replace(self.mtrack_id + "-", ""): source for source in self.track_ids}
         self.sections = {"brass": [], "strings": [], "woodwinds": []}
         for instrument, track_id in self.instruments.items():
             self.sections[DATASET_SECTIONS[instrument]].append(track_id)
@@ -257,9 +250,7 @@ class MultiTrack(core.MultiTrack):
                 f"instrument={instrument} is not in this multitrack. Must be one of {self.instruments.keys()}"
             )
 
-        return getattr(
-            self.tracks[self.instruments[instrument]], self.track_audio_property
-        )[0]
+        return getattr(self.tracks[self.instruments[instrument]], self.track_audio_property)[0]
 
     def get_audio_for_section(self, section):
         """Get the audio for a particular section
@@ -321,9 +312,7 @@ class MultiTrack(core.MultiTrack):
             NoteData: Note data for the section
 
         """
-        return self.get_notes_target(
-            self.sections[section], notes_property=notes_property
-        )
+        return self.get_notes_target(self.sections[section], notes_property=notes_property)
 
 
 @io.coerce_to_bytes_io
@@ -358,9 +347,7 @@ def load_score(fhandle: TextIO) -> annotations.NoteData:
     #### read notes as string
     fhandle.seek(0)
     content = fhandle.readlines()
-    values = np.array(
-        [librosa.note_to_hz(line.split(",")[2].strip("\n")) for line in content]
-    )
+    values = np.array([librosa.note_to_hz(line.split(",")[2].strip("\n")) for line in content])
 
     return annotations.NoteData(intervals, "s", values, "hz")
 
@@ -384,14 +371,10 @@ class Dataset(core.Dataset):
             license_info=LICENSE_INFO,
         )
 
-    @deprecated(
-        reason="Use mirdata.datasets.phenicx_anechoic.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.phenicx_anechoic.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.phenicx_anechoic.load_score", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.phenicx_anechoic.load_score", version="0.3.4")
     def load_score(self, *args, **kwargs):
         return load_score(*args, **kwargs)

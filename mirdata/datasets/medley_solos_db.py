@@ -157,9 +157,7 @@ class Dataset(core.Dataset):
 
     @core.cached_property
     def _metadata(self):
-        metadata_path = os.path.join(
-            self.data_home, "annotation", "Medley-solos-DB_metadata.csv"
-        )
+        metadata_path = os.path.join(self.data_home, "annotation", "Medley-solos-DB_metadata.csv")
 
         metadata_index = {}
         try:
@@ -177,8 +175,6 @@ class Dataset(core.Dataset):
 
         return metadata_index
 
-    @deprecated(
-        reason="Use mirdata.datasets.medley_solos_db.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.medley_solos_db.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)

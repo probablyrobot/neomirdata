@@ -14,12 +14,9 @@ def test_track():
 
     expected_attributes = {
         "track_id": "Enta_Bhagyamu_2",
-        "audio_path": "tests/resources/mir_datasets/"
-        + "scms/SCMS/audio/Enta_Bhagyamu_2.wav",
-        "pitch_path": "tests/resources/mir_datasets/"
-        + "scms/SCMS/annotations/melody/Enta_Bhagyamu_2.csv",
-        "activations_path": "tests/resources/mir_datasets/"
-        + "scms/SCMS/annotations/activations/Enta_Bhagyamu_2.lab",
+        "audio_path": "tests/resources/mir_datasets/" + "scms/SCMS/audio/Enta_Bhagyamu_2.wav",
+        "pitch_path": "tests/resources/mir_datasets/" + "scms/SCMS/annotations/melody/Enta_Bhagyamu_2.csv",
+        "activations_path": "tests/resources/mir_datasets/" + "scms/SCMS/annotations/activations/Enta_Bhagyamu_2.lab",
     }
 
     expected_property_types = {
@@ -42,10 +39,7 @@ def test_track():
 
 def test_load_pitch():
     # load a file which exists
-    pitch_path = (
-        "tests/resources/mir_datasets/scms/SCMS/"
-        + "annotations/melody/Enta_Bhagyamu_2.csv"
-    )
+    pitch_path = "tests/resources/mir_datasets/scms/SCMS/" + "annotations/melody/Enta_Bhagyamu_2.csv"
     pitch_data = scms.load_pitch(pitch_path)
 
     # check types
@@ -55,9 +49,7 @@ def test_load_pitch():
     assert isinstance(pitch_data.voicing, np.ndarray)
 
     # check values
-    assert np.array_equal(
-        pitch_data.times, np.array([0.0, 0.0029024943310657597, 0.005804988662131519])
-    )
+    assert np.array_equal(pitch_data.times, np.array([0.0, 0.0029024943310657597, 0.005804988662131519]))
     assert np.array_equal(
         pitch_data.frequencies,
         np.array([205.34705622484543, 205.5702056921407, 205.5604865955533]),
@@ -66,10 +58,7 @@ def test_load_pitch():
 
 
 def test_load_activations():
-    activations_path = (
-        "tests/resources/mir_datasets/scms/SCMS/"
-        + "annotations/activations/Enta_Bhagyamu_2.lab"
-    )
+    activations_path = "tests/resources/mir_datasets/scms/SCMS/" + "annotations/activations/Enta_Bhagyamu_2.lab"
     activations_data = scms.load_activations(activations_path)
 
     # check types
@@ -84,10 +73,7 @@ def test_load_activations():
     assert activations_data.events[1] == "singer"
     assert activations_data.event_unit == "open"
 
-    activations_path = (
-        "tests/resources/mir_datasets/scms/SCMS/"
-        + "annotations/activations/Enta_Bhagyamu_3.lab"
-    )
+    activations_path = "tests/resources/mir_datasets/scms/SCMS/" + "annotations/activations/Enta_Bhagyamu_3.lab"
     activations_data = scms.load_activations(activations_path)
     assert activations_data is None
 

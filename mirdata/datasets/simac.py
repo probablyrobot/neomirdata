@@ -29,8 +29,8 @@ from mirdata import annotations, core, io
 BIBTEX = """
 @INPROCEEDINGS{1576040,
   author={Herrera, P. and Bello, J. and Widmer, G. and Sandler, M. and Celma, O. and Vignoli, F. and Pampalk, E. and Cano, P. and Pauws, S. and Serra, X.},
-  booktitle={The 2nd European Workshop on the Integration of Knowledge, Semantics and Digital Media Technology, 2005. EWIMT 2005. (Ref. No. 2005/11099)}, 
-  title={SIMAC: semantic interaction with music audio contents}, 
+  booktitle={The 2nd European Workshop on the Integration of Knowledge, Semantics and Digital Media Technology, 2005. EWIMT 2005. (Ref. No. 2005/11099)},
+  title={SIMAC: semantic interaction with music audio contents},
   year={2005},
   volume={},
   number={},
@@ -52,9 +52,7 @@ INDEXES = {
 
 REMOTES = None
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 DOWNLOAD_INFO = """
     Unfortunately the SIMAC Rhythm dataset is not available for download.

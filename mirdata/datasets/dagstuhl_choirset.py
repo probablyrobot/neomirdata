@@ -238,9 +238,7 @@ class MultiTrack(core.MultiTrack):
 
     """
 
-    def __init__(
-        self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-    ):
+    def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
         super().__init__(
             mtrack_id=mtrack_id,
             data_home=data_home,
@@ -451,9 +449,7 @@ def load_score(fhandle: TextIO) -> annotations.NoteData:
         intervals.append([float(line[0]), float(line[1])])
         notes.append(float(line[2]))
 
-    return annotations.NoteData(
-        np.array(intervals), "s", librosa.midi_to_hz(notes), "hz"
-    )
+    return annotations.NoteData(np.array(intervals), "s", librosa.midi_to_hz(notes), "hz")
 
 
 @io.coerce_to_string_io
@@ -501,26 +497,18 @@ class Dataset(core.Dataset):
             license_info=LICENSE_INFO,
         )
 
-    @deprecated(
-        reason="Use mirdata.datasets.dagstuhl_choirset.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.dagstuhl_choirset.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.dagstuhl_choirset.load_f0", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.dagstuhl_choirset.load_f0", version="0.3.4")
     def load_f0(self, *args, **kwargs):
         return load_f0(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.dagstuhl_choirset.load_score", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.dagstuhl_choirset.load_score", version="0.3.4")
     def load_score(self, *args, **kwargs):
         return load_score(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.dagstuhl_choirset.load_beat", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.dagstuhl_choirset.load_beat", version="0.3.4")
     def load_beat(self, *args, **kwargs):
         return load_beat(*args, **kwargs)

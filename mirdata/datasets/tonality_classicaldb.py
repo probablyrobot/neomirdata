@@ -99,9 +99,7 @@ DOWNLOAD_INFO = """
     and copy the folder to {} directory
 """
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 
 class Track(core.Track):
@@ -259,15 +257,11 @@ class Dataset(core.Dataset):
             license_info=LICENSE_INFO,
         )
 
-    @deprecated(
-        reason="Use mirdata.datasets.tonality_classicaldb.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.tonality_classicaldb.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.tonality_classicaldb.load_key", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.tonality_classicaldb.load_key", version="0.3.4")
     def load_key(self, *args, **kwargs):
         return load_key(*args, **kwargs)
 
@@ -278,9 +272,7 @@ class Dataset(core.Dataset):
     def load_spectrum(self, *args, **kwargs):
         return load_spectrum(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.tonality_classicaldb.load_hpcp", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.tonality_classicaldb.load_hpcp", version="0.3.4")
     def load_hpcp(self, *args, **kwargs):
         return load_hpcp(*args, **kwargs)
 

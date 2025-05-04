@@ -75,9 +75,7 @@ def test_load_melody():
             ]
         ),
     )
-    assert np.array_equal(
-        f0_data.frequencies, np.array([0.0, 137.0, 220.34, 400.0, 110.0, 110.0])
-    )
+    assert np.array_equal(f0_data.frequencies, np.array([0.0, 137.0, 220.34, 400.0, 110.0, 110.0]))
     assert np.array_equal(f0_data.voicing, np.array([0.0, 1.0, 1.0, 1.0, 0.0, 0.0]))
 
 
@@ -124,9 +122,7 @@ def test_load_notes():
             ]
         ),
     )
-    assert np.array_equal(
-        notes_data.confidence, np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
-    )
+    assert np.array_equal(notes_data.confidence, np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0]))
 
 
 def test_load_spectrum():

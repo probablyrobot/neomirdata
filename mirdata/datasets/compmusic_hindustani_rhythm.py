@@ -82,20 +82,16 @@ INDEXES = {
         url="https://zenodo.org/records/14007893/files/compmusic_hindustani_rhythm_full_index_1.0.json?download=1",
         checksum="1b66dfd109bf453626be0b7352c9fa3a",
     ),
-    "sample": core.Index(
-        filename="compmusic_hindustani_rhythm_full_index_1.0_sample.json"
-    ),
+    "sample": core.Index(filename="compmusic_hindustani_rhythm_full_index_1.0_sample.json"),
 }
 
 REMOTES = None
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 DOWNLOAD_INFO = """The files of this dataset are shared under request. Please go to: https://zenodo.org/record/1264742 and request access, stating
-    the research-related use you will give to the dataset. Once the access is granted (it may take, at most, one day or two), please download 
-    the dataset with the provided Zenodo link and uncompress and store the datasets to a desired location, and use such location to initialize the 
+    the research-related use you will give to the dataset. Once the access is granted (it may take, at most, one day or two), please download
+    the dataset with the provided Zenodo link and uncompress and store the datasets to a desired location, and use such location to initialize the
     dataset as follows: compmusic_hindustani_rhythm = mirdata.initialize("compmusic_hindustani_rhythm", data_home="/path/to/home/folder/of/dataset").
     """
 
@@ -270,9 +266,7 @@ def load_beats(fhandle):
     if not beat_times or beat_times[0] == -1.0:
         return None
 
-    return annotations.BeatData(
-        np.array(beat_times), "s", np.array(beat_positions), "bar_index"
-    )
+    return annotations.BeatData(np.array(beat_times), "s", np.array(beat_positions), "bar_index")
 
 
 @io.coerce_to_string_io
@@ -345,13 +339,9 @@ class Dataset(core.Dataset):
                         "num_of_beats": int(reade.cell(row, 13).value),
                         "num_of_samas": int(reade.cell(row, 14).value),
                         "median_matra_period": float(reade.cell(row, 16).value),
-                        "median_matras_per_min": round(
-                            60 / float(reade.cell(row, 16).value), 2
-                        ),
+                        "median_matras_per_min": round(60 / float(reade.cell(row, 16).value), 2),
                         "median_ISI": float(reade.cell(row, 16).value) * 16,
-                        "median_avarts_per_min": round(
-                            60 / (float(reade.cell(row, 16).value) * 16), 2
-                        ),
+                        "median_avarts_per_min": round(60 / (float(reade.cell(row, 16).value) * 16), 2),
                     }
 
         except FileNotFoundError:

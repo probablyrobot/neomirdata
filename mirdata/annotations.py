@@ -1161,7 +1161,9 @@ def convert_time_units(times, time_unit, target_time_unit):
     try:
         return _from_seconds(_to_seconds(times, time_unit), target_time_unit)
     except NotImplementedError as err:
-        raise NotImplementedError(f"Conversion of time in units {time_unit} to {target_time_unit} is not supported") from err
+        raise NotImplementedError(
+            f"Conversion of time in units {time_unit} to {target_time_unit} is not supported"
+        ) from err
 
 
 def convert_pitch_units(pitches, pitch_unit, target_pitch_unit):
@@ -1225,7 +1227,9 @@ def convert_pitch_units(pitches, pitch_unit, target_pitch_unit):
     try:
         return _from_hz(_to_hz(pitches, pitch_unit), target_pitch_unit)
     except NotImplementedError as err:
-        raise NotImplementedError(f"Conversion of pitch in units {pitch_unit} to {target_pitch_unit} is not supported") from err
+        raise NotImplementedError(
+            f"Conversion of pitch in units {pitch_unit} to {target_pitch_unit} is not supported"
+        ) from err
 
 
 def convert_amplitude_units(amplitude, amplitude_unit, target_amplitude_unit):

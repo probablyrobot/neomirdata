@@ -15,8 +15,7 @@ def test_track():
 
     expected_attributes = {
         "track_id": "csic.1995_ansina1_01",
-        "audio_path": "tests/resources/mir_datasets/candombe/"
-        "candombe_audio/csic.1995_ansina1_01.flac",
+        "audio_path": "tests/resources/mir_datasets/candombe/" "candombe_audio/csic.1995_ansina1_01.flac",
         "beats_path": "tests/resources/mir_datasets/candombe/"
         "candombe_annotations/with_bar_number/csic.1995_ansina1_01.csv",
     }
@@ -45,8 +44,7 @@ def test_track():
 def test_load_beats():
     # load a file which exists
     beats_path = (
-        "tests/resources/mir_datasets/candombe/candombe_annotations/"
-        "with_bar_number/csic.1995_ansina1_01.csv"
+        "tests/resources/mir_datasets/candombe/candombe_annotations/" "with_bar_number/csic.1995_ansina1_01.csv"
     )
     beats_data = candombe.load_beats(beats_path)
 

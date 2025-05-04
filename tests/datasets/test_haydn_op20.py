@@ -81,12 +81,8 @@ def test_load_chords():
     assert type(chord_data) == ChordData
     assert type(chord_data.intervals) == np.ndarray
     assert type(chord_data.labels) == list
-    assert np.array_equal(
-        chord_data.intervals[:, 0], np.array([0.0, 364.0, 392.0, 644.0])
-    )
-    assert np.array_equal(
-        chord_data.intervals[:, 1], np.array([363.0, 391.0, 643.0, 644.0])
-    )
+    assert np.array_equal(chord_data.intervals[:, 0], np.array([0.0, 364.0, 392.0, 644.0]))
+    assert np.array_equal(chord_data.intervals[:, 1], np.array([363.0, 391.0, 643.0, 644.0]))
     assert np.array_equal(
         chord_data.labels,
         np.array(

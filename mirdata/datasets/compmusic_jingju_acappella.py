@@ -121,8 +121,7 @@ REMOTES = {
 
 LICENSE_INFO = (
     "audio files ending with upf or lon: Creative Commons Attribution Non-Commercial 4.0"
-    " International, "
-    + "audio files ending with qm: http://isophonics.org/SingingVoiceDataset"
+    " International, " + "audio files ending with qm: http://isophonics.org/SingingVoiceDataset"
 )
 
 
@@ -233,9 +232,7 @@ def load_phonemes(fhandle: TextIO) -> annotations.LyricData:
         end_times.append(float(line[1]))
         events.append(str(line[2] if line[2] != "sil" else ""))
 
-    return annotations.LyricData(
-        np.array([start_times, end_times]).T, "s", events, "pronunciations_open"
-    )
+    return annotations.LyricData(np.array([start_times, end_times]).T, "s", events, "pronunciations_open")
 
 
 @io.coerce_to_string_io
@@ -258,9 +255,7 @@ def load_phrases(fhandle: TextIO) -> annotations.LyricData:
         end_times.append(float(line[1]))
         lyrics.append(line[2] if line[2] != "sil" else "")
 
-    return annotations.LyricData(
-        np.array([start_times, end_times]).T, "s", lyrics, "words"
-    )
+    return annotations.LyricData(np.array([start_times, end_times]).T, "s", lyrics, "words")
 
 
 @io.coerce_to_string_io
@@ -284,9 +279,7 @@ def load_syllable(fhandle: TextIO) -> annotations.LyricData:
         end_times.append(float(line[1]))
         events.append(line[2] if line[2] != "sil" else "")
 
-    return annotations.LyricData(
-        np.array([start_times, end_times]).T, "s", events, "syllable_open"
-    )
+    return annotations.LyricData(np.array([start_times, end_times]).T, "s", events, "syllable_open")
 
 
 @core.docstring_inherit(core.Dataset)
@@ -309,9 +302,7 @@ class Dataset(core.Dataset):
 
     @core.cached_property
     def _metadata(self):
-        metadata_path_laosheng = os.path.join(
-            self.data_home, "catalogue - laosheng.csv"
-        )
+        metadata_path_laosheng = os.path.join(self.data_home, "catalogue - laosheng.csv")
         # metadata_path_dan = os.path.join(
         #     self.data_home,
         #     "catalogue - dan.csv",
@@ -330,26 +321,18 @@ class Dataset(core.Dataset):
                 data_home = os.path.dirname(metadata_path_laosheng)
                 metadata["data_home"] = data_home
         except FileNotFoundError:
-            raise FileNotFoundError(
-                "laosheng metadata not found. Did you run .download()?"
-            )
+            raise FileNotFoundError("laosheng metadata not found. Did you run .download()?")
 
         return metadata
 
-    @deprecated(
-        reason="Use mirdata.datasets.jingju_acapella.load_phonemes", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.jingju_acapella.load_phonemes", version="0.3.4")
     def load_phonemes(self, *args, **kwargs):
         return load_phonemes(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.jingju_acapella.load_phrases", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.jingju_acapella.load_phrases", version="0.3.4")
     def load_phrases(self, *args, **kwargs):
         return load_phrases(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.jingju_acapella.load_syllable", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.jingju_acapella.load_syllable", version="0.3.4")
     def load_syllable(self, *args, **kwargs):
         return load_syllable(*args, **kwargs)

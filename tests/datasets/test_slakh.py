@@ -183,9 +183,7 @@ def test_multitrack():
             "Track00001-S09",
             "Track00001-S10",
         ],
-        "lakh_midi_dir": (
-            "lmd_matched/O/O/H/TROOHTB128F931F9DF/1a81ae092884234f3264e2f45927f00a.mid"
-        ),
+        "lakh_midi_dir": ("lmd_matched/O/O/H/TROOHTB128F931F9DF/1a81ae092884234f3264e2f45927f00a.mid"),
         "normalized": True,
         "overall_gain": 0.18270259567062658,
         "uuid": "1a81ae092884234f3264e2f45927f00a",

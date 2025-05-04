@@ -61,12 +61,8 @@ def test_load_beats():
     parsed_beats = simac.load_beats(beats_path)
 
     # Check types
-    assert isinstance(
-        parsed_beats, annotations.BeatData
-    ), "The returned type should be BeatData."
-    assert isinstance(
-        parsed_beats.times, np.ndarray
-    ), "The beat times should be a NumPy array."
+    assert isinstance(parsed_beats, annotations.BeatData), "The returned type should be BeatData."
+    assert isinstance(parsed_beats.times, np.ndarray), "The beat times should be a NumPy array."
 
     # Check values
     expected_beats = np.array([0.24, 1.047, 1.86])
@@ -75,9 +71,7 @@ def test_load_beats():
     ), f"Expected {expected_beats}, but got {parsed_beats.times}."
 
     # Check for None case
-    assert (
-        simac.load_beats(None) is None
-    ), "The function should return None when the input is None."
+    assert simac.load_beats(None) is None, "The function should return None when the input is None."
 
     # Case: beat_times[0] == -1.0
     invalid_beats_file = io.StringIO("-1.0\tInvalid beat\n")
@@ -87,9 +81,7 @@ def test_load_beats():
 
     # Case: empty beat_times
     empty_beats_file = io.StringIO("")
-    assert (
-        simac.load_beats(empty_beats_file) is None
-    ), "The function should return None when the beat times are empty."
+    assert simac.load_beats(empty_beats_file) is None, "The function should return None when the beat times are empty."
 
 
 def test_load_audio():

@@ -16,9 +16,7 @@ def test_track():
 
     expected_attributes = {
         "track_id": os.path.normpath("TapeEcho_Bridge/2-0"),
-        "audio_path": os.path.normpath(
-            "tests/resources/mir_datasets/egfxset/TapeEcho/Bridge/2-0.wav"
-        ),
+        "audio_path": os.path.normpath("tests/resources/mir_datasets/egfxset/TapeEcho/Bridge/2-0.wav"),
         "stringfret_tuple": [2, 0],
         "pickup_configuration": "Bridge",
         "effect": "tape echo",
@@ -65,9 +63,7 @@ def test_track():
 
     expected_attributes = {
         "track_id": os.path.normpath("Clean_Middle/6-22"),
-        "audio_path": os.path.normpath(
-            "tests/resources/mir_datasets/egfxset/Clean/Middle/6-22.wav"
-        ),
+        "audio_path": os.path.normpath("tests/resources/mir_datasets/egfxset/Clean/Middle/6-22.wav"),
         "stringfret_tuple": [6, 22],
         "pickup_configuration": "Middle",
         "effect": "clean",

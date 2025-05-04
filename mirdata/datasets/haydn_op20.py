@@ -61,9 +61,7 @@ REMOTES = {
         destination_dir=".",
     )
 }
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 
 class Track(core.Track):
@@ -123,9 +121,7 @@ class Track(core.Track):
 
     @core.cached_property
     def midi_path(self) -> Optional[str]:
-        logging.warning(
-            "midi_path is deprecated as of 0.3.4 and will be removed in a future version."
-        )
+        logging.warning("midi_path is deprecated as of 0.3.4 and will be removed in a future version.")
         return convert_and_save_to_midi(self.humdrum_annotated_path)
 
 
@@ -324,9 +320,7 @@ def load_chords(fhandle: TextIO, resolution: int = 28):
             start_times.append(chords[ii]["time"])
             chord_names.append(str(chords[ii]["chord"]))
     end_times.append(chords[-1]["time"])
-    return ChordData(
-        np.array([start_times, end_times]).astype(float).T, "ticks", chord_names, "open"
-    )
+    return ChordData(np.array([start_times, end_times]).astype(float).T, "ticks", chord_names, "open")
 
 
 @io.coerce_to_string_io
@@ -366,9 +360,7 @@ class Dataset(core.Dataset):
     def load_score(self, *args, **kwargs):
         return load_score(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.haydn_op20.load_key_music21", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.haydn_op20.load_key_music21", version="0.3.4")
     def load_key_music21(self, *args, **kwargs):
         return load_key_music21(*args, **kwargs)
 
@@ -380,15 +372,11 @@ class Dataset(core.Dataset):
     def load_chords(self, *args, **kwargs):
         return load_chords(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.haydn_op20.load_chords_music21", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.haydn_op20.load_chords_music21", version="0.3.4")
     def load_chords_music21(self, *args, **kwargs):
         return load_chords_music21(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.haydn_op20.load_roman_numerals", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.haydn_op20.load_roman_numerals", version="0.3.4")
     def load_roman_numerals(self, *args, **kwargs):
         return load_roman_numerals(*args, **kwargs)
 

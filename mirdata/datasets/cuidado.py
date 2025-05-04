@@ -43,8 +43,8 @@ from mirdata import annotations, core, io
 BIBTEX = """
 @article{1678001,
     author={Gouyon, F. and Klapuri, A. and Dixon, S. and Alonso, M. and Tzanetakis, G. and Uhle, C. and Cano, P.},
-    journal={IEEE Transactions on Audio, Speech, and Language Processing}, 
-    title={An experimental comparison of audio tempo induction algorithms}, 
+    journal={IEEE Transactions on Audio, Speech, and Language Processing},
+    title={An experimental comparison of audio tempo induction algorithms},
     year={2006},
     volume={14},
     number={5},
@@ -65,9 +65,7 @@ INDEXES = {
 
 REMOTES = None
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 DOWNLOAD_INFO = """
     Unfortunately the Cuidado dataset is not available for download.

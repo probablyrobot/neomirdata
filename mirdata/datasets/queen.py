@@ -47,9 +47,7 @@ BIBTEX = """@inproceedings{mauch2009beatles,
     year={2009},
     series = {ISMIR}
 }"""
-LICENSE_INFO = (
-    "Unfortunately we couldn't find the license information for Queen dataset."
-)
+LICENSE_INFO = "Unfortunately we couldn't find the license information for Queen dataset."
 
 INDEXES = {
     "default": "1.0",
@@ -170,9 +168,7 @@ def load_chords(fhandle: TextIO) -> annotations.ChordData:
         end_times.append(float(line[1]))
         chords.append(line[2])
 
-    return annotations.ChordData(
-        np.array([start_times, end_times]).T, "s", chords, "harte"
-    )
+    return annotations.ChordData(np.array([start_times, end_times]).T, "s", chords, "harte")
 
 
 @io.coerce_to_string_io
@@ -194,9 +190,7 @@ def load_key(fhandle: TextIO) -> annotations.KeyData:
             end_times.append(float(line[1]))
             keys.append(line[3])
 
-    return annotations.KeyData(
-        np.array([start_times, end_times]).T, "s", keys, "key_mode"
-    )
+    return annotations.KeyData(np.array([start_times, end_times]).T, "s", keys, "key_mode")
 
 
 @io.coerce_to_string_io
@@ -217,9 +211,7 @@ def load_sections(fhandle: TextIO) -> annotations.SectionData:
         end_times.append(float(line[1]))
         sections.append(line[3])
 
-    return annotations.SectionData(
-        np.array([start_times, end_times]).T, "s", sections, "open"
-    )
+    return annotations.SectionData(np.array([start_times, end_times]).T, "s", sections, "open")
 
 
 @core.docstring_inherit(core.Dataset)

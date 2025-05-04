@@ -64,9 +64,7 @@ REMOTES = {
 
 DOWNLOAD_INFO = None
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non-Commercial Share-Alike 4.0 (CC BY-NC-SA 4.0)."
-)
+LICENSE_INFO = "Creative Commons Attribution Non-Commercial Share-Alike 4.0 (CC BY-NC-SA 4.0)."
 
 
 class Track(core.Track):
@@ -179,9 +177,7 @@ def load_pitch(fhandle: TextIO) -> annotations.F0Data:
         freqs.append(freq_val)
         voicing.append(float(freq_val > 0))
 
-    return annotations.F0Data(
-        np.array(times), "s", np.array(freqs), "hz", np.array(voicing), "binary"
-    )
+    return annotations.F0Data(np.array(times), "s", np.array(freqs), "hz", np.array(voicing), "binary")
 
 
 @io.coerce_to_string_io
@@ -232,17 +228,13 @@ class Dataset(core.Dataset):
 
     @core.cached_property
     def _artists_to_track_mapping(self):
-        mapping_path = os.path.join(
-            self.data_home, "SCMS/artists_to_track_mapping.json"
-        )
+        mapping_path = os.path.join(self.data_home, "SCMS/artists_to_track_mapping.json")
 
         try:
             with open(mapping_path, "r") as fhandle:
                 mapping = json.load(fhandle)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                "Artists to track mapping not found. Did you run .download()?"
-            )
+            raise FileNotFoundError("Artists to track mapping not found. Did you run .download()?")
 
         return mapping
 

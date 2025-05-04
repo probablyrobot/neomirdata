@@ -39,10 +39,9 @@ from typing import BinaryIO, Optional, Tuple
 
 import librosa
 import numpy as np
-from deprecated.sphinx import deprecated
 from smart_open import open
 
-from mirdata import core, download_utils, io
+from mirdata import core, download_utils
 
 BIBTEX = """
 @dataset{stein_michael_2023_7544032,
@@ -80,7 +79,7 @@ DOWNLOAD_INFO = """
     https://www.idmt.fraunhofer.de/en/publications/datasets/audio_effects.html
     And Zenodo:
     https://zenodo.org/records/7544032
-    
+
     Folder tree:
     data_home/
     ├── Bass monophon/
@@ -99,7 +98,7 @@ DOWNLOAD_INFO = """
     ├── Gitarre_polyphon2.zip       # Duplicate of Gitarre polyphon2
     ├── IDMT-SMT-AUDIO-EFFECTS/     # Empty folder
     └── IDMT-SMT-Audio-Effects-Description.pdf
-            
+
 """
 
 LICENSE_INFO = """
@@ -176,9 +175,7 @@ class Track(core.Track):
         try:
             return load_audio(self.audio_path)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                f"Audio file {self.audio_path} not found. Did you run .download?"
-            )
+            raise FileNotFoundError(f"Audio file {self.audio_path} not found. Did you run .download?")
 
 
 # no decorator here because of https://github.com/librosa/librosa/issues/1267
@@ -287,9 +284,7 @@ class Dataset(core.Dataset):
                         }
 
         if xml_files_count == 0:
-            raise FileNotFoundError(
-                f"No XML files found in {self.data_home}. Did you run .download?"
-            )
+            raise FileNotFoundError(f"No XML files found in {self.data_home}. Did you run .download?")
         return metadata
 
     def download(
@@ -327,9 +322,7 @@ class Dataset(core.Dataset):
         download_utils.unzip(zip_path=download_path, cleanup=cleanup)
 
         # Unzip the nested archives
-        nested_zip_path = os.path.join(
-            self.data_home, "IDMT-SMT-AUDIO-EFFECTS", "IDMT-SMT-AUDIO-EFFECTS"
-        )
+        nested_zip_path = os.path.join(self.data_home, "IDMT-SMT-AUDIO-EFFECTS", "IDMT-SMT-AUDIO-EFFECTS")
 
         zip_files_to_extract = {
             "Bass monophon.zip": "Bass monophon",
@@ -346,6 +339,4 @@ class Dataset(core.Dataset):
             download_utils.unzip(zip_path=zip_file_path, cleanup=cleanup)
 
         # Move contents from the temporary directory to the target directory
-        download_utils.move_directory_contents(
-            source_dir=nested_zip_path, target_dir=self.data_home
-        )
+        download_utils.move_directory_contents(source_dir=nested_zip_path, target_dir=self.data_home)

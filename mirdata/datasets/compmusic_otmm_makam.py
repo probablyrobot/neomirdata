@@ -69,9 +69,7 @@ INDEXES = {
         url="https://zenodo.org/records/13993317/files/compmusic_otmm_makam_index_dlfm2016-fix1.json?download=1",
         checksum="4400d99c243a2f2d3748631abe05c311",
     ),
-    "sample": core.Index(
-        filename="compmusic_otmm_makam_index_dlfm2016-fix1_sample.json"
-    ),
+    "sample": core.Index(filename="compmusic_otmm_makam_index_dlfm2016-fix1_sample.json"),
 }
 
 REMOTES = {
@@ -82,9 +80,7 @@ REMOTES = {
     )
 }
 
-LICENSE_INFO = (
-    "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
-)
+LICENSE_INFO = "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
 
 
 class Track(core.Track):
@@ -221,14 +217,10 @@ class Dataset(core.Dataset):
 
         return metadata
 
-    @deprecated(
-        reason="Use mirdata.datasets.compmusic_otmm_makam.load_pitch", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.compmusic_otmm_makam.load_pitch", version="0.3.4")
     def load_pitch(self, *args, **kwargs):
         return load_pitch(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.compmusic_otmm_makam.load_mb_tags", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.compmusic_otmm_makam.load_mb_tags", version="0.3.4")
     def load_mb_tags(self, *args, **kwargs):
         return load_mb_tags(*args, **kwargs)

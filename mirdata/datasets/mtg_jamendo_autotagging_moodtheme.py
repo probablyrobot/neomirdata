@@ -35,6 +35,7 @@
     This work has received funding from the European Union's Horizon 2020 research and innovation programme under
     grant agreement No 688382 "AudioCommons".
 """
+
 import csv
 import os
 from typing import BinaryIO, Optional, Tuple
@@ -63,20 +64,18 @@ INDEXES = {
         url="https://zenodo.org/records/13930488/files/mtg_jamendo_autotagging_moodtheme_index_1.0.json?download=1",
         checksum="a6f7b654d3ebccf3388e9e93a5e58239",
     ),
-    "sample": core.Index(
-        filename="mtg_jamendo_autotagging_moodtheme_index_1.0_sample.json"
-    ),
+    "sample": core.Index(filename="mtg_jamendo_autotagging_moodtheme_index_1.0_sample.json"),
 }
 DOWNLOAD_INFO = """
     The audio files can be downloaded following the path described in https://github.com/MTG/mtg-jamendo-dataset#downloading-the-data
-    
+
     To download audio, unpack and validate all tar archives:
-    
+
     .. code-block:: console
 
           mkdir /path/to/download
           python3 scripts/download/download.py --dataset autotagging_moodtheme --type audio /path/to/download --unpack --remove
-    
+
     Later add the files to a folder into mir_datasets called audio/ with the following structure:
         > mtg_jamendo_autotagging_moodtheme/
             > audios/
@@ -174,9 +173,7 @@ class Dataset(core.Dataset):
             download_info=DOWNLOAD_INFO,
             indexes=INDEXES,
             remotes=REMOTES,
-            license_info=(
-                "Creative Commons Attribution NonCommercial Share Alike 4.0 International."
-            ),
+            license_info=("Creative Commons Attribution NonCommercial Share Alike 4.0 International."),
         )
 
     @core.cached_property
@@ -186,10 +183,7 @@ class Dataset(core.Dataset):
         try:
             with open(meta_path, "r") as fhandle:
                 reader = csv.DictReader(fhandle, delimiter="\t")
-                meta = {
-                    row["TRACK_ID"]: {k: row[k] for k in row if k != "TRACK_ID"}
-                    for row in reader
-                }
+                meta = {row["TRACK_ID"]: {k: row[k] for k in row if k != "TRACK_ID"} for row in reader}
         except FileNotFoundError:
             raise FileNotFoundError("Metadata not found. Did you run .download()?")
 
@@ -251,9 +245,7 @@ class Dataset(core.Dataset):
             dict: splits, keyed by split name and with values of lists of track_ids
         """
         if split_number not in [0, 1, 2, 3, 4]:
-            raise ValueError(
-                f"split_number must be 0, 1, 2, 3, or 4, got {split_number}"
-            )
+            raise ValueError(f"split_number must be 0, 1, 2, 3, or 4, got {split_number}")
 
         return self._metadata["splits"][split_number]
 

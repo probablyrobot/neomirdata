@@ -58,19 +58,11 @@ TEST_DATA_HOME = os.path.normpath("tests/resources/mir_datasets")
 
 def test_dataset_attributes():
     for dataset_name in DATASETS:
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
-        assert (
-            dataset.name == dataset_name
-        ), f"{dataset_name}.dataset attribute does not match dataset name"
-        assert (
-            dataset.bibtex is not None
-        ), f"No BIBTEX information provided for {dataset_name}"
-        assert (
-            dataset._license_info is not None
-        ), f"No LICENSE information provided for {dataset_name}"
+        assert dataset.name == dataset_name, f"{dataset_name}.dataset attribute does not match dataset name"
+        assert dataset.bibtex is not None, f"No BIBTEX information provided for {dataset_name}"
+        assert dataset._license_info is not None, f"No LICENSE information provided for {dataset_name}"
         assert (
             isinstance(dataset.remotes, dict) or dataset.remotes is None
         ), f"{dataset_name}.REMOTES must be a dictionary"
@@ -78,9 +70,7 @@ def test_dataset_attributes():
         assert (
             isinstance(dataset._download_info, str) or dataset._download_info is None
         ), f"{dataset_name}.DOWNLOAD_INFO must be a string"
-        assert type(dataset._track_class) == type(
-            core.Track
-        ), f"{dataset_name}.Track must be an instance of core.Track"
+        assert type(dataset._track_class) == type(core.Track), f"{dataset_name}.Track must be an instance of core.Track"
         assert callable(dataset.download), f"{dataset_name}.download is not a function"
 
 
@@ -108,16 +98,12 @@ def test_smart_open():
         )
         if "open(" in code_lines:
             assert hasattr(dataset_module, "open"), not_overwritten_message
-            assert (
-                dataset_module.open.__module__ == "smart_open.smart_open_lib"
-            ), overwritten_wrong_message
+            assert dataset_module.open.__module__ == "smart_open.smart_open_lib", overwritten_wrong_message
 
 
 def test_cite_and_license():
     for dataset_name in DATASETS:
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
         text_trap = io.StringIO()
         sys.stdout = text_trap
@@ -137,9 +123,7 @@ DOWNLOAD_EXCEPTIONS = ["maestro", "slakh", "gtzan_genre", "idmt_smt_audio_effect
 def test_download(mocker):
     for dataset_name in DATASETS:
         print(dataset_name)
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
         # test parameters & defaults
         assert callable(dataset.download), f"{dataset_name}.download is not callable"
@@ -192,9 +176,7 @@ def test_download(mocker):
 # when tests are run with the --local flag
 def test_validate(skip_local):
     for dataset_name in DATASETS:
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
         try:
             dataset.validate()
@@ -209,9 +191,7 @@ def test_validate(skip_local):
 
 def test_load_and_trackids():
     for dataset_name in DATASETS:
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
         try:
             track_ids = dataset.track_ids
@@ -234,9 +214,7 @@ def test_load_and_trackids():
             except:
                 assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
-            assert isinstance(
-                dataset_data, dict
-            ), f"{dataset_name}.load should return a dictionary"
+            assert isinstance(dataset_data, dict), f"{dataset_name}.load should return a dictionary"
             assert len(dataset_data.keys()) == trackid_len, (
                 f"the dictionary returned {dataset_name}.load() does not have the same number of elements as"
                 f" {dataset_name}.track_ids()"
@@ -245,9 +223,7 @@ def test_load_and_trackids():
 
 def test_track():
     for dataset_name in DATASETS:
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
         # if the dataset doesn't have a track object, make sure it raises a value error
         # and move on to the next dataset
@@ -264,9 +240,7 @@ def test_track():
         except:
             assert False, f"{dataset_name}: {sys.exc_info()[0]}"
 
-        assert isinstance(
-            track_test, core.Track
-        ), f"{dataset_name}.track must be an instance of type core.Track"
+        assert isinstance(track_test, core.Track), f"{dataset_name}.track must be an instance of type core.Track"
 
         # test calling all attributes, properties and cached properties
         track_data = get_attributes_and_properties(track_test)
@@ -369,9 +343,7 @@ def test_load_methods():
         dataset_module = importlib.import_module(f"mirdata.datasets.{dataset_name}")
 
         all_methods = dir(dataset_module)
-        load_methods = [
-            getattr(dataset_module, m) for m in all_methods if m.startswith("load_")
-        ]
+        load_methods = [getattr(dataset_module, m) for m in all_methods if m.startswith("load_")]
         for load_method in load_methods:
             method_name = load_method.__name__
 
@@ -380,9 +352,7 @@ def test_load_methods():
                 continue
 
             if load_method.__doc__ is None:
-                raise ValueError(
-                    f"mirdata.datasets.{dataset_name}.Dataset.{method_name} has no documentation"
-                )
+                raise ValueError(f"mirdata.datasets.{dataset_name}.Dataset.{method_name} has no documentation")
 
             # add to the EXCEPTIONS dictionary above if your load_* function needs
             # more than one argument.
@@ -402,9 +372,7 @@ def test_multitracks():
     data_home_dir = os.path.normpath("tests/resources/mir_datasets")
 
     for dataset_name in DATASETS:
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
         # TODO this is currently an opt-in test. Make it an opt out test
         # once #265 is addressed
@@ -435,9 +403,7 @@ def test_multitracks():
 def test_random_splits():
     split = [0.9, 0.1]
     for dataset_name in DATASETS:
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
         # check wrong type of split function
         if dataset._track_class is None:
@@ -464,9 +430,7 @@ def test_predetermined_splits():
     required_mtrack = ["slakh"]
     for dataset_name in DATASETS:
         print(dataset_name)
-        dataset = mirdata.initialize(
-            dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test"
-        )
+        dataset = mirdata.initialize(dataset_name, os.path.join(TEST_DATA_HOME, dataset_name), version="test")
 
         # test custom get_track_splits functions
         try:

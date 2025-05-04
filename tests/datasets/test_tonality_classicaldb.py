@@ -54,7 +54,9 @@ def test_track():
 
 
 def test_load_key():
-    key_path = "tests/resources/mir_datasets/tonality_classicaldb/keys/01-Allegro__Gloria_in_excelsis_Deo_in_D_Major - D.txt"
+    key_path = (
+        "tests/resources/mir_datasets/tonality_classicaldb/keys/01-Allegro__Gloria_in_excelsis_Deo_in_D_Major - D.txt"
+    )
     key_data = tonality_classicaldb.load_key(key_path)
 
     assert type(key_data) == str
@@ -66,7 +68,9 @@ def test_load_key():
 
 def test_load_spectrum():
     spectrum_path = "tests/resources/mir_datasets/tonality_classicaldb/spectrums/01-Allegro__Gloria_in_excelsis_Deo_in_D_Major - D.json"
-    audio_path = "tests/resources/mir_datasets/tonality_classicaldb/audio/01-Allegro__Gloria_in_excelsis_Deo_in_D_Major - D.wav"
+    audio_path = (
+        "tests/resources/mir_datasets/tonality_classicaldb/audio/01-Allegro__Gloria_in_excelsis_Deo_in_D_Major - D.wav"
+    )
     spectrum_data = tonality_classicaldb.load_spectrum(spectrum_path)
 
     assert type(spectrum_data) == np.ndarray
@@ -86,7 +90,9 @@ np.set_printoptions(threshold=sys.maxsize)
 
 
 def test_load_hpcp():
-    hpcp_path = "tests/resources/mir_datasets/tonality_classicaldb/HPCPs/01-Allegro__Gloria_in_excelsis_Deo_in_D_Major - D.json"
+    hpcp_path = (
+        "tests/resources/mir_datasets/tonality_classicaldb/HPCPs/01-Allegro__Gloria_in_excelsis_Deo_in_D_Major - D.json"
+    )
     hpcp_data = tonality_classicaldb.load_hpcp(hpcp_path)
 
     assert type(hpcp_data) == np.ndarray
@@ -130,9 +136,7 @@ musicbrainz_metadata_annotated = {
 
 def test_load_musicbrainz_metadata():
     musicbrainz_metadata_path = "tests/resources/mir_datasets/tonality_classicaldb/musicbrainz_metadata/01-Allegro__Gloria_in_excelsis_Deo_in_D_Major - D.json"
-    musicbrainz_metadata_data = tonality_classicaldb.load_musicbrainz(
-        musicbrainz_metadata_path
-    )
+    musicbrainz_metadata_data = tonality_classicaldb.load_musicbrainz(musicbrainz_metadata_path)
     print(musicbrainz_metadata_data)
     assert type(musicbrainz_metadata_data) == dict
     assert musicbrainz_metadata_data == musicbrainz_metadata_annotated

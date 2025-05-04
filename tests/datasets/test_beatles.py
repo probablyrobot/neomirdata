@@ -64,13 +64,9 @@ def test_load_beats():
     )
     beat_data = beatles.load_beats(beats_path)
 
-    assert (
-        type(beat_data) == annotations.BeatData
-    ), "beat_data is not type annotations.BeatData"
+    assert type(beat_data) == annotations.BeatData, "beat_data is not type annotations.BeatData"
     assert type(beat_data.times) == np.ndarray, "beat_data.times is not an np.ndarray"
-    assert (
-        type(beat_data.positions) == np.ndarray
-    ), "beat_data.positions is not an np.ndarray"
+    assert type(beat_data.positions) == np.ndarray, "beat_data.positions is not an np.ndarray"
 
     assert np.array_equal(
         beat_data.times,
@@ -94,12 +90,8 @@ def test_load_chords():
     assert type(chord_data.intervals) == np.ndarray
     assert type(chord_data.labels) == list
 
-    assert np.array_equal(
-        chord_data.intervals[:, 0], np.array([0.000000, 4.586464, 6.989730])
-    )
-    assert np.array_equal(
-        chord_data.intervals[:, 1], np.array([0.497838, 6.989730, 9.985104])
-    )
+    assert np.array_equal(chord_data.intervals[:, 0], np.array([0.000000, 4.586464, 6.989730]))
+    assert np.array_equal(chord_data.intervals[:, 1], np.array([0.497838, 6.989730, 9.985104]))
     assert np.array_equal(chord_data.labels, np.array(["N", "E:min", "G"]))
 
     assert beatles.load_chords(None) is None

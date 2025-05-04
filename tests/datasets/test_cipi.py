@@ -47,9 +47,7 @@ def test_track():
 
 
 def test_load_score():
-    path = os.path.normpath(
-        "craig_files/beethoven-piano-sonatas-master/kern/sonata01-1.musicxml"
-    )
+    path = os.path.normpath("craig_files/beethoven-piano-sonatas-master/kern/sonata01-1.musicxml")
     data_home = os.path.normpath("tests/resources/mir_datasets/cipi")
     score = cipi.load_score(path, data_home)
     assert isinstance(score, music21.stream.Score)

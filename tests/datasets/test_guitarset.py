@@ -177,27 +177,21 @@ def test_load_contours():
 def test_load_chords_no_annotations():
     dataset = guitarset.Dataset(TEST_DATA_HOME, version="test")
     track = dataset.track("00_BN1-129-Eb_comp")
-    with pytest.raises(
-        ValueError, match="No chord annotations found in the JAMS file."
-    ):
+    with pytest.raises(ValueError, match="No chord annotations found in the JAMS file."):
         guitarset.load_chords(track.jams_path, leadsheet_version=True)
 
 
 def test_load_pitch_contour_no_data():
     dataset = guitarset.Dataset(TEST_DATA_HOME, version="test")
     track = dataset.track("00_BN1-129-Eb_comp")
-    with pytest.raises(
-        ValueError, match="Pitch contour annotation not found in the JAMS file."
-    ):
+    with pytest.raises(ValueError, match="Pitch contour annotation not found in the JAMS file."):
         guitarset.load_pitch_contour(track.jams_path, 5)
 
 
 def test_load_notes_no_data():
     dataset = guitarset.Dataset(TEST_DATA_HOME, version="test")
     track = dataset.track("00_BN1-129-Eb_comp")
-    with pytest.raises(
-        ValueError, match="Note annotation or 'data' key not found in the JAMS file."
-    ):
+    with pytest.raises(ValueError, match="Note annotation or 'data' key not found in the JAMS file."):
         guitarset.load_notes(track.jams_path, 5)
 
 
@@ -209,9 +203,7 @@ def test_load_notes():
         track.notes["e"].intervals[:, 0],
         [0.7612308390022235, 1.5072852607709137, 1.7806185941042258],
     )
-    assert np.allclose(
-        track.notes["e"].intervals[:, 1], [1.2604598639455844, 1.7336798185940552, 2.0]
-    )
+    assert np.allclose(track.notes["e"].intervals[:, 1], [1.2604598639455844, 1.7336798185940552, 2.0])
     assert np.allclose(
         track.notes["e"].pitches,
         [67.0576287044242, 71.03221526299762, 71.03297250121584],

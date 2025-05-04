@@ -54,8 +54,7 @@ def test_track():
 def test_load_sections():
     # load a file which exists
     section_path = (
-        "tests/resources/mir_datasets/rwc_classical/"
-        + "annotations/AIST.RWC-MDB-C-2001.CHORUS/RM-C003.CHORUS.TXT"
+        "tests/resources/mir_datasets/rwc_classical/" + "annotations/AIST.RWC-MDB-C-2001.CHORUS/RM-C003.CHORUS.TXT"
     )
     section_data = rwc_classical.load_sections(section_path)
 
@@ -71,8 +70,7 @@ def test_load_sections():
 
     # empty file
     section_path = (
-        "tests/resources/mir_datasets/rwc_classical/"
-        + "annotations/AIST.RWC-MDB-C-2001.CHORUS/RM-C025_A.CHORUS.TXT"
+        "tests/resources/mir_datasets/rwc_classical/" + "annotations/AIST.RWC-MDB-C-2001.CHORUS/RM-C025_A.CHORUS.TXT"
     )
 
     section_data = rwc_classical.load_sections(section_path)
@@ -85,9 +83,7 @@ def test_position_in_bar():
     times1 = np.array([1, 2, 3, 4, 5, 6, 7, 8])
     fixed_positions1 = np.array([2, 1, 2, 1, 2, 1, 2, 1])
     fixed_times1 = np.array([1, 2, 3, 4, 5, 6, 7, 8])
-    actual_positions1, actual_times1 = rwc_classical._position_in_bar(
-        positions1, times1
-    )
+    actual_positions1, actual_times1 = rwc_classical._position_in_bar(positions1, times1)
     assert np.array_equal(actual_positions1, fixed_positions1)
     assert np.array_equal(actual_times1, fixed_times1)
 
@@ -95,9 +91,7 @@ def test_position_in_bar():
     times2 = np.array([1, 2, 3, 4, 5, 6, 7, 8])
     fixed_positions2 = np.array([2, 1, 2, 1, 2, 1, 2])
     fixed_times2 = np.array([2, 3, 4, 5, 6, 7, 8])
-    actual_positions2, actual_times2 = rwc_classical._position_in_bar(
-        positions2, times2
-    )
+    actual_positions2, actual_times2 = rwc_classical._position_in_bar(positions2, times2)
     assert np.array_equal(actual_positions2, fixed_positions2)
     assert np.array_equal(actual_times2, fixed_times2)
 
@@ -105,9 +99,7 @@ def test_position_in_bar():
     times3 = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
     fixed_positions3 = np.array([1, 2, 1, 2, 1, 2, 1, 2, 1])
     fixed_times3 = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
-    actual_positions3, actual_times3 = rwc_classical._position_in_bar(
-        positions3, times3
-    )
+    actual_positions3, actual_times3 = rwc_classical._position_in_bar(positions3, times3)
     assert np.array_equal(actual_positions3, fixed_positions3)
     assert np.array_equal(actual_times3, fixed_times3)
 
@@ -115,9 +107,7 @@ def test_position_in_bar():
     times4 = np.array([1, 2, 3, 4, 5, 6, 7, 8])
     fixed_positions4 = np.array([1, 2, 3, 4, 5, 6, 1, 2])
     fixed_times4 = np.array([1, 2, 3, 4, 5, 6, 7, 8])
-    actual_positions4, actual_times4 = rwc_classical._position_in_bar(
-        positions4, times4
-    )
+    actual_positions4, actual_times4 = rwc_classical._position_in_bar(positions4, times4)
     assert np.array_equal(actual_positions4, fixed_positions4)
     assert np.array_equal(actual_times4, fixed_times4)
 
@@ -125,18 +115,13 @@ def test_position_in_bar():
     times5 = np.array([1, 2, 3, 4, 5, 6, 7])
     fixed_positions5 = np.array([3, 1, 2, 3, 1, 2, 3])
     fixed_times5 = np.array([1, 2, 3, 4, 5, 6, 7])
-    actual_positions5, actual_times5 = rwc_classical._position_in_bar(
-        positions5, times5
-    )
+    actual_positions5, actual_times5 = rwc_classical._position_in_bar(positions5, times5)
     assert np.array_equal(actual_positions5, fixed_positions5)
     assert np.array_equal(actual_times5, fixed_times5)
 
 
 def test_load_beats():
-    beats_path = (
-        "tests/resources/mir_datasets/rwc_classical/"
-        + "annotations/AIST.RWC-MDB-C-2001.BEAT/RM-C003.BEAT.TXT"
-    )
+    beats_path = "tests/resources/mir_datasets/rwc_classical/" + "annotations/AIST.RWC-MDB-C-2001.BEAT/RM-C003.BEAT.TXT"
     beat_data = rwc_classical.load_beats(beats_path)
 
     # check types
@@ -145,9 +130,7 @@ def test_load_beats():
     assert type(beat_data.positions) is np.ndarray
 
     # check values
-    assert np.array_equal(
-        beat_data.times, np.array([1.65, 2.58, 2.95, 3.33, 3.71, 4.09, 5.18, 6.28])
-    )
+    assert np.array_equal(beat_data.times, np.array([1.65, 2.58, 2.95, 3.33, 3.71, 4.09, 5.18, 6.28]))
     assert np.array_equal(beat_data.positions, np.array([2, 1, 2, 1, 2, 1, 2, 1]))
 
 

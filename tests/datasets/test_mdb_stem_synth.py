@@ -51,9 +51,7 @@ def test_track():
 
 
 def test_load_f0():
-    f0_path = os.path.join(
-        DATA_HOME, "annotation_stems", f"{DEFAULT_TRACK_ID}.RESYN.csv"
-    )
+    f0_path = os.path.join(DATA_HOME, "annotation_stems", f"{DEFAULT_TRACK_ID}.RESYN.csv")
     f0_data = mdb_stem_synth.load_f0(f0_path)
 
     # check types

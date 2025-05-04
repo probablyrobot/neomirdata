@@ -38,7 +38,6 @@ from typing import BinaryIO, Optional, Tuple
 
 import librosa
 import numpy as np
-from deprecated.sphinx import deprecated
 
 from mirdata import annotations, core, download_utils, io
 

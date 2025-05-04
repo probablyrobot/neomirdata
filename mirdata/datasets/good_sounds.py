@@ -26,6 +26,7 @@
 
 
 """
+
 import json
 import os
 from typing import BinaryIO, Optional, Tuple
@@ -191,9 +192,7 @@ class Track(core.Track):
 
     @core.cached_property
     def sound_info(self) -> dict:
-        return self._metadata()["sounds"][
-            str(self._metadata()["takes"][self.track_id]["sound_id"])
-        ]
+        return self._metadata()["sounds"][str(self._metadata()["takes"][self.track_id]["sound_id"])]
 
     @core.cached_property
     def take_info(self) -> dict:
@@ -214,11 +213,7 @@ class Track(core.Track):
     @core.cached_property
     def pack_info(self) -> dict:
         return self._metadata()["packs"][
-            str(
-                self._metadata()["sounds"][
-                    str(self._metadata()["takes"][self.track_id]["sound_id"])
-                ]["pack_id"]
-            )
+            str(self._metadata()["sounds"][str(self._metadata()["takes"][self.track_id]["sound_id"])]["pack_id"])
         ]
 
     @core.cached_property
@@ -286,33 +281,25 @@ class Dataset(core.Dataset):
             with open(packs, "r") as fhandle:
                 packs = json.load(fhandle)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                "Packs metadata not found. Did you run .download()?"
-            )
+            raise FileNotFoundError("Packs metadata not found. Did you run .download()?")
 
         try:
             with open(ratings, "r") as fhandle:
                 ratings = json.load(fhandle)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                "Ratings metadata not found. Did you run .download()?"
-            )
+            raise FileNotFoundError("Ratings metadata not found. Did you run .download()?")
 
         try:
             with open(sounds, "r") as fhandle:
                 sounds = json.load(fhandle)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                "Sounds metadata not found. Did you run .download()?"
-            )
+            raise FileNotFoundError("Sounds metadata not found. Did you run .download()?")
 
         try:
             with open(takes, "r") as fhandle:
                 takes = json.load(fhandle)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                "Takes metadata not found. Did you run .download()?"
-            )
+            raise FileNotFoundError("Takes metadata not found. Did you run .download()?")
 
         return {"packs": packs, "ratings": ratings, "sounds": sounds, "takes": takes}
 

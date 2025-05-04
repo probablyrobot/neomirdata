@@ -55,10 +55,7 @@ def test_track():
 
 def test_load_melody():
     # load a file which exists
-    melody_path = (
-        "tests/resources/mir_datasets/medleydb_melody/"
-        + "melody1/MusicDelta_Beethoven_MELODY1.csv"
-    )
+    melody_path = "tests/resources/mir_datasets/medleydb_melody/" + "melody1/MusicDelta_Beethoven_MELODY1.csv"
     melody_data = medleydb_melody.load_melody(melody_path)
 
     # check types
@@ -68,19 +65,14 @@ def test_load_melody():
     assert isinstance(melody_data.voicing, np.ndarray)
 
     # check values
-    assert np.array_equal(
-        melody_data.times, np.array([0.0058049886621315194, 0.052244897959183675])
-    )
+    assert np.array_equal(melody_data.times, np.array([0.0058049886621315194, 0.052244897959183675]))
     assert np.array_equal(melody_data.frequencies, np.array([0.0, 965.99199999999996]))
     assert np.array_equal(melody_data.voicing, np.array([0.0, 1.0]))
 
 
 def test_load_melody3():
     # load a file which exists
-    melody_path = (
-        "tests/resources/mir_datasets/medleydb_melody/"
-        + "melody3/MusicDelta_Beethoven_MELODY3.csv"
-    )
+    melody_path = "tests/resources/mir_datasets/medleydb_melody/" + "melody3/MusicDelta_Beethoven_MELODY3.csv"
     melody_data = medleydb_melody.load_melody3(melody_path)
 
     # check types

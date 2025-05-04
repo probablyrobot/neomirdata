@@ -57,9 +57,7 @@ DOWNLOAD_INFO = """
     and copy the Beatles folder to {}
 """
 
-LICENSE_INFO = (
-    "Unfortunately we couldn't find the license information for the Beatles dataset."
-)
+LICENSE_INFO = "Unfortunately we couldn't find the license information for the Beatles dataset."
 
 
 class Track(core.Track):
@@ -170,7 +168,6 @@ def load_beats(fhandle: TextIO) -> annotations.BeatData:
     )
 
 
-
 @io.coerce_to_string_io
 def load_chords(fhandle: TextIO) -> annotations.ChordData:
     """Load Beatles format chord data from a file
@@ -191,9 +188,7 @@ def load_chords(fhandle: TextIO) -> annotations.ChordData:
         end_times.append(float(line[1]))
         chords.append(line[2])
 
-    return annotations.ChordData(
-        np.array([start_times, end_times]).T, "s", chords, "harte"
-    )
+    return annotations.ChordData(np.array([start_times, end_times]).T, "s", chords, "harte")
 
 
 @io.coerce_to_string_io
@@ -215,9 +210,7 @@ def load_key(fhandle: TextIO) -> annotations.KeyData:
             end_times.append(float(line[1]))
             keys.append(line[3])
 
-    return annotations.KeyData(
-        np.array([start_times, end_times]).T, "s", keys, "key_mode"
-    )
+    return annotations.KeyData(np.array([start_times, end_times]).T, "s", keys, "key_mode")
 
 
 @io.coerce_to_string_io
@@ -237,9 +230,7 @@ def load_sections(fhandle: TextIO) -> annotations.SectionData:
         end_times.append(float(line[1]))
         sections.append(line[3])
 
-    return annotations.SectionData(
-        np.array([start_times, end_times]).T, "s", sections, "open"
-    )
+    return annotations.SectionData(np.array([start_times, end_times]).T, "s", sections, "open")
 
 
 def _fix_newpoint(beat_positions: np.ndarray) -> np.ndarray:
@@ -250,12 +241,10 @@ def _fix_newpoint(beat_positions: np.ndarray) -> np.ndarray:
     while np.any(beat_positions == "New Point"):
         idxs = np.where(beat_positions == "New Point")[0]
         for i in idxs:
-            if i < len(beat_positions) - 1:
-                if beat_positions[i + 1] != "New Point":
-                    beat_positions[i] = str(np.mod(int(beat_positions[i + 1]) - 1, 4))
-            if i == len(beat_positions) - 1:
-                if beat_positions[i - 1] != "New Point":
-                    beat_positions[i] = str(np.mod(int(beat_positions[i - 1]) + 1, 4))
+            if i < len(beat_positions) - 1 and beat_positions[i + 1] != "New Point":
+                beat_positions[i] = str(np.mod(int(beat_positions[i + 1]) - 1, 4))
+            if i == len(beat_positions) - 1 and beat_positions[i - 1] != "New Point":
+                beat_positions[i] = str(np.mod(int(beat_positions[i - 1]) + 1, 4))
     beat_positions[beat_positions == "0"] = "4"
 
     return beat_positions

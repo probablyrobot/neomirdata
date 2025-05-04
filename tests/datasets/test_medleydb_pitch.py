@@ -48,10 +48,7 @@ def test_track():
 
 def test_load_pitch():
     # load a file which exists
-    pitch_path = (
-        "tests/resources/mir_datasets/medleydb_pitch/"
-        + "pitch/AClassicEducation_NightOwl_STEM_08.csv"
-    )
+    pitch_path = "tests/resources/mir_datasets/medleydb_pitch/" + "pitch/AClassicEducation_NightOwl_STEM_08.csv"
     pitch_data = medleydb_pitch.load_pitch(pitch_path)
 
     # check types
@@ -61,9 +58,7 @@ def test_load_pitch():
     assert isinstance(pitch_data.voicing, np.ndarray)
 
     # check values
-    assert np.array_equal(
-        pitch_data.times, np.array([0.06965986394557823, 0.07546485260770976])
-    )
+    assert np.array_equal(pitch_data.times, np.array([0.06965986394557823, 0.07546485260770976]))
     assert np.array_equal(pitch_data.frequencies, np.array([0.0, 191.877]))
     assert np.array_equal(pitch_data.voicing, np.array([0.0, 1.0]))
 

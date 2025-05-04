@@ -54,9 +54,7 @@ REMOTES = {
     )
 }
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 
 class Track(core.Track):
@@ -219,9 +217,7 @@ def load_melody(fhandle: TextIO) -> annotations.F0Data:
         freqs.append(float(line[1]))
         voicing.append(0.0 if line[1] == "0" else 1.0)
 
-    return annotations.F0Data(
-        np.array(times), "s", np.array(freqs), "hz", np.array(voicing), "binary"
-    )
+    return annotations.F0Data(np.array(times), "s", np.array(freqs), "hz", np.array(voicing), "binary")
 
 
 @core.docstring_inherit(core.Dataset)
@@ -244,9 +240,7 @@ class Dataset(core.Dataset):
 
     @core.cached_property
     def _metadata(self):
-        predominant_inst_path = os.path.join(
-            self.data_home, "Orchset - Predominant Melodic Instruments.csv"
-        )
+        predominant_inst_path = os.path.join(self.data_home, "Orchset - Predominant Melodic Instruments.csv")
 
         try:
             with open(predominant_inst_path, "r") as fhandle:
@@ -271,9 +265,7 @@ class Dataset(core.Dataset):
                 id_split.pop(1)
 
             melodic_instruments = [s.split(",") for s in line[1].split("+")]
-            melodic_instruments = [
-                item.lower() for sublist in melodic_instruments for item in sublist
-            ]
+            melodic_instruments = [item.lower() for sublist in melodic_instruments for item in sublist]
             for i, inst in enumerate(melodic_instruments):
                 if inst == "string":
                     melodic_instruments[i] = "strings"
@@ -302,9 +294,7 @@ class Dataset(core.Dataset):
     def load_audio_mono(self, *args, **kwargs):
         return load_audio_mono(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.orchset.load_audio_stereo", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.orchset.load_audio_stereo", version="0.3.4")
     def load_audio_stereo(self, *args, **kwargs):
         return load_audio_stereo(*args, **kwargs)
 

@@ -24,13 +24,7 @@ from smart_open import open
 from mirdata import annotations, core, download_utils, io
 
 # these functions are identical for all rwc datasets
-from mirdata.datasets.rwc_classical import (
-    LICENSE_INFO,
-    _duration_to_sec,
-    load_audio,
-    load_beats,
-    load_sections,
-)
+from mirdata.datasets.rwc_classical import LICENSE_INFO, _duration_to_sec, load_audio, load_beats, load_sections
 
 BIBTEX = """@inproceedings{goto2002rwc,
   title={RWC Music Database: Popular, Classical and Jazz Music Databases.},
@@ -82,9 +76,7 @@ REMOTES = {
     ),
     "annotations_sections": download_utils.RemoteFileMetadata(
         filename="AIST.RWC-MDB-P-2001.CHORUS.zip",
-        url=(
-            "https://staff.aist.go.jp/m.goto/RWC-MDB/AIST-Annotation/AIST.RWC-MDB-P-2001.CHORUS.zip"
-        ),
+        url=("https://staff.aist.go.jp/m.goto/RWC-MDB/AIST-Annotation/AIST.RWC-MDB-P-2001.CHORUS.zip"),
         checksum="f76b3a32701fbd9bf78baa608f692a77",
         destination_dir="annotations",
     ),
@@ -340,9 +332,7 @@ class Dataset(core.Dataset):
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.rwc_popular.load_sections", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.rwc_popular.load_sections", version="0.3.4")
     def load_sections(self, *args, **kwargs):
         return load_sections(*args, **kwargs)
 
@@ -354,8 +344,6 @@ class Dataset(core.Dataset):
     def load_chords(self, *args, **kwargs):
         return load_chords(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.rwc_popular.load_vocal_activity", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.rwc_popular.load_vocal_activity", version="0.3.4")
     def load_vocal_activity(self, *args, **kwargs):
         return load_vocal_activity(*args, **kwargs)

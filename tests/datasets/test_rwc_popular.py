@@ -76,21 +76,14 @@ def test_load_chords():
     assert type(chord_data.labels) is list
 
     # check values
-    assert np.array_equal(
-        chord_data.intervals[:, 0], np.array([0.000, 0.104, 3.646, 43.992, 44.494])
-    )
-    assert np.array_equal(
-        chord_data.intervals[:, 1], np.array([0.104, 1.858, 5.387, 44.494, 47.636])
-    )
-    assert np.array_equal(
-        chord_data.labels, ["N", "Ab:min", "E:maj", "Bb:maj(*3)", "C:min7"]
-    )
+    assert np.array_equal(chord_data.intervals[:, 0], np.array([0.000, 0.104, 3.646, 43.992, 44.494]))
+    assert np.array_equal(chord_data.intervals[:, 1], np.array([0.104, 1.858, 5.387, 44.494, 47.636]))
+    assert np.array_equal(chord_data.labels, ["N", "Ab:min", "E:maj", "Bb:maj(*3)", "C:min7"])
 
 
 def test_load_vocal_activity():
     vocinst_path = (
-        "tests/resources/mir_datasets/rwc_popular/"
-        + "annotations/AIST.RWC-MDB-P-2001.VOCA_INST/RM-P001.VOCA_INST.TXT"
+        "tests/resources/mir_datasets/rwc_popular/" + "annotations/AIST.RWC-MDB-P-2001.VOCA_INST/RM-P001.VOCA_INST.TXT"
     )
     vocinst_data = rwc_popular.load_vocal_activity(vocinst_path)
 
@@ -132,9 +125,7 @@ def test_load_vocal_activity():
     )
     assert np.array_equal(
         vocinst_data.events,
-        np.array(
-            ["b", "m:withm", "b", "m:withm", "b", "m:withm", "b", "s:electricguitar"]
-        ),
+        np.array(["b", "m:withm", "b", "m:withm", "b", "m:withm", "b", "s:electricguitar"]),
     )
 
 

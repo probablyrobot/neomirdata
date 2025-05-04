@@ -47,9 +47,7 @@ def test_track():
     expected_property_test_types = {"instrument": list, "audio": tuple}
 
     run_track_tests(track, expected_attributes, expected_property_test_types)
-    run_track_tests(
-        track_train, expected_attributes_train, expected_property_test_types
-    )
+    run_track_tests(track_train, expected_attributes_train, expected_property_test_types)
 
     audio, sr = track.audio
     assert sr == 44100
@@ -59,18 +57,14 @@ def test_track():
 
 def test_load_pred_inst():
     # Training samples
-    pred_inst_audio_train = (
-        "tests/resources/mir_datasets/irmas/IRMAS-TrainingData/cla/"
-        + "[cla][cla]0189__2.wav"
-    )
+    pred_inst_audio_train = "tests/resources/mir_datasets/irmas/IRMAS-TrainingData/cla/" + "[cla][cla]0189__2.wav"
 
     pred_inst_train = os.path.basename(os.path.dirname(pred_inst_audio_train))
     assert pred_inst_train == "cla"
 
     # Testing samples
     pred_inst_ann_path_test = (
-        "tests/resources/mir_datasets/irmas/IRMAS-TestingData-Part1/Part1/"
-        + "02 - And The Body Will Die-8.txt"
+        "tests/resources/mir_datasets/irmas/IRMAS-TestingData-Part1/Part1/" + "02 - And The Body Will Die-8.txt"
     )
     pred_inst_data_test = irmas.load_pred_inst(pred_inst_ann_path_test)
     assert type(pred_inst_data_test) is list

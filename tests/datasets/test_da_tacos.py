@@ -73,7 +73,9 @@ def test_track():
 
 
 def test_load_tags():
-    tags_path = "tests/resources/mir_datasets/da_tacos/da-tacos_coveranalysis_subset_tags/W_163992_tags/P_547131_tags.h5"
+    tags_path = (
+        "tests/resources/mir_datasets/da_tacos/da-tacos_coveranalysis_subset_tags/W_163992_tags/P_547131_tags.h5"
+    )
     tags_data = da_tacos.load_tags(tags_path)
 
     assert isinstance(tags_data, list)
@@ -82,7 +84,9 @@ def test_load_tags():
 
 
 def test_load_cens():
-    cens_path = "tests/resources/mir_datasets/da_tacos/da-tacos_coveranalysis_subset_cens/W_163992_cens/P_547131_cens.h5"
+    cens_path = (
+        "tests/resources/mir_datasets/da_tacos/da-tacos_coveranalysis_subset_cens/W_163992_cens/P_547131_cens.h5"
+    )
     cens_data = da_tacos.load_cens(cens_path)
 
     assert isinstance(cens_data, np.ndarray)
@@ -92,7 +96,9 @@ def test_load_cens():
 
 
 def test_load_crema():
-    crema_path = "tests/resources/mir_datasets/da_tacos/da-tacos_coveranalysis_subset_crema/W_163992_crema/P_547131_crema.h5"
+    crema_path = (
+        "tests/resources/mir_datasets/da_tacos/da-tacos_coveranalysis_subset_crema/W_163992_crema/P_547131_crema.h5"
+    )
     crema_data = da_tacos.load_crema(crema_path)
 
     assert isinstance(crema_data, np.ndarray)

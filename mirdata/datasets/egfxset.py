@@ -345,9 +345,7 @@ class Dataset(core.Dataset):
 
             if track[:2].lower() == "cl":
                 metadata_index[track] = {
-                    "String-fret Tuple": [
-                        int(s) for s in re.findall(r"\b\d+\b", track.split("/")[1])
-                    ],
+                    "String-fret Tuple": [int(s) for s in re.findall(r"\b\d+\b", track.split("/")[1])],
                     "Note Name": annotations.convert_pitch_units(
                         pitches=np.array(
                             [cuerdas[noteCord[0]] + int(float(noteCord[1]))],
@@ -376,9 +374,7 @@ class Dataset(core.Dataset):
 
             if trackiden in indexname:
                 metadata_index[track] = {
-                    "String-fret Tuple": [
-                        int(s) for s in re.findall(r"\b\d+\b", track.split("/")[1])
-                    ],
+                    "String-fret Tuple": [int(s) for s in re.findall(r"\b\d+\b", track.split("/")[1])],
                     "Note Name": annotations.convert_pitch_units(
                         pitches=np.array(
                             [cuerdas[noteCord[0]] + int(float(noteCord[1]))],
@@ -400,15 +396,9 @@ class Dataset(core.Dataset):
                     "Effect": reader[indexname.index(trackiden)]["Effect "],
                     "Model": reader[indexname.index(trackiden)]["Model"],
                     "Effect Type": reader[indexname.index(trackiden)]["Effect Type"],
-                    "Knob Names": literal_eval(
-                        reader[indexname.index(trackiden)]["Knob Names"]
-                    ),
-                    "Knob Type": literal_eval(
-                        reader[indexname.index(trackiden)]["Knob Type"]
-                    ),
-                    "Setting": literal_eval(
-                        reader[indexname.index(trackiden)]["Setting "]
-                    ),
+                    "Knob Names": literal_eval(reader[indexname.index(trackiden)]["Knob Names"]),
+                    "Knob Type": literal_eval(reader[indexname.index(trackiden)]["Knob Type"]),
+                    "Setting": literal_eval(reader[indexname.index(trackiden)]["Setting "]),
                 }
 
         return metadata_index
