@@ -243,7 +243,10 @@ def test_download_index_cases(mocker, mock_path):
 
 def _clean(fpath):
     if os.path.exists(fpath):
-        shutil.rmtree(fpath)
+        try:
+            shutil.rmtree(fpath)
+        except (OSError, FileNotFoundError):
+            pass  # Ignore errors if directory was already removed
 
 
 def test_downloader_with_server_file(httpserver):

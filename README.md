@@ -1,33 +1,33 @@
-# mirdata
+# neomirdata
 Common loaders for Music Information Retrieval (MIR) datasets. Find the API documentation [here](https://mirdata.readthedocs.io/).
 
-![CI status](https://github.com/mir-dataset-loaders/mirdata/actions/workflows/ci.yml/badge.svg?branch=master)
-![Formatting status](https://github.com/mir-dataset-loaders/mirdata/actions/workflows/formatting.yml/badge.svg?branch=master)
-![Linting status](https://github.com/mir-dataset-loaders/mirdata/actions/workflows/lint-python.yml/badge.svg?branch=master)
-[![Documentation Status](https://readthedocs.org/projects/mirdata/badge/?version=latest)](https://mirdata.readthedocs.io/en/latest/?badge=latest)
-![GitHub](https://img.shields.io/github/license/mir-dataset-loaders/mirdata.svg)
+![CI status](https://github.com/probablyrobot/neomirdata/actions/workflows/ci.yml/badge.svg?branch=master)
+![Formatting status](https://github.com/probablyrobot/neomirdata/actions/workflows/formatting.yml/badge.svg?branch=master)
+![Linting status](https://github.com/probablyrobot/neomirdata/actions/workflows/lint-python.yml/badge.svg?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/neomirdata/badge/?version=latest)](https://neomirdata.readthedocs.io/en/latest/?badge=latest)
+![GitHub](https://img.shields.io/github/license/probablyrobot/neomirdata.svg)
 
 
-[![PyPI version](https://badge.fury.io/py/mirdata.svg)](https://badge.fury.io/py/mirdata)
-[![codecov](https://codecov.io/gh/mir-dataset-loaders/mirdata/branch/master/graph/badge.svg)](https://codecov.io/gh/mir-dataset-loaders/mirdata)
-[![Downloads](https://static.pepy.tech/badge/mirdata)](https://pepy.tech/project/mirdata)
-[![DOI](https://zenodo.org/badge/DOI/zenodo.10070589.svg)](https://doi.org/10.5281/zenodo.10070589)
+[![PyPI version](https://badge.fury.io/py/neomirdata.svg)](https://badge.fury.io/py/neomirdata)
+[![codecov](https://codecov.io/gh/probablyrobot/neomirdata/branch/master/graph/badge.svg)](https://codecov.io/gh/probablyrobot/neomirdata)
+[![Downloads](https://static.pepy.tech/badge/neomirdata)](https://pepy.tech/project/neomirdata)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-
-This library provides tools for working with common MIR datasets, including tools for:
+This library is a fork of [mirdata](https://github.com/mir-dataset-loaders/mirdata) and provides tools for working with common MIR datasets, including tools for:
 * downloading datasets to a common location and format
 * validating that the files for a dataset are all present 
 * loading annotation files to a common format, consistent with the format required by [mir_eval](https://github.com/craffel/mir_eval)
 * parsing track level metadata for detailed evaluations
 
+### Maintainer
+Igor Bogicevic (igor.bogicevic@gmail.com) - [@probablyrobot](https://github.com/probablyrobot)
 
 ### Installation
 
 To install, simply run:
 
 ```python
-pip install mirdata
+pip install neomirdata
 ```
 
 ### Quick example
@@ -54,17 +54,9 @@ For the **complete list** of supported datasets, see the [documentation](https:/
 
 ### Citing
 
+This project is a fork of mirdata. When using this library, please cite both the original mirdata paper and this fork:
 
-There are two ways of citing mirdata:
-
-If you are using the library for your work, please cite the version you used as indexed at Zenodo:
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10070589.svg)](https://doi.org/10.5281/zenodo.10070589)
-
-If you refer to mirdata's design principles, motivation etc., please cite the following [paper](https://zenodo.org/record/3527750#.X-Inp5NKhUI):
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3527750.svg)](https://doi.org/10.5281/zenodo.3527750)
-
+Original mirdata paper:
 ```
 "mirdata: Software for Reproducible Usage of Datasets"
 Rachel M. Bittner, Magdalena Fuentes, David Rubinstein, Andreas Jansson, Keunwoo Choi, and Thor Kell
@@ -81,8 +73,8 @@ in International Society for Music Information Retrieval (ISMIR) Conference, 201
 }
 ```
 
-When working with datasets, please cite the version of `mirdata` that you are using (given by the `DOI` above) **AND** include the reference of the dataset, which can be found in the respective dataset loader using the `cite()` method. 
+When working with datasets, please cite both the original mirdata paper and include the reference of the dataset, which can be found in the respective dataset loader using the `cite()` method.
 
-### Contributing a new dataset loader
+### Contributing
 
 We welcome contributions to this library, especially new datasets. Please see [contributing](https://mirdata.readthedocs.io/en/latest/source/contributing.html) for guidelines.
