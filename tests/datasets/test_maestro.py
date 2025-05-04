@@ -77,7 +77,8 @@ def test_download_partial(httpserver):
     if os.path.exists(data_home):
         shutil.rmtree(data_home)
 
-    httpserver.serve_content(open("tests/resources/download/maestro-v2.0.0.json").read())
+    with open("tests/resources/download/maestro-v2.0.0.json", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
     remotes = {
         "all": download_utils.RemoteFileMetadata(
             filename="1-maestro-v2.0.0.json",
@@ -117,7 +118,8 @@ def test_download(httpserver):
         shutil.rmtree(data_home)
 
     # download the full dataset
-    httpserver.serve_content(open("tests/resources/download/maestro-v2.0.0.zip", "rb").read())
+    with open("tests/resources/download/maestro-v2.0.0.zip", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
     remotes = {
         "all": download_utils.RemoteFileMetadata(
@@ -176,7 +178,8 @@ def test_download(httpserver):
         shutil.rmtree(data_home)
 
     # download the midi-only zip
-    httpserver.serve_content(open("tests/resources/download/maestro-v2.0.0-midi.zip", "rb").read())
+    with open("tests/resources/download/maestro-v2.0.0-midi.zip", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
     remotes = {
         "midi": download_utils.RemoteFileMetadata(
@@ -213,7 +216,8 @@ def test_download(httpserver):
         shutil.rmtree(data_home)
 
     # download only the metadata
-    httpserver.serve_content(open("tests/resources/download/maestro-v2.0.0.json", "rb").read())
+    with open("tests/resources/download/maestro-v2.0.0.json", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
     remotes = {
         "metadata": download_utils.RemoteFileMetadata(

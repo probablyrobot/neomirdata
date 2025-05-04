@@ -18,7 +18,8 @@ def test_track():
     expected_attributes = {
         "track_id": "G73-45200-3341-33944",
         "audio_path": os.path.normpath(
-            "tests/resources/mir_datasets/idmt_smt_audio_effects/Gitarre monophon2/Samples/Tremolo/G73-45200-3341-33944.wav",
+            "tests/resources/mir_datasets/idmt_smt_audio_effects/Gitarre monophon2/Samples/Tremolo/"
+            "G73-45200-3341-33944.wav",
         ),
     }
 
@@ -61,10 +62,10 @@ def test_metadata():
         os.makedirs(fake_data_home)
 
     # Test for FileNotFoundError
-    with pytest.raises(FileNotFoundError):
-        dataset = idmt_smt_audio_effects.Dataset(fake_data_home, version="test")
-        if hasattr(dataset, "_metadata"):
-            del dataset._metadata
+    dataset = idmt_smt_audio_effects.Dataset(fake_data_home, version="test")
+    if hasattr(dataset, "_metadata"):
+        del dataset._metadata
+    with pytest.raises(FileNotFoundError, match="Could not find metadata XML file"):
         metadata = dataset._metadata
 
     # Test for ParseError
@@ -75,7 +76,7 @@ def test_metadata():
         f.write("<root><corrupted>")
 
     dataset = idmt_smt_audio_effects.Dataset(corrupted_data_home, version="test")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Error parsing the metadata XML file"):
         metadata = dataset._metadata
 
     # Clean up after the test by removing the corrupted XML
@@ -88,7 +89,8 @@ def test_download(httpserver):
     if os.path.exists(data_home):
         shutil.rmtree(data_home)
 
-    httpserver.serve_content(open("tests/resources/download/IDMT-SMT-AUDIO-EFFECTS.zip", "rb").read())
+    with open("tests/resources/download/IDMT-SMT-AUDIO-EFFECTS.zip", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
     remotes = {
         "full_dataset": download_utils.RemoteFileMetadata(

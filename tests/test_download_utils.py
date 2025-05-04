@@ -1,3 +1,4 @@
+import contextlib
 import os
 import shutil
 import zipfile
@@ -106,7 +107,7 @@ def test_downloader(mocker, mock_path):
     mocker.resetall()
 
     # test bad type partial download
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="must be a list which is a subset"):
         download_utils.downloader(
             "a",
             index=index,
@@ -114,7 +115,7 @@ def test_downloader(mocker, mock_path):
             partial_download="b",
         )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="must be a list which is a subset"):
         download_utils.downloader(
             "a",
             index=index,
@@ -213,17 +214,16 @@ def test_download_index_cases(mocker, mock_path):
 
 def _clean(fpath):
     if os.path.exists(fpath):
-        try:
+        with contextlib.suppress(OSError, FileNotFoundError):
             shutil.rmtree(fpath)
-        except (OSError, FileNotFoundError):
-            pass  # Ignore errors if directory was already removed
 
 
 def test_downloader_with_server_file(httpserver):
     index = core.Index("asdf.json")
-    httpserver.serve_content(open("tests/resources/remote.wav").read())
+    with open("tests/resources/remote.wav", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
-    TEST_REMOTE = download_utils.RemoteFileMetadata(
+    test_remote = download_utils.RemoteFileMetadata(
         filename="remote.wav",
         url=httpserver.url,
         checksum=("3f77d0d69dc41b3696f074ad6bf2852f"),
@@ -232,38 +232,38 @@ def test_downloader_with_server_file(httpserver):
     save_dir = "tests/resources/tmp_download_test"
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, cleanup=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, cleanup=True)
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, force_overwrite=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, force_overwrite=True)
 
     _clean(save_dir)
 
     # test with wrong checksum: raises error
-    TEST_REMOTE = download_utils.RemoteFileMetadata(
+    test_remote = download_utils.RemoteFileMetadata(
         filename="remote.wav", url=httpserver.url, checksum=("wrongchecksum")
     )
 
-    with pytest.raises(OSError):
-        _clean(save_dir)
-        download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    _clean(save_dir)
+    with pytest.raises(OSError, match="checksum.*differs from the expected"):
+        download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
 
-    with pytest.raises(OSError):
-        _clean(save_dir)
-        download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, cleanup=True)
+    _clean(save_dir)
+    with pytest.raises(OSError, match="checksum.*differs from the expected"):
+        download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, cleanup=True)
 
-    with pytest.raises(OSError):
-        _clean(save_dir)
-        download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, force_overwrite=True)
+    _clean(save_dir)
+    with pytest.raises(OSError, match="checksum.*differs from the expected"):
+        download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, force_overwrite=True)
 
     # test with wrong checksum: ignore error
     with pytest.warns(UserWarning):
@@ -271,7 +271,7 @@ def test_downloader_with_server_file(httpserver):
         download_utils.downloader(
             save_dir,
             index=index,
-            remotes={"b": TEST_REMOTE},
+            remotes={"b": test_remote},
             allow_invalid_checksum=True,
         )
 
@@ -280,7 +280,7 @@ def test_downloader_with_server_file(httpserver):
         download_utils.downloader(
             save_dir,
             index=index,
-            remotes={"b": TEST_REMOTE},
+            remotes={"b": test_remote},
             cleanup=True,
             allow_invalid_checksum=True,
         )
@@ -290,7 +290,7 @@ def test_downloader_with_server_file(httpserver):
         download_utils.downloader(
             save_dir,
             index=index,
-            remotes={"b": TEST_REMOTE},
+            remotes={"b": test_remote},
             force_overwrite=True,
             allow_invalid_checksum=True,
         )
@@ -298,9 +298,10 @@ def test_downloader_with_server_file(httpserver):
 
 def test_downloader_with_server_zip(httpserver):
     index = core.Index("asdf.json")
-    httpserver.serve_content(open("tests/resources/remote.zip", "rb").read())
+    with open("tests/resources/remote.zip", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
-    TEST_REMOTE = download_utils.RemoteFileMetadata(
+    test_remote = download_utils.RemoteFileMetadata(
         filename="remote.zip",
         url=httpserver.url,
         checksum=("7a31ccfa28bfa3fb112d16c96e9d9a89"),
@@ -309,24 +310,24 @@ def test_downloader_with_server_zip(httpserver):
     save_dir = "tests/resources/_tmp_test_download_utils"
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, cleanup=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, cleanup=True)
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE})
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote})
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, force_overwrite=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, force_overwrite=True)
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, cleanup=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, cleanup=True)
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, force_overwrite=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, force_overwrite=True)
 
     _clean(save_dir)
 
@@ -334,10 +335,11 @@ def test_downloader_with_server_zip(httpserver):
 @pytest.mark.skip(reason="Tar file test is not working reliably")
 def test_downloader_with_server_tar(httpserver):
     index = core.Index("asdf.json")
-    httpserver.serve_content(open("tests/resources/remote-valid.tar.gz", "rb").read())
+    with open("tests/resources/remote-valid.tar.gz", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
     # Update the checksum to not match the actual file, but use allow_invalid_checksum
-    TEST_REMOTE = download_utils.RemoteFileMetadata(
+    test_remote = download_utils.RemoteFileMetadata(
         filename="remote-valid.tar.gz",
         url=httpserver.url,
         checksum="1234567890",  # This is deliberately wrong
@@ -346,61 +348,63 @@ def test_downloader_with_server_tar(httpserver):
     save_dir = "tests/resources/_tmp_test_download_utils"
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, allow_invalid_checksum=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, allow_invalid_checksum=True)
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, allow_invalid_checksum=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, allow_invalid_checksum=True)
 
     _clean(save_dir)
     download_utils.downloader(
-        save_dir, index=index, remotes={"b": TEST_REMOTE}, cleanup=True, allow_invalid_checksum=True
+        save_dir, index=index, remotes={"b": test_remote}, cleanup=True, allow_invalid_checksum=True
     )
     # test downloading twice
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, allow_invalid_checksum=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, allow_invalid_checksum=True)
 
     _clean(save_dir)
-    download_utils.downloader(save_dir, index=index, remotes={"b": TEST_REMOTE}, allow_invalid_checksum=True)
+    download_utils.downloader(save_dir, index=index, remotes={"b": test_remote}, allow_invalid_checksum=True)
     # test downloading twice
     download_utils.downloader(
-        save_dir, index=index, remotes={"b": TEST_REMOTE}, force_overwrite=True, allow_invalid_checksum=True
+        save_dir, index=index, remotes={"b": test_remote}, force_overwrite=True, allow_invalid_checksum=True
     )
 
     _clean(save_dir)
 
 
 def test_download_from_remote(httpserver, tmpdir):
-    httpserver.serve_content(open("tests/resources/remote.wav").read())
+    with open("tests/resources/remote.wav", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
-    TEST_REMOTE = download_utils.RemoteFileMetadata(
+    test_remote = download_utils.RemoteFileMetadata(
         filename="remote.wav",
         url=httpserver.url,
         checksum=("3f77d0d69dc41b3696f074ad6bf2852f"),
     )
 
-    download_path = download_utils.download_from_remote(TEST_REMOTE, str(tmpdir), False, False)
+    download_utils.download_from_remote(test_remote, str(tmpdir), False, False)
 
 
 def test_download_from_remote_destdir(httpserver, tmpdir):
-    httpserver.serve_content(open("tests/resources/remote.wav").read())
+    with open("tests/resources/remote.wav", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
-    TEST_REMOTE = download_utils.RemoteFileMetadata(
+    test_remote = download_utils.RemoteFileMetadata(
         filename="remote.wav",
         url=httpserver.url,
         checksum=("3f77d0d69dc41b3696f074ad6bf2852f"),
         destination_dir="subfolder",
     )
 
-    download_path = download_utils.download_from_remote(TEST_REMOTE, str(tmpdir), False, False)
+    download_path = download_utils.download_from_remote(test_remote, str(tmpdir), False, False)
     expected_download_path = os.path.join(str(tmpdir), "subfolder", "remote.wav")
     assert expected_download_path == download_path
 
 
-def test_download_from_remote_raises_IOError(httpserver, tmpdir):
+def test_download_from_remote_raises_ioerror(httpserver, tmpdir):
     httpserver.serve_content("File not found!", 404)
 
-    TEST_REMOTE = download_utils.RemoteFileMetadata(filename="remote.wav", url=httpserver.url, checksum=("1234"))
+    test_remote = download_utils.RemoteFileMetadata(filename="remote.wav", url=httpserver.url, checksum=("1234"))
 
-    with pytest.raises(IOError):
-        download_utils.download_from_remote(TEST_REMOTE, str(tmpdir), False, False)
+    with pytest.raises(OSError, match="Failed to download"):
+        download_utils.download_from_remote(test_remote, str(tmpdir), False, False)
 
 
 def test_unzip():
@@ -456,8 +460,8 @@ def test_download_tar_file_ignorechecksum(mocker, mock_download_from_remote, moc
 def test_extractall_unicode(mocker, mock_download_from_remote, mock_unzip):
     zip_files = ("tests/resources/utfissue.zip", "tests/resources/utfissuewin.zip")
     expected_files_all = (
-        ["pic👨‍👩‍👧‍👦🎂.jpg", "Benoît.txt", "Icon"],
-        ["pic👨‍👩‍👧‍👦🎂.jpg", "BenoŒt.txt", "Icon"],
+        ["pic👨‍👩‍👧‍👦🎂.jpg", "Benoît.txt", "Icon"],
+        ["pic👨‍👩‍👧‍👦🎂.jpg", "BenoŒt.txt", "Icon"],
     )
     for zipf, expected_files in zip(zip_files, expected_files_all):
         zfile = zipfile.ZipFile(zipf, "r")
@@ -473,7 +477,7 @@ def test_extractall_cp437(mocker, mock_download_from_remote, mock_unzip):
     zfile = zipfile.ZipFile("tests/resources/utfissue.zip", "r")
     zfile.extractall(os.path.dirname("tests/resources/"))
     zfile.close()
-    expected_files = ["pic👨‍👩‍👧‍👦🎂.jpg", "Benoît.txt", "Icon"]
+    expected_files = ["pic👨‍👩‍👧‍👦🎂.jpg", "Benoît.txt", "Icon"]
     for expected_file in expected_files:
         expected_file_location = os.path.join("tests", "resources", expected_file)
         assert not os.path.exists(expected_file_location)
