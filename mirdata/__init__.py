@@ -4,12 +4,9 @@ import pkgutil
 
 from .version import version as __version__
 
-DATASETS = [
-    d.name
-    for d in pkgutil.iter_modules(
-        [os.path.dirname(os.path.abspath(__file__)) + "/datasets"]
-    )
-]
+DATASETS = [d.name for d in pkgutil.iter_modules([os.path.dirname(os.path.abspath(__file__)) + "/datasets"])]
+
+__all__ = ["__version__", "DATASETS", "list_datasets", "list_dataset_versions", "initialize"]
 
 
 def list_datasets():
@@ -31,11 +28,7 @@ def list_dataset_versions(dataset_name):
     module = importlib.import_module(f"mirdata.datasets.{dataset_name}")
     return "Available versions for {}: {}. Default version: {}".format(
         dataset_name,
-        [
-            x
-            for x in list(module.INDEXES.keys())
-            if x not in ["default", "sample", "test"]
-        ],
+        [x for x in list(module.INDEXES.keys()) if x not in ["default", "sample", "test"]],
         module.INDEXES["default"],
     )
 

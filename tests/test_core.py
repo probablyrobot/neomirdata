@@ -33,9 +33,7 @@ def test_track():
         track._track_metadata
 
     path_good = track.get_path("annotation")
-    assert os.path.normpath(path_good) == os.path.normpath(
-        "tests/resources/mir_datasets/asdf/asdd"
-    )
+    assert os.path.normpath(path_good) == os.path.normpath("tests/resources/mir_datasets/asdf/asdd")
     path_none = track.get_path("audio")
     assert path_none is None
 
@@ -44,22 +42,16 @@ def test_track():
     metadata_global = lambda: {"asdf": [1, 2, 3], "asdd": [4, 5, 6]}
     metadata_none = lambda: None
 
-    track_metadata_tidx = core.Track(
-        track_id, data_home, dataset_name, index, metadata_track_index
-    )
+    track_metadata_tidx = core.Track(track_id, data_home, dataset_name, index, metadata_track_index)
     assert track_metadata_tidx._track_metadata == {"x": 1, "y": 2, "z": 3}
 
-    track_metadata_global = core.Track(
-        track_id, data_home, dataset_name, index, metadata_global
-    )
+    track_metadata_global = core.Track(track_id, data_home, dataset_name, index, metadata_global)
     assert track_metadata_global._track_metadata == {
         "asdf": [1, 2, 3],
         "asdd": [4, 5, 6],
     }
 
-    track_metadata_none = core.Track(
-        track_id, data_home, dataset_name, index, metadata_none
-    )
+    track_metadata_none = core.Track(track_id, data_home, dataset_name, index, metadata_none)
     with pytest.raises(AttributeError):
         track_metadata_none._track_metadata
 
@@ -77,12 +69,12 @@ def test_track_repr():
         @property
         def f(self):
             """ThisObjectType: I have a docstring"""
-            return None
+            return
 
         @property
         def g(self):
             """I have an improper docstring"""
-            return None
+            return
 
         def h(self):
             return "I'm a function!"
@@ -121,12 +113,12 @@ def test_multitrack_repr():
         @property
         def f(self):
             """ThisObjectType: I have a docstring"""
-            return None
+            return
 
         @property
         def g(self):
             """I have an improper docstring"""
-            return None
+            return
 
         def h(self):
             return "I'm a function!"
@@ -140,9 +132,7 @@ def test_multitrack_repr():
 
     test_mtrack = TestMultiTrack("test", "foo")
     actual = test_mtrack.__repr__()
-    assert (
-        actual == expected1 + expected2 + expected3 + expected4 + expected5 + expected6
-    )
+    assert actual == expected1 + expected2 + expected3 + expected4 + expected5 + expected6
 
 
 def test_dataset():
@@ -183,9 +173,7 @@ def test_dataset_versions():
                     "default": "1",
                     "test": "0",
                     "0": core.Index("blah_0.json"),
-                    "1": core.Index(
-                        "blah_1.json", url="https://google.com", checksum="asdf"
-                    ),
+                    "1": core.Index("blah_1.json", url="https://google.com", checksum="asdf"),
                     "2": core.Index("blah_2.json"),
                     "real": core.Index("beatles_index_1.2_sample.json"),
                 },
@@ -204,39 +192,35 @@ def test_dataset_versions():
 
     dataset = VersionTest("asdf")
     assert dataset.version == "1"
-    assert os.path.join(
-        *dataset.index_path.split(os.path.sep)[-4:]
-    ) == os.path.normpath("mirdata/datasets/indexes/blah_1.json")
+    assert os.path.join(*dataset.index_path.split(os.path.sep)[-4:]) == os.path.normpath(
+        "mirdata/datasets/indexes/blah_1.json"
+    )
 
     dataset_default = VersionTest("asdf")
     assert dataset_default.version == "1"
-    assert os.path.join(
-        *dataset.index_path.split(os.path.sep)[-4:]
-    ) == os.path.normpath("mirdata/datasets/indexes/blah_1.json")
+    assert os.path.join(*dataset.index_path.split(os.path.sep)[-4:]) == os.path.normpath(
+        "mirdata/datasets/indexes/blah_1.json"
+    )
 
     dataset_1 = VersionTest("asdf", version="1")
     assert dataset_1.version == "1"
-    assert os.path.join(
-        *dataset_1.index_path.split(os.path.sep)[-4:]
-    ) == os.path.normpath("mirdata/datasets/indexes/blah_1.json")
+    assert os.path.join(*dataset_1.index_path.split(os.path.sep)[-4:]) == os.path.normpath(
+        "mirdata/datasets/indexes/blah_1.json"
+    )
     with pytest.raises(FileNotFoundError):
         dataset_1._index
 
     local_index_path = os.path.dirname(os.path.realpath(__file__))[:-5]
     dataset_test = VersionTest("asdf", version="test")
     assert dataset_test.version == "0"
-    assert dataset_test.index_path == os.path.join(
-        local_index_path, "tests", "indexes", "blah_0.json"
-    )
+    assert dataset_test.index_path == os.path.join(local_index_path, "tests", "indexes", "blah_0.json")
 
     with pytest.raises(IOError):
         dataset_test._index
 
     dataset_0 = VersionTest("asdf", version="0")
     assert dataset_0.version == "0"
-    assert dataset_0.index_path == os.path.join(
-        local_index_path, "tests", "indexes", "blah_0.json"
-    )
+    assert dataset_0.index_path == os.path.join(local_index_path, "tests", "indexes", "blah_0.json")
 
     dataset_real = VersionTest("asdf", version="real")
     assert dataset_real.version == "real"
@@ -317,14 +301,10 @@ def test_multitrack():
     mtrack_id = "ab"
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
-    mtrack = core.MultiTrack(
-        mtrack_id, data_home, dataset_name, index, core.Track, lambda: None
-    )
+    mtrack = core.MultiTrack(mtrack_id, data_home, dataset_name, index, core.Track, lambda: None)
 
     path_good = mtrack.get_path("audio_master")
-    assert os.path.normpath(path_good) == os.path.normpath(
-        "tests/resources/mir_datasets/foo/bar"
-    )
+    assert os.path.normpath(path_good) == os.path.normpath("tests/resources/mir_datasets/foo/bar")
     path_none = mtrack.get_path("score")
     assert path_none is None
 
@@ -354,29 +334,21 @@ def test_multitrack():
     metadata_global = lambda: {"asdf": [1, 2, 3], "asdd": [4, 5, 6]}
     metadata_none = lambda: None
 
-    mtrack_metadata_tidx = core.MultiTrack(
-        mtrack_id, data_home, dataset_name, index, core.Track, metadata_mtrack_index
-    )
+    mtrack_metadata_tidx = core.MultiTrack(mtrack_id, data_home, dataset_name, index, core.Track, metadata_mtrack_index)
     assert mtrack_metadata_tidx._multitrack_metadata == {"x": 1, "y": 2, "z": 3}
 
-    mtrack_metadata_global = core.MultiTrack(
-        mtrack_id, data_home, dataset_name, index, core.Track, metadata_global
-    )
+    mtrack_metadata_global = core.MultiTrack(mtrack_id, data_home, dataset_name, index, core.Track, metadata_global)
     assert mtrack_metadata_global._multitrack_metadata == {
         "asdf": [1, 2, 3],
         "asdd": [4, 5, 6],
     }
 
-    mtrack_metadata_none = core.MultiTrack(
-        mtrack_id, data_home, dataset_name, index, core.Track, metadata_none
-    )
+    mtrack_metadata_none = core.MultiTrack(mtrack_id, data_home, dataset_name, index, core.Track, metadata_none)
     with pytest.raises(AttributeError):
         mtrack_metadata_none._multitrack_metadata
 
     class TestTrack(core.Track):
-        def __init__(
-            self, key, data_home="foo", dataset_name="foo", index=None, metadata=None
-        ):
+        def __init__(self, key, data_home="foo", dataset_name="foo", index=None, metadata=None):
             self.key = key
 
         @property
@@ -384,30 +356,22 @@ def test_multitrack():
             return np.random.uniform(-1, 1, (2, 100)), 1000
 
     class TestMultiTrack1(core.MultiTrack):
-        def __init__(
-            self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-        ):
-            super().__init__(
-                mtrack_id, data_home, dataset_name, index, track_class, metadata
-            )
+        def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
+            super().__init__(mtrack_id, data_home, dataset_name, index, track_class, metadata)
 
         @property
         def track_audio_property(self):
             return "f"
 
     # import pdb;pdb.set_trace()
-    mtrack = TestMultiTrack1(
-        mtrack_id, data_home, dataset_name, index, TestTrack, lambda: None
-    )
+    mtrack = TestMultiTrack1(mtrack_id, data_home, dataset_name, index, TestTrack, metadata_none)
     mtrack.get_target(["a"])
     mtrack.get_random_target()
 
 
 def test_multitrack_mixing():
     class TestTrack(core.Track):
-        def __init__(
-            self, key, data_home="foo", dataset_name="foo", index=None, metadata=None
-        ):
+        def __init__(self, key, data_home="foo", dataset_name="foo", index=None, metadata=None):
             self.key = key
 
         @property
@@ -415,12 +379,8 @@ def test_multitrack_mixing():
             return np.random.uniform(-1, 1, (2, 100)), 1000
 
     class TestMultiTrack1(core.MultiTrack):
-        def __init__(
-            self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-        ):
-            super().__init__(
-                mtrack_id, data_home, dataset_name, index, track_class, metadata
-            )
+        def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
+            super().__init__(mtrack_id, data_home, dataset_name, index, track_class, metadata)
 
         @property
         def track_audio_property(self):
@@ -431,7 +391,12 @@ def test_multitrack_mixing():
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
     mtrack = TestMultiTrack1(
-        mtrack_id, data_home, dataset_name, index, TestTrack, lambda: None
+        mtrack_id,
+        data_home,
+        dataset_name,
+        index,
+        TestTrack,
+        lambda: None,
     )
 
     target1 = mtrack.get_target(["a", "c"])
@@ -478,9 +443,7 @@ def test_multitrack_mixing():
     assert np.all(w3 >= 0.3)
     assert np.all(w3 <= 1.0)
 
-    random_target4, t4, w4 = mtrack.get_random_target(
-        n_tracks=2, min_weight=0.1, max_weight=0.4
-    )
+    random_target4, t4, w4 = mtrack.get_random_target(n_tracks=2, min_weight=0.1, max_weight=0.4)
     assert random_target4.shape == (2, 100)
     assert np.max(np.abs(random_target4)) <= 1
     assert len(t4) == 2
@@ -494,9 +457,7 @@ def test_multitrack_mixing():
 
 def test_multitrack_unequal_len():
     class TestTrack(core.Track):
-        def __init__(
-            self, key, data_home="foo", dataset_name="foo", index=None, metadata=None
-        ):
+        def __init__(self, key, data_home="foo", dataset_name="foo", index=None, metadata=None):
             self.key = key
 
         @property
@@ -504,12 +465,8 @@ def test_multitrack_unequal_len():
             return np.random.uniform(-1, 1, (2, np.random.randint(50, 100))), 1000
 
     class TestMultiTrack1(core.MultiTrack):
-        def __init__(
-            self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-        ):
-            super().__init__(
-                mtrack_id, data_home, dataset_name, index, track_class, metadata
-            )
+        def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
+            super().__init__(mtrack_id, data_home, dataset_name, index, track_class, metadata)
 
         @property
         def track_audio_property(self):
@@ -519,9 +476,7 @@ def test_multitrack_unequal_len():
     mtrack_id = "ab"
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
-    mtrack = TestMultiTrack1(
-        mtrack_id, data_home, dataset_name, index, TestTrack, lambda: None
-    )
+    mtrack = TestMultiTrack1(mtrack_id, data_home, dataset_name, index, TestTrack, metadata_none)
 
     with pytest.raises(ValueError):
         mtrack.get_target(["a", "b", "c"])
@@ -540,9 +495,7 @@ def test_multitrack_unequal_len():
 
 def test_multitrack_unequal_sr():
     class TestTrack(core.Track):
-        def __init__(
-            self, key, data_home="foo", dataset_name="foo", index=None, metadata=None
-        ):
+        def __init__(self, key, data_home="foo", dataset_name="foo", index=None, metadata=None):
             self.key = key
 
         @property
@@ -550,12 +503,8 @@ def test_multitrack_unequal_sr():
             return np.random.uniform(-1, 1, (2, 100)), np.random.randint(10, 1000)
 
     class TestMultiTrack1(core.MultiTrack):
-        def __init__(
-            self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-        ):
-            super().__init__(
-                mtrack_id, data_home, dataset_name, index, track_class, metadata
-            )
+        def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
+            super().__init__(mtrack_id, data_home, dataset_name, index, track_class, metadata)
 
         @property
         def track_audio_property(self):
@@ -571,7 +520,7 @@ def test_multitrack_unequal_sr():
         dataset_name,
         index,
         TestTrack,
-        lambda: track_metadata_none,
+        metadata_none,
     )
 
     with pytest.raises(ValueError):
@@ -581,9 +530,7 @@ def test_multitrack_unequal_sr():
 def test_multitrack_mono():
     ### no first channel - audio shapes (100,)
     class TestTrack(core.Track):
-        def __init__(
-            self, key, data_home="foo", dataset_name="foo", index=None, metadata=None
-        ):
+        def __init__(self, key, data_home="foo", dataset_name="foo", index=None, metadata=None):
             self.key = key
 
         @property
@@ -591,12 +538,8 @@ def test_multitrack_mono():
             return np.random.uniform(-1, 1, (100)), 1000
 
     class TestMultiTrack1(core.MultiTrack):
-        def __init__(
-            self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-        ):
-            super().__init__(
-                mtrack_id, data_home, dataset_name, index, track_class, metadata
-            )
+        def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
+            super().__init__(mtrack_id, data_home, dataset_name, index, track_class, metadata)
 
         @property
         def track_audio_property(self):
@@ -606,9 +549,7 @@ def test_multitrack_mono():
     mtrack_id = "ab"
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
-    mtrack = TestMultiTrack1(
-        mtrack_id, data_home, dataset_name, index, TestTrack, lambda: None
-    )
+    mtrack = TestMultiTrack1(mtrack_id, data_home, dataset_name, index, TestTrack, metadata_none)
 
     target1 = mtrack.get_target(["a", "c"])
     assert target1.shape == (1, 100)
@@ -620,9 +561,7 @@ def test_multitrack_mono():
 
     ### one channel mono shape (1, 100)
     class TestTrack1(core.Track):
-        def __init__(
-            self, key, data_home="foo", dataset_name="foo", index=None, metadata=None
-        ):
+        def __init__(self, key, data_home="foo", dataset_name="foo", index=None, metadata=None):
             self.key = key
 
         @property
@@ -630,12 +569,8 @@ def test_multitrack_mono():
             return np.random.uniform(-1, 1, (1, 100)), 1000
 
     class TestMultiTrack1(core.MultiTrack):
-        def __init__(
-            self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-        ):
-            super().__init__(
-                mtrack_id, data_home, dataset_name, index, track_class, metadata
-            )
+        def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
+            super().__init__(mtrack_id, data_home, dataset_name, index, track_class, metadata)
 
         @property
         def track_audio_property(self):
@@ -645,9 +580,7 @@ def test_multitrack_mono():
     mtrack_id = "ab"
     dataset_name = "test"
     data_home = "tests/resources/mir_datasets"
-    mtrack = TestMultiTrack1(
-        mtrack_id, data_home, dataset_name, index, TestTrack, lambda: None
-    )
+    mtrack = TestMultiTrack1(mtrack_id, data_home, dataset_name, index, TestTrack, metadata_none)
 
     target1 = mtrack.get_target(["a", "c"])
     assert target1.shape == (1, 100)
@@ -659,9 +592,7 @@ def test_multitrack_mono():
 
 
 def test_dataset_splits():
-    empty_dataset = core.Dataset(
-        name="test", indexes={"default": core.Index("asdf.json")}
-    )
+    empty_dataset = core.Dataset(name="test", indexes={"default": core.Index("asdf.json")})
 
     # test the case where there are no tracks
     with pytest.raises(AttributeError):
@@ -678,7 +609,7 @@ def test_dataset_splits():
         empty_dataset.get_mtrack_splits()
 
     # test the partition function
-    items = [i for i in range(100)]
+    items = list(range(100))
     list_sum_up_1 = [
         [0.7, 0.1, 0.1, 0.1],
         [0.4, 0.2, 0.2, 0.2],
@@ -699,9 +630,7 @@ def test_dataset_splits():
         # check that the number of total items matches
         assert len(items) == sum([len(i) for i in splits.values()])
         # check that all items are used
-        assert set(items) == set(
-            [i for split_items in splits.values() for i in split_items]
-        )
+        assert set(items) == {i for split_items in splits.values() for i in split_items}
         # check that splits are nonoverlapping
         used = set()
         for split in splits.values():
@@ -715,19 +644,15 @@ def test_dataset_splits():
 
     # test partition names
     with pytest.raises(ValueError):
-        splits = empty_dataset._get_partitions(
-            items, [0.1, 0.9], 42, partition_names=["asdf"]
-        )
+        splits = empty_dataset._get_partitions(items, [0.1, 0.9], 42, partition_names=["asdf"])
 
     splits = empty_dataset._get_partitions(items, [0.1, 0.9], 42)
-    assert set(splits.keys()) == set([0, 1])
+    assert set(splits.keys()) == {0, 1}
     assert len(splits[0]) == 10
     assert len(splits[1]) == 90
 
-    splits = empty_dataset._get_partitions(
-        items, [0.1, 0.9], 42, partition_names=["test", "train"]
-    )
-    assert set(splits.keys()) == set(["test", "train"])
+    splits = empty_dataset._get_partitions(items, [0.1, 0.9], 42, partition_names=["test", "train"])
+    assert set(splits.keys()) == {"test", "train"}
     assert len(splits["test"]) == 10
     assert len(splits["train"]) == 90
 
@@ -763,7 +688,7 @@ def test_dataset_splits():
     # test one real dataset
     test_dataset = mirdata.initialize("slakh", version="sample_2100-redux")
     splits = test_dataset.get_track_splits()
-    assert set(splits.keys()) == set(["train", "validation", "test", "omitted"])
+    assert set(splits.keys()) == {"train", "validation", "test", "omitted"}
 
     splits = test_dataset.get_mtrack_splits()
-    assert set(splits.keys()) == set(["train", "validation", "test", "omitted"])
+    assert set(splits.keys()) == {"train", "validation", "test", "omitted"}

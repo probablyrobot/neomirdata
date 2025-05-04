@@ -106,7 +106,20 @@ line-length = 120
 target-version = "py38"
 
 [tool.ruff.lint]
-ignore = ["B904", "E501", "RET505", "RET506", "RET507"]
+ignore = [
+    "B904",   # Exceptions without from err
+    "E501",   # Line too long
+    "RET505", # Unnecessary else after return
+    "RET506", # Unnecessary elif after return
+    "RET507", # Unnecessary else after continue
+    "E721",   # Do not compare types, use isinstance()
+    "E722",   # Do not use bare except
+    "E731",   # Do not assign lambda expression, use def
+    "E741",   # Ambiguous variable name
+    "F601",   # Dictionary key repeated
+    "F841",   # Local variable assigned but never used
+    "F821"    # Undefined name
+]
 
 [tool.poetry.scripts]
 format = "pre-commit:main"
