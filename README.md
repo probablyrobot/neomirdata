@@ -2,20 +2,17 @@
 Common loaders for Music Information Retrieval (MIR) datasets. Find the API documentation [here](https://mirdata.readthedocs.io/).
 
 ![CI status](https://github.com/probablyrobot/neomirdata/actions/workflows/ci.yml/badge.svg?branch=master)
-![Formatting status](https://github.com/probablyrobot/neomirdata/actions/workflows/formatting.yml/badge.svg?branch=master)
-![Linting status](https://github.com/probablyrobot/neomirdata/actions/workflows/lint-python.yml/badge.svg?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/neomirdata/badge/?version=latest)](https://neomirdata.readthedocs.io/en/latest/?badge=latest)
 ![GitHub](https://img.shields.io/github/license/probablyrobot/neomirdata.svg)
 
 
 [![PyPI version](https://badge.fury.io/py/neomirdata.svg)](https://badge.fury.io/py/neomirdata)
 [![codecov](https://codecov.io/gh/probablyrobot/neomirdata/branch/master/graph/badge.svg)](https://codecov.io/gh/probablyrobot/neomirdata)
-[![Downloads](https://static.pepy.tech/badge/neomirdata)](https://pepy.tech/project/neomirdata)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 This library is a fork of [mirdata](https://github.com/mir-dataset-loaders/mirdata) and provides tools for working with common MIR datasets, including tools for:
 * downloading datasets to a common location and format
-* validating that the files for a dataset are all present 
+* validating that the files for a dataset are all present
 * loading annotation files to a common format, consistent with the format required by [mir_eval](https://github.com/craffel/mir_eval)
 * parsing track level metadata for detailed evaluations
 
