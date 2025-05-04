@@ -25,7 +25,7 @@ and respect the dataset's license.
 ##### decorators ######
 
 
-class cached_property(object):
+class cached_property:
     """Cached propery decorator
 
     A property that is only computed once per instance and then replaces
@@ -69,7 +69,7 @@ def docstring_inherit(parent):
 ##### Core Classes #####
 
 
-class Dataset(object):
+class Dataset:
     """mirdata Dataset class
 
     Attributes:
@@ -117,9 +117,7 @@ class Dataset(object):
         self.data_home = self.default_path if data_home is None else data_home
 
         if version not in indexes:
-            raise ValueError(
-                f"Invalid version {version}. Must be one of {indexes.keys()}."
-            )
+            raise ValueError(f"Invalid version {version}. Must be one of {indexes.keys()}.")
 
         if isinstance(indexes[version], str):
             self.version = indexes[version]
@@ -166,15 +164,13 @@ class Dataset(object):
         try:
             with open(self.index_path, encoding="utf-8") as fhandle:
                 index = json.load(fhandle)
-        except FileNotFoundError:
+        except FileNotFoundError as err:
             if self._index_data.remote:
-                raise FileNotFoundError(
-                    "This dataset's index must be downloaded. Did you run .download()?"
-                )
+                raise FileNotFoundError("This dataset's index must be downloaded. Did you run .download()?") from err
             raise FileNotFoundError(
                 f"Dataset index for {self.name} was expected "
                 + "but not found. Make sure your sample indexes for testing are in mirdata/tests/indexes/"
-            )
+            ) from err
 
         return index
 
@@ -207,10 +203,7 @@ class Dataset(object):
         """
         if self._track_class is None:
             raise AttributeError("This dataset does not have tracks")
-        else:
-            return self._track_class(
-                track_id, self.data_home, self.name, self._index, lambda: self._metadata
-            )
+        return self._track_class(track_id, self.data_home, self.name, self._index, lambda: self._metadata)
 
     def _multitrack(self, mtrack_id):
         """Load a multitrack by mtrack_id.
@@ -226,15 +219,14 @@ class Dataset(object):
         """
         if self._multitrack_class is None:
             raise AttributeError("This dataset does not have multitracks")
-        else:
-            return self._multitrack_class(
-                mtrack_id,
-                self.data_home,
-                self.name,
-                self._index,
-                self._track_class,
-                lambda: self._metadata,
-            )
+        return self._multitrack_class(
+            mtrack_id,
+            self.data_home,
+            self.name,
+            self._index,
+            self._track_class,
+            lambda: self._metadata,
+        )
 
     def load_tracks(self):
         """Load all tracks in the dataset
@@ -291,14 +283,10 @@ class Dataset(object):
             dict: a dictionary containing the partitions
         """
         if not np.isclose(np.sum(splits), 1):
-            raise ValueError(
-                f"Splits values should sum up to 1. Given {splits} sums {np.sum(splits)}"
-            )
+            raise ValueError(f"Splits values should sum up to 1. Given {splits} sums {np.sum(splits)}")
 
         if partition_names and len(partition_names) != len(splits):
-            raise ValueError(
-                "If partition_names is provided, it should have the same length as splits"
-            )
+            raise ValueError("If partition_names is provided, it should have the same length as splits")
 
         rng = np.random.default_rng(seed=seed)
         shuffled_items = rng.permutation(items)
@@ -308,11 +296,8 @@ class Dataset(object):
 
         # Method from https://stackoverflow.com/a/14281094
         cdf = np.cumsum(splits)
-        partitions = list(map(lambda x: int(np.ceil(x)), cdf * len(items)))
-        return {
-            name: shuffled_items[a:b]
-            for name, a, b in zip(partition_names, [0] + partitions, partitions)
-        }
+        partitions = [int(np.ceil(x)) for x in cdf * len(items)]
+        return {name: shuffled_items[a:b] for name, a, b in zip(partition_names, [0] + partitions, partitions)}
 
     def get_track_splits(self):
         """Get predetermined track splits (e.g. train/ test)
@@ -330,8 +315,7 @@ class Dataset(object):
 
         if not hasattr(self.choice_track(), "split"):
             raise NotImplementedError(
-                f"The {self.name} dataset does not have an official split. Use"
-                " get_random_track_splits instead."
+                f"The {self.name} dataset does not have an official split. Use" " get_random_track_splits instead."
             )
 
         splits = {}
@@ -375,8 +359,7 @@ class Dataset(object):
 
         if not hasattr(self.choice_multitrack(), "split"):
             raise NotImplementedError(
-                f"The {self.name} dataset does not have an official split. Use"
-                " get_random_mtrack_splits instead."
+                f"The {self.name} dataset does not have an official split. Use" " get_random_mtrack_splits instead."
             )
 
         splits = {}
@@ -494,13 +477,11 @@ class Dataset(object):
             * list - files which have an invalid checksum
 
         """
-        missing_files, invalid_checksums = validate.validator(
-            self._index, self.data_home, verbose=verbose
-        )
+        missing_files, invalid_checksums = validate.validator(self._index, self.data_home, verbose=verbose)
         return missing_files, invalid_checksums
 
 
-class Track(object):
+class Track:
     """Track base class
 
     See the docs for each dataset loader's Track class for details
@@ -525,9 +506,7 @@ class Track(object):
 
         """
         if track_id not in index["tracks"]:
-            raise ValueError(
-                f"{track_id} is not a valid track_id in {dataset_name}"
-            )
+            raise ValueError(f"{track_id} is not a valid track_id in {dataset_name}")
         self._metadata = metadata
         self.track_id = track_id
         self._dataset_name = dataset_name
@@ -546,9 +525,7 @@ class Track(object):
 
     def __repr__(self):
         properties = [v for v in dir(self.__class__) if not v.startswith("_")]
-        attributes = [
-            v for v in dir(self) if not v.startswith("_") and v not in properties
-        ]
+        attributes = [v for v in dir(self) if not v.startswith("_") and v not in properties]
 
         repr_str = "Track(\n"
 
@@ -600,9 +577,7 @@ class MultiTrack(Track):
 
     """
 
-    def __init__(
-        self, mtrack_id, data_home, dataset_name, index, track_class, metadata
-    ):
+    def __init__(self, mtrack_id, data_home, dataset_name, index, track_class, metadata):
         """Multitrack init method. Sets boilerplate attributes, including:
 
         - ``mtrack_id``
@@ -620,9 +595,7 @@ class MultiTrack(Track):
 
         """
         if mtrack_id not in index["multitracks"]:
-            raise ValueError(
-                f"{mtrack_id} is not a valid mtrack_id in {dataset_name}"
-            )
+            raise ValueError(f"{mtrack_id} is not a valid mtrack_id in {dataset_name}")
 
         self.mtrack_id = mtrack_id
         self._dataset_name = dataset_name
@@ -638,9 +611,7 @@ class MultiTrack(Track):
     @property
     def tracks(self):
         return {
-            t: self._track_class(
-                t, self._data_home, self._dataset_name, self._index, self._metadata
-            )
+            t: self._track_class(t, self._data_home, self._dataset_name, self._index, self._metadata)
             for t in self.track_ids
         }
 
@@ -707,12 +678,10 @@ class MultiTrack(Track):
             sample_rates.append(sample_rate)
 
         if len(set(sample_rates)) > 1:
-            raise ValueError(
-                f"Sample rates for tracks {track_keys} are not equal: {sample_rates}"
-            )
+            raise ValueError(f"Sample rates for tracks {track_keys} are not equal: {sample_rates}")
 
         max_length = np.max(lengths)
-        if any(l != max_length for l in lengths):
+        if any(length != max_length for length in lengths):
             if enforce_length:
                 raise ValueError(
                     f"Track's {track_keys} audio are not the same length {lengths}. Use enforce_length=False to pad"
@@ -720,10 +689,7 @@ class MultiTrack(Track):
                 )
             else:
                 # pad signals to the max length
-                signals = [
-                    np.pad(signal, ((0, 0), (0, max_length - signal.shape[1])))
-                    for signal in signals
-                ]
+                signals = [np.pad(signal, ((0, 0), (0, max_length - signal.shape[1]))) for signal in signals]
 
         if weights is None:
             weights = np.ones((len(track_keys),))
@@ -772,7 +738,7 @@ class MultiTrack(Track):
         return self.get_target(tracks)
 
 
-class Index(object):
+class Index:
     """Class for storing information about dataset indexes.
     Args:
         filename (str): The index filename (not path), e.g. "example_dataset_index_1.2.json"
@@ -809,9 +775,7 @@ class Index(object):
                 destination_dir=self.indexes_dir,
             )
         elif url or checksum:
-            raise ValueError(
-                "Remote indexes must have both a url and a checksum specified."
-            )
+            raise ValueError("Remote indexes must have both a url and a checksum specified.")
         else:
             self.indexes_dir = os.path.join(
                 os.path.dirname(os.path.dirname(os.path.realpath(__file__))),

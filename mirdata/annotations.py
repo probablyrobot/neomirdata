@@ -7,7 +7,6 @@ from typing import List, Optional, Tuple
 import librosa
 import numpy as np
 import scipy
-from deprecated.sphinx import deprecated
 
 # Regex pattern needed to validate chords and keys
 KEY_MODE_PATTERN = r"^N|([A-G][b#]?)(:(major|minor|ionian|dorian|phrygian|lydian|mixolydian|aeolian|locrian))?$"
@@ -71,7 +70,7 @@ TIME_UNITS = {"s": "seconds", "ms": "miliseconds", "ticks": "MIDI ticks"}
 VOICING_UNITS = {k: AMPLITUDE_UNITS[k] for k in ["binary", "likelihood"]}
 
 
-class Annotation(object):
+class Annotation:
     """Annotation base class"""
 
     def __repr__(self):
@@ -259,9 +258,7 @@ class F0Data(Annotation):
         """
         times = convert_time_units(self.times, self.time_unit, times_new_unit)
         if self.frequency_unit not in ["hz", "midi"]:
-            raise NotImplementedError(
-                f"resampling is not supported for {self.frequency_unit}"
-            )
+            raise NotImplementedError(f"resampling is not supported for {self.frequency_unit}")
         frequencies = self.frequencies
         voicing = self.voicing
         confidence = self._confidence
@@ -278,21 +275,21 @@ class F0Data(Annotation):
             times, frequencies_held, "linear", bounds_error=False, fill_value=0.0
         )(times_new)
         # Retain zeros
-        frequency_mask = scipy.interpolate.interp1d(
-            times, frequencies, "zero", bounds_error=False, fill_value=0
-        )(times_new)
+        frequency_mask = scipy.interpolate.interp1d(times, frequencies, "zero", bounds_error=False, fill_value=0)(
+            times_new
+        )
         frequencies_resampled *= frequency_mask != 0
 
         # Use nearest-neighbor for voicing if it was used for frequencies
         # if voicing is not binary, use linear interpolation
         if self.voicing_unit != "binary":
-            voicing_resampled = scipy.interpolate.interp1d(
-                times, voicing, "linear", bounds_error=False, fill_value=0
-            )(times_new)
+            voicing_resampled = scipy.interpolate.interp1d(times, voicing, "linear", bounds_error=False, fill_value=0)(
+                times_new
+            )
         else:
-            voicing_resampled = scipy.interpolate.interp1d(
-                times, voicing, "nearest", bounds_error=False, fill_value=0
-            )(times_new)
+            voicing_resampled = scipy.interpolate.interp1d(times, voicing, "nearest", bounds_error=False, fill_value=0)(
+                times_new
+            )
 
         voicing_resampled[frequencies_resampled == 0] = 0
 
@@ -345,23 +342,17 @@ class F0Data(Annotation):
 
         """
         f0dat = self.resample(time_scale, time_scale_unit)
-        frequencies = convert_pitch_units(
-            f0dat.frequencies, self.frequency_unit, frequency_scale_unit
-        )
+        frequencies = convert_pitch_units(f0dat.frequencies, self.frequency_unit, frequency_scale_unit)
 
         # get indexes in matrix
         nonzero_freqs = frequencies > 0  # find indexes for frequencies not equal to 0
         frequencies[frequencies == 0] = 1  # change zero frequency value to avoid NaN
         time_indexes = np.arange(len(time_scale))
-        freq_indexes = closest_index(
-            np.log(frequencies)[:, np.newaxis], np.log(frequency_scale)[:, np.newaxis]
-        )
+        freq_indexes = closest_index(np.log(frequencies)[:, np.newaxis], np.log(frequency_scale)[:, np.newaxis])
 
         # create sparse index
         index = [
-            (t, f)
-            for t, f in zip(time_indexes[nonzero_freqs], freq_indexes[nonzero_freqs])
-            if t != -1 and f != -1
+            (t, f) for t, f in zip(time_indexes[nonzero_freqs], freq_indexes[nonzero_freqs]) if t != -1 and f != -1
         ]
         voicing = np.array(
             [
@@ -423,9 +414,7 @@ class F0Data(Annotation):
         confidence_list = (
             None
             if self._confidence is None
-            else [
-                [c] if f > 0 else [] for c, f in zip(self._confidence, self.frequencies)
-            ]
+            else [[c] if f > 0 else [] for c, f in zip(self._confidence, self.frequencies)]
         )
         return MultiF0Data(
             self.times,
@@ -512,9 +501,7 @@ class MultiF0Data(Annotation):
             new_confidence_list.append(tmp_clist)
 
         self.frequency_list = new_frequency_list
-        self.confidence_list = (
-            None if self.confidence_list is None else new_confidence_list
-        )
+        self.confidence_list = None if self.confidence_list is None else new_confidence_list
 
     def __add__(self, other):
         if other is None:
@@ -538,10 +525,8 @@ class MultiF0Data(Annotation):
             this_data = self
             other_data = other_resamp
 
-        this_frequency_list = [[f for f in flist] for flist in this_data.frequency_list]
-        other_frequency_list = convert_pitch_units(
-            other_data.frequency_list, other.frequency_unit, self.frequency_unit
-        )
+        this_frequency_list = [list(flist) for flist in this_data.frequency_list]
+        other_frequency_list = convert_pitch_units(other_data.frequency_list, other.frequency_unit, self.frequency_unit)
 
         for i, flist in enumerate(other_frequency_list):
             this_frequency_list[i].extend(flist)
@@ -550,9 +535,7 @@ class MultiF0Data(Annotation):
         other_has_confidence = other_data.confidence_unit is not None
         this_confidence_unit = this_data.confidence_unit
         if this_has_confidence and other_has_confidence:
-            this_confidence_list = [
-                [c for c in clist] for clist in this_data.confidence_list
-            ]
+            this_confidence_list = [list(clist) for clist in this_data.confidence_list]
             other_confidence_list = convert_amplitude_units(
                 other_data.confidence_list, other.confidence_unit, self.confidence_unit
             )
@@ -617,9 +600,7 @@ class MultiF0Data(Annotation):
 
         if self.confidence_list is not None:
             confidence_vals = self.confidence_list + [[]]
-            confidence_resampled = [
-                confidence_vals[i] for i in new_frequency_index.astype(int)
-            ]
+            confidence_resampled = [confidence_vals[i] for i in new_frequency_index.astype(int)]
         else:
             confidence_resampled = None
 
@@ -665,28 +646,18 @@ class MultiF0Data(Annotation):
             frequency_scale_unit,
         )
         time_indexes_flattened = np.array(
-            [
-                t
-                for (t, f_list) in zip(time_indexes, multif0dat.frequency_list)
-                for f in f_list
-            ]
+            [t for (t, f_list) in zip(time_indexes, multif0dat.frequency_list) for f in f_list]
         )
         if multif0dat.confidence_list is None:
             confidence_flattened = np.ones((len(time_indexes_flattened),))
             conf_unit = "binary"
         else:
-            confidence_flattened = np.array(
-                [c for c_list in multif0dat.confidence_list for c in c_list]
-            )
+            confidence_flattened = np.array([c for c_list in multif0dat.confidence_list for c in c_list])
             conf_unit = self.confidence_unit
 
         # get frequency indexes in matrix
-        nonzero_freqs = (
-            frequencies_flattened > 0
-        )  # find indexes for frequencies not equal to 0
-        frequencies_flattened[frequencies_flattened == 0] = (
-            1  # change zero frequency value to avoid NaN
-        )
+        nonzero_freqs = frequencies_flattened > 0  # find indexes for frequencies not equal to 0
+        frequencies_flattened[frequencies_flattened == 0] = 1  # change zero frequency value to avoid NaN
         freq_indexes = closest_index(
             np.log(frequencies_flattened)[:, np.newaxis],
             np.log(frequency_scale)[:, np.newaxis],
@@ -695,9 +666,7 @@ class MultiF0Data(Annotation):
         # create sparse index
         index = [
             (t, f)
-            for t, f in zip(
-                time_indexes_flattened[nonzero_freqs], freq_indexes[nonzero_freqs]
-            )
+            for t, f in zip(time_indexes_flattened[nonzero_freqs], freq_indexes[nonzero_freqs])
             if t != -1 and f != -1
         ]
         confidence_out = np.array(
@@ -757,8 +726,7 @@ class MultiF0Data(Annotation):
         """
         times = convert_time_units(self.times, self.time_unit, "s")
         frequency_list = [
-            convert_pitch_units(np.array(flist), self.frequency_unit, "hz")
-            for flist in self.frequency_list
+            convert_pitch_units(np.array(flist), self.frequency_unit, "hz") for flist in self.frequency_list
         ]
         return times, frequency_list
 
@@ -808,8 +776,7 @@ class NoteData(Annotation):
     @property
     def notes(self) -> np.ndarray:
         logging.warning(
-            "NoteData.notes is deprecated as of 0.3.4 and will be removed in a future version. Use"
-            " NoteData.pitches."
+            "NoteData.notes is deprecated as of 0.3.4 and will be removed in a future version. Use" " NoteData.pitches."
         )
         return self.pitches
 
@@ -832,9 +799,7 @@ class NoteData(Annotation):
         if not isinstance(other, NoteData):
             raise TypeError(f"Unable to add type {type(other)} to NoteData")
         # convert to the current units
-        intervals = convert_time_units(
-            other.intervals, other.interval_unit, self.interval_unit
-        )
+        intervals = convert_time_units(other.intervals, other.interval_unit, self.interval_unit)
         pitches = convert_pitch_units(other.pitches, other.pitch_unit, self.pitch_unit)
 
         if other.confidence is None and self.confidence is None:
@@ -844,9 +809,7 @@ class NoteData(Annotation):
             new_confidence = np.concatenate(
                 [
                     self.confidence,
-                    convert_amplitude_units(
-                        other.confidence, other.confidence_unit, self.confidence_unit
-                    ),
+                    convert_amplitude_units(other.confidence, other.confidence_unit, self.confidence_unit),
                 ]
             )
             new_confidence_unit = self.confidence_unit
@@ -893,28 +856,16 @@ class NoteData(Annotation):
             * amplitude (np.ndarray): Array of amplitude values for each index
 
         """
-        intervals = convert_time_units(
-            self.intervals, self.interval_unit, time_scale_unit
-        )
-        freqs_hz = convert_pitch_units(
-            self.pitches, self.pitch_unit, frequency_scale_unit
-        )
+        intervals = convert_time_units(self.intervals, self.interval_unit, time_scale_unit)
+        freqs_hz = convert_pitch_units(self.pitches, self.pitch_unit, frequency_scale_unit)
 
         if self.confidence is not None:
-            confidence = convert_amplitude_units(
-                self.confidence, self.confidence_unit, amplitude_unit
-            )
+            confidence = convert_amplitude_units(self.confidence, self.confidence_unit, amplitude_unit)
         else:
-            confidence = convert_amplitude_units(
-                np.ones((freqs_hz.shape)), "binary", amplitude_unit
-            )
+            confidence = convert_amplitude_units(np.ones(freqs_hz.shape), "binary", amplitude_unit)
 
-        time_index_0 = closest_index(
-            intervals[:, 0, np.newaxis], time_scale[:, np.newaxis]
-        )
-        freq_indexes = closest_index(
-            np.log(freqs_hz)[:, np.newaxis], np.log(frequency_scale)[:, np.newaxis]
-        )
+        time_index_0 = closest_index(intervals[:, 0, np.newaxis], time_scale[:, np.newaxis])
+        freq_indexes = closest_index(np.log(freqs_hz)[:, np.newaxis], np.log(frequency_scale)[:, np.newaxis])
         if onsets_only:
             onset_index = []
             confidences = []
@@ -925,9 +876,7 @@ class NoteData(Annotation):
                 confidences.append(c)
             return np.array(onset_index), np.array(confidences)
 
-        time_index_1 = closest_index(
-            intervals[:, 1, np.newaxis], time_scale[:, np.newaxis]
-        )
+        time_index_1 = closest_index(intervals[:, 1, np.newaxis], time_scale[:, np.newaxis])
         max_idx = len(time_scale) - 1
         sparse_index = []
         confidences = []
@@ -977,9 +926,7 @@ class NoteData(Annotation):
         matrix[index[:, 0], index[:, 1]] = voicing
         return matrix
 
-    def to_multif0(
-        self, time_hop: float, time_hop_unit: str, max_time: Optional[float] = None
-    ) -> MultiF0Data:
+    def to_multif0(self, time_hop: float, time_hop_unit: str, max_time: Optional[float] = None) -> MultiF0Data:
         """Convert note annotation to multiple f0 format.
 
         Args:
@@ -993,32 +940,22 @@ class NoteData(Annotation):
         Returns:
             MultiF0Data: multif0 annotation
         """
-        intervals = convert_time_units(
-            self.intervals, self.interval_unit, time_hop_unit
-        )
+        intervals = convert_time_units(self.intervals, self.interval_unit, time_hop_unit)
         note_time_max = np.max(intervals[:, 1])
-        max_time = note_time_max if not max_time else max_time
+        max_time = max_time if max_time else note_time_max
         if max_time < note_time_max:
-            raise ValueError(
-                f"max_time = {max_time} cannot be smaller than the last note interval = {note_time_max}"
-            )
+            raise ValueError(f"max_time = {max_time} cannot be smaller than the last note interval = {note_time_max}")
         times = np.arange(0, max_time + time_hop, time_hop)
         frequency_list: List[List[float]] = [[] for _ in times]
         confidence_list: List[List[float]] = [[] for _ in times]
         if self.confidence is not None:
-            for t0, t1, pch, conf in zip(
-                intervals[:, 0], intervals[:, 1], self.pitches, self.confidence
-            ):
-                for i in range(
-                    int(np.round(t0 / time_hop)), int(np.round(t1 / time_hop)) + 1
-                ):
+            for t0, t1, pch, conf in zip(intervals[:, 0], intervals[:, 1], self.pitches, self.confidence):
+                for i in range(int(np.round(t0 / time_hop)), int(np.round(t1 / time_hop)) + 1):
                     frequency_list[i].append(pch)
                     confidence_list[i].append(conf)
         else:
             for t0, t1, pch in zip(intervals[:, 0], intervals[:, 1], self.pitches):
-                for i in range(
-                    int(np.round(t0 / time_hop)), int(np.round(t1 / time_hop)) + 1
-                ):
+                for i in range(int(np.round(t0 / time_hop)), int(np.round(t1 / time_hop)) + 1):
                     frequency_list[i].append(pch)
 
         return MultiF0Data(
@@ -1044,9 +981,7 @@ class NoteData(Annotation):
         velocity = (
             None
             if self.confidence is None
-            else convert_amplitude_units(
-                self.confidence, self.confidence_unit, "velocity"
-            )
+            else convert_amplitude_units(self.confidence, self.confidence_unit, "velocity")
         )
         return intervals, pitches, velocity
 
@@ -1225,10 +1160,8 @@ def convert_time_units(times, time_unit, target_time_unit):
 
     try:
         return _from_seconds(_to_seconds(times, time_unit), target_time_unit)
-    except NotImplementedError:
-        raise NotImplementedError(
-            f"Conversion of time in units {time_unit} to {target_time_unit} is not supported"
-        )
+    except NotImplementedError as err:
+        raise NotImplementedError(f"Conversion of time in units {time_unit} to {target_time_unit} is not supported") from err
 
 
 def convert_pitch_units(pitches, pitch_unit, target_pitch_unit):
@@ -1248,11 +1181,7 @@ def convert_pitch_units(pitches, pitch_unit, target_pitch_unit):
     # if input is a nested list, call this function recursively
     if isinstance(pitches, list) and isinstance(pitches[0], list):
         return [
-            (
-                []
-                if len(plist) == 0
-                else list(convert_pitch_units(plist, pitch_unit, target_pitch_unit))
-            )
+            ([] if len(plist) == 0 else list(convert_pitch_units(plist, pitch_unit, target_pitch_unit)))
             for plist in pitches
         ]
 
@@ -1295,10 +1224,8 @@ def convert_pitch_units(pitches, pitch_unit, target_pitch_unit):
 
     try:
         return _from_hz(_to_hz(pitches, pitch_unit), target_pitch_unit)
-    except NotImplementedError:
-        raise NotImplementedError(
-            f"Conversion of pitch in units {pitch_unit} to {target_pitch_unit} is not supported"
-        )
+    except NotImplementedError as err:
+        raise NotImplementedError(f"Conversion of pitch in units {pitch_unit} to {target_pitch_unit} is not supported") from err
 
 
 def convert_amplitude_units(amplitude, amplitude_unit, target_amplitude_unit):
@@ -1321,11 +1248,7 @@ def convert_amplitude_units(amplitude, amplitude_unit, target_amplitude_unit):
             (
                 []
                 if len(alist) == 0
-                else list(
-                    convert_amplitude_units(
-                        np.array(alist), amplitude_unit, target_amplitude_unit
-                    )
-                )
+                else list(convert_amplitude_units(np.array(alist), amplitude_unit, target_amplitude_unit))
             )
             for alist in amplitude
         ]
@@ -1347,13 +1270,11 @@ def convert_amplitude_units(amplitude, amplitude_unit, target_amplitude_unit):
         raise NotImplementedError
 
     try:
-        return _from_likelihood(
-            _to_likelihood(amplitude, amplitude_unit), target_amplitude_unit
-        )
-    except NotImplementedError:
+        return _from_likelihood(_to_likelihood(amplitude, amplitude_unit), target_amplitude_unit)
+    except NotImplementedError as err:
         raise NotImplementedError(
             f"Conversion of amplitude in units {amplitude_unit} to {target_amplitude_unit} is not supported"
-        )
+        ) from err
 
 
 def closest_index(input_array, target_array):
@@ -1401,23 +1322,13 @@ def validate_array_like(array_like, expected_type, expected_dtype, none_allowed=
     ], "expected type must be a list or np.ndarray"
 
     if not isinstance(array_like, expected_type):
-        raise TypeError(
-            f"Object should be a {expected_type}, but is a {type(array_like)}"
-        )
+        raise TypeError(f"Object should be a {expected_type}, but is a {type(array_like)}")
 
-    if expected_type == list and not all(
-        isinstance(n, expected_dtype) for n in array_like
-    ):
+    if expected_type == list and not all(isinstance(n, expected_dtype) for n in array_like):
         raise TypeError(f"List elements should all have type {expected_dtype}")
 
-    if (
-        expected_type == np.ndarray
-        and array_like.dtype != expected_dtype
-        and expected_dtype is not None
-    ):
-        raise TypeError(
-            f"Array should have dtype {expected_dtype} but has {array_like.dtype}"
-        )
+    if expected_type == np.ndarray and array_like.dtype != expected_dtype and expected_dtype is not None:
+        raise TypeError(f"Array should have dtype {expected_dtype} but has {array_like.dtype}")
 
     if np.asarray(array_like, dtype=object).size == 0:
         raise ValueError("Object should not be empty, use None instead")
@@ -1480,20 +1391,13 @@ def validate_beat_positions(positions, position_unit):
 
     position_shape = np.shape(positions)
     if len(position_shape) != 1:
-        raise ValueError(
-            f"positions should be 1d, but array has shape {position_shape}"
-        )
+        raise ValueError(f"positions should be 1d, but array has shape {position_shape}")
 
     if (positions < 0).any():
         raise ValueError("beat positions must be positive. Found values below 0.")
 
-    if position_unit in ["bar_index", "global_index"] and not np.array_equal(
-        np.floor(positions), positions
-    ):
-        raise ValueError(
-            "measure index or global indexes should be integers. "
-            + "Found fractional values."
-        )
+    if position_unit in ["bar_index", "global_index"] and not np.array_equal(np.floor(positions), positions):
+        raise ValueError("measure index or global indexes should be integers. " + "Found fractional values.")
 
     # we expect no more than 32 beats per bar - this can be changed if a need arises!
     if position_unit == "bar_index" and np.max(positions) > 32:
@@ -1504,10 +1408,7 @@ def validate_beat_positions(positions, position_unit):
         )
 
     if position_unit == "bar_fraction" and np.max(positions) > 1:
-        raise ValueError(
-            "beats with bar_fraction units should be between 0 and 1. "
-            + "Found values above 1."
-        )
+        raise ValueError("beats with bar_fraction units should be between 0 and 1. " + "Found values above 1.")
 
 
 def validate_confidence(confidence, confidence_unit):
@@ -1529,32 +1430,22 @@ def validate_confidence(confidence, confidence_unit):
     validate_unit(confidence_unit, AMPLITUDE_UNITS)
     confidence_flat = [c for subconf in confidence for c in subconf] if isinstance(confidence[0], list) else confidence
 
-    if confidence_unit == "likelihood" and (
-        any(c < 0 for c in confidence_flat) or any(c > 1 for c in confidence_flat)
-    ):
+    if confidence_unit == "likelihood" and (any(c < 0 for c in confidence_flat) or any(c > 1 for c in confidence_flat)):
         raise ValueError(
-            "confidence with unit 'likelihood' should be between 0 and 1. "
-            + "Found values outside [0, 1]."
+            "confidence with unit 'likelihood' should be between 0 and 1. " + "Found values outside [0, 1]."
         )
 
     if confidence_unit == "energy" and any(c < 0 for c in confidence_flat):
-        raise ValueError(
-            "confidence with unit 'energy' should be nonnegative. "
-            + "Found negative values."
-        )
+        raise ValueError("confidence with unit 'energy' should be nonnegative. " + "Found negative values.")
 
     if confidence_unit == "binary" and any(c not in [0, 1] for c in confidence_flat):
         raise ValueError(
-            "confidence with unit 'binary' should only have values of 0 or 1. "
-            + "Found non-binary values."
+            "confidence with unit 'binary' should only have values of 0 or 1. " + "Found non-binary values."
         )
 
-    if confidence_unit == "velocity" and (
-        any(c < 0 for c in confidence_flat) or any(c > 127 for c in confidence_flat)
-    ):
+    if confidence_unit == "velocity" and (any(c < 0 for c in confidence_flat) or any(c > 127 for c in confidence_flat)):
         raise ValueError(
-            "confidence with unit 'velocity' should be between 0 and 127. "
-            + "Found values outside [0, 127]."
+            "confidence with unit 'velocity' should be between 0 and 127. " + "Found values outside [0, 127]."
         )
 
 
@@ -1575,19 +1466,11 @@ def validate_voicing(voicing, voicing_unit):
     if len(voicing_shape) != 1:
         raise ValueError(f"voicings should be 1d, but array has shape {voicing_shape}")
 
-    if voicing_unit == "likelihood" and (
-        any(c < 0 for c in voicing) or any(c > 1 for c in voicing)
-    ):
-        raise ValueError(
-            "voicing with unit 'likelihood' should be between 0 and 1. "
-            + "Found values outside [0, 1]."
-        )
+    if voicing_unit == "likelihood" and (any(c < 0 for c in voicing) or any(c > 1 for c in voicing)):
+        raise ValueError("voicing with unit 'likelihood' should be between 0 and 1. " + "Found values outside [0, 1].")
 
     if voicing_unit == "binary" and any(c not in [0, 1] for c in voicing):
-        raise ValueError(
-            "voicing with unit 'binary' should only have values of 0 or 1. "
-            + "Found non-binary values."
-        )
+        raise ValueError("voicing with unit 'binary' should only have values of 0 or 1. " + "Found non-binary values.")
 
 
 def validate_pitches(pitches, pitch_unit):
@@ -1602,9 +1485,7 @@ def validate_pitches(pitches, pitch_unit):
 
     """
     validate_unit(pitch_unit, PITCH_UNITS)
-    if pitch_unit in ["hz", "midi"] and np.any(
-        [np.any(np.array(p) < 0) for p in pitches]
-    ):
+    if pitch_unit in ["hz", "midi"] and np.any([np.any(np.array(p) < 0) for p in pitches]):
         raise ValueError(
             "pitches should be positive numbers. "
             + "Unvoiced frames should be indicated using the confidence field, "
@@ -1617,8 +1498,8 @@ def validate_pitches(pitches, pitch_unit):
     if pitch_unit in ["pc", "note_name"]:
         try:
             librosa.note_to_midi(pitches)
-        except:
-            raise ValueError("invalid format for unit pc or note_name")
+        except Exception as err:
+            raise ValueError("invalid format for unit pc or note_name") from err
 
 
 def validate_chord_labels(chords, chord_unit):
@@ -1642,9 +1523,7 @@ def validate_chord_labels(chords, chord_unit):
         matches = [re.match(pattern, c) for c in chords]
         if not all(matches):
             non_matches = [c for c, m in zip(chords, matches) if not m]
-            raise ValueError(
-                f"chords {non_matches} don't conform to chord_unit {chord_unit}"
-            )
+            raise ValueError(f"chords {non_matches} don't conform to chord_unit {chord_unit}")
 
 
 def validate_key_labels(keys, key_unit):
@@ -1664,9 +1543,7 @@ def validate_key_labels(keys, key_unit):
         matches = [re.match(pattern, c) for c in keys]
         if not all(matches):
             non_matches = [k for k, m in zip(keys, matches) if not m]
-            raise ValueError(
-                f"keys {non_matches} don't conform to key_unit key-mode"
-            )
+            raise ValueError(f"keys {non_matches} don't conform to key_unit key-mode")
 
 
 def validate_times(times, time_unit):
@@ -1720,17 +1597,15 @@ def validate_intervals(intervals, interval_unit):
     # validate that intervals have the correct shape
     interval_shape = np.shape(intervals)
     if len(interval_shape) != 2 or interval_shape[1] != 2:
-        raise ValueError(
-            f"Intervals should be arrays with two columns, but array has {interval_shape}"
-        )
+        raise ValueError(f"Intervals should be arrays with two columns, but array has {interval_shape}")
 
     # validate that time stamps are all positive numbers
     if (intervals < 0).any():
-        raise ValueError(f"Interval values should be nonnegative numbers")
+        raise ValueError("Interval values should be nonnegative numbers")
 
     # validate that end times are bigger than start times
     elif (intervals[:, 1] - intervals[:, 0] < 0).any():
-        raise ValueError(f"Interval start times must be smaller than end times")
+        raise ValueError("Interval start times must be smaller than end times")
 
 
 def validate_unit(unit, unit_values, allow_none=False):
@@ -1755,6 +1630,4 @@ def validate_uniform_times(times):
     time_diffs = np.diff(times)
     median_diff = np.median(time_diffs)
     if any(np.abs(time_diffs - median_diff) > 0.01):
-        raise ValueError(
-            "time stamps should be uniformly spaced, but found non-uniform spacing"
-        )
+        raise ValueError("time stamps should be uniformly spaced, but found non-uniform spacing")

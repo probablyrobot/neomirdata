@@ -59,7 +59,6 @@ from typing import BinaryIO, Dict, List, Optional, TextIO, Tuple
 import librosa
 import numpy as np
 from deprecated.sphinx import deprecated
-from smart_open import open
 
 from mirdata import annotations, core, download_utils, io
 
@@ -196,17 +195,13 @@ class Track(core.Track):
     @core.cached_property
     def leadsheet_chords(self):
         if self.mode == "solo":
-            logging.info(
-                "Chord annotations for solo excerpts are the same with the comp excerpt."
-            )
+            logging.info("Chord annotations for solo excerpts are the same with the comp excerpt.")
         return load_chords(self.jams_path, True)
 
     @core.cached_property
     def inferred_chords(self):
         if self.mode == "solo":
-            logging.info(
-                "Chord annotations for solo excerpts are the same as the comp excerpt."
-            )
+            logging.info("Chord annotations for solo excerpts are the same as the comp excerpt.")
         return load_chords(self.jams_path, False)
 
     @core.cached_property
@@ -225,10 +220,7 @@ class Track(core.Track):
     def multif0(self) -> annotations.MultiF0Data:
         contours: List[annotations.F0Data] = list(self.pitch_contours.values())
         max_times = np.argmax(
-            [
-                0 if contour_data is None else len(contour_data.times)
-                for contour_data in contours
-            ]
+            [0 if contour_data is None else len(contour_data.times) for contour_data in contours]
         )  # type: ignore
         times = contours[max_times].times  # type: ignore
         frequency_list: List[list] = [[] for _ in times]
@@ -348,11 +340,7 @@ def load_beats(fhandle: TextIO) -> annotations.BeatData:
     """
     annotation = json.load(fhandle)
     # Find the annotation with the namespace 'beat_position'
-    beat_annotation = next(
-        anno
-        for anno in annotation["annotations"]
-        if anno["namespace"] == "beat_position"
-    )
+    beat_annotation = next(anno for anno in annotation["annotations"] if anno["namespace"] == "beat_position")
 
     times = [event["time"] for event in beat_annotation["data"]]
     positions = [int(event["value"]["position"]) for event in beat_annotation["data"]]
@@ -378,22 +366,15 @@ def load_chords(jams_fhandle: TextIO, leadsheet_version):
     """
     annotation = json.load(jams_fhandle)
 
-    chord_annotations = [
-        ann for ann in annotation["annotations"] if ann["namespace"] == "chord"
-    ]
+    chord_annotations = [ann for ann in annotation["annotations"] if ann["namespace"] == "chord"]
 
     if not chord_annotations[0].get("data"):
         raise ValueError("No chord annotations found in the JAMS file.")
 
     # Select the appropriate annotation (leadsheet or inferred)
-    if leadsheet_version:
-        anno = chord_annotations[0]  # Leadsheet version is first
-    else:
-        anno = chord_annotations[1]  # Inferred version is second
+    anno = chord_annotations[0] if leadsheet_version else chord_annotations[1]
 
-    intervals = np.array(
-        [[event["time"], event["time"] + event["duration"]] for event in anno["data"]]
-    )
+    intervals = np.array([[event["time"], event["time"] + event["duration"]] for event in anno["data"]])
     values = [event["value"] for event in anno["data"]]
 
     return annotations.ChordData(intervals, "s", values, "jams")
@@ -415,9 +396,7 @@ def load_key_mode(fhandle: TextIO) -> annotations.KeyData:
         if ann["namespace"] == "key_mode":
             anno = ann
             break
-    intervals = np.array(
-        [[event["time"], event["time"] + event["duration"]] for event in anno["data"]]
-    )
+    intervals = np.array([[event["time"], event["time"] + event["duration"]] for event in anno["data"]])
 
     values = [event["value"] for event in anno["data"]]
 
@@ -440,7 +419,7 @@ def _fill_pitch_contour(times, freqs, voicing, max_time, contour_hop, duration=N
     """
     if duration is not None and max_time > duration:
         max_time = duration
-    n_stamps = int(np.floor((max_time / contour_hop)))
+    n_stamps = int(np.floor(max_time / contour_hop))
     filled_times = np.arange(n_stamps) * contour_hop
     filled_freqs = np.zeros((len(filled_times),))
     filled_voicing = np.zeros((len(filled_times),))
@@ -473,9 +452,7 @@ def load_pitch_contour(jams_fhandle: TextIO, string_num):
     annotation = json.load(jams_fhandle)
 
     # Find all pitch_contour annotations
-    pitch_annotations = [
-        ann for ann in annotation["annotations"] if ann["namespace"] == "pitch_contour"
-    ]
+    pitch_annotations = [ann for ann in annotation["annotations"] if ann["namespace"] == "pitch_contour"]
 
     # Find the annotation for the specified string
     anno = None
@@ -504,9 +481,7 @@ def load_pitch_contour(jams_fhandle: TextIO, string_num):
         times, frequencies, voicing, np.max(times), CONTOUR_HOP
     )
 
-    return annotations.F0Data(
-        filled_times, "s", filled_freqs, "hz", filled_voicing, "binary"
-    )
+    return annotations.F0Data(filled_times, "s", filled_freqs, "hz", filled_voicing, "binary")
 
 
 @io.coerce_to_string_io
@@ -524,24 +499,19 @@ def load_notes(jams_fhandle: TextIO, string_num):
     """
     annotation = json.load(jams_fhandle)
     # Find all pitch_contour annotations
-    notes_annot = [
-        ann for ann in annotation["annotations"] if ann["namespace"] == "note_midi"
-    ]
+    notes_annot = [ann for ann in annotation["annotations"] if ann["namespace"] == "note_midi"]
     # Find the matching data source
     anno = next(
         (
             entry
             for entry in notes_annot
-            if str(entry.get("annotation_metadata", {}).get("data_source"))
-            == str(string_num)
+            if str(entry.get("annotation_metadata", {}).get("data_source")) == str(string_num)
         ),
         None,
     )
     if not anno or "data" not in anno:
         raise ValueError("Note annotation or 'data' key not found in the JAMS file.")
-    intervals = [
-        (note["time"], note["time"] + note["duration"]) for note in anno["data"]
-    ]
+    intervals = [(note["time"], note["time"] + note["duration"]) for note in anno["data"]]
     values = [note["value"] for note in anno["data"]]
     if len(values) == 0:
         return None
@@ -570,9 +540,7 @@ class Dataset(core.Dataset):
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.guitarset.load_multitrack_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.guitarset.load_multitrack_audio", version="0.3.4")
     def load_multitrack_audio(self, *args, **kwargs):
         return load_multitrack_audio(*args, **kwargs)
 
@@ -588,9 +556,7 @@ class Dataset(core.Dataset):
     def load_key_mode(self, *args, **kwargs):
         return load_key_mode(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.guitarset.load_pitch_contour", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.guitarset.load_pitch_contour", version="0.3.4")
     def load_pitch_contour(self, *args, **kwargs):
         return load_pitch_contour(*args, **kwargs)
 

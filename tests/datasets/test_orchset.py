@@ -156,9 +156,8 @@ def test_download(httpserver):
     if os.path.exists(data_home):
         shutil.rmtree(data_home)
 
-    httpserver.serve_content(
-        open("tests/resources/download/Orchset_dataset_0.zip", "rb").read()
-    )
+    with open("tests/resources/download/Orchset_dataset_0.zip", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
     remotes = {
         "all": download_utils.RemoteFileMetadata(
@@ -176,9 +175,7 @@ def test_download(httpserver):
     assert not os.path.exists(os.path.join(data_home, "Orchset"))
 
     assert os.path.exists(os.path.join(data_home, "README.txt"))
-    assert os.path.exists(
-        os.path.join(data_home, "Orchset - Predominant Melodic Instruments.csv")
-    )
+    assert os.path.exists(os.path.join(data_home, "Orchset - Predominant Melodic Instruments.csv"))
     track = dataset.track("Beethoven-S3-I-ex1")
     assert os.path.exists(track.audio_path_mono)
     assert os.path.exists(track.audio_path_stereo)

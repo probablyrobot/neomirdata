@@ -1,6 +1,5 @@
 import os
 
-
 from mirdata.datasets import beatport_key
 from tests.test_utils import run_track_tests
 
@@ -74,14 +73,10 @@ def test_load_meta():
 
 
 def test_find_replace():
-    with open(
-        "tests/resources/mir_datasets/beatport_key/find_replace.json", "w"
-    ) as the_file:
+    with open("tests/resources/mir_datasets/beatport_key/find_replace.json", "w") as the_file:
         the_file.write('{"probando": nan}')
     dataset = beatport_key.Dataset()
-    dataset._find_replace(
-        "tests/resources/mir_datasets/beatport_key", ": nan", ": null", "*.json"
-    )
-    f = open("tests/resources/mir_datasets/beatport_key/find_replace.json", "r")
-    content = f.read()
+    dataset._find_replace("tests/resources/mir_datasets/beatport_key", ": nan", ": null", "*.json")
+    with open("tests/resources/mir_datasets/beatport_key/find_replace.json") as f:
+        content = f.read()
     assert content == '{"probando": null}'

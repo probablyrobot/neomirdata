@@ -4,9 +4,7 @@ import pytest
 
 
 def pytest_addoption(parser):
-    parser.addoption(
-        "--local", action="store_true", default=False, help="run local tests"
-    )
+    parser.addoption("--local", action="store_true", default=False, help="run local tests")
     parser.addoption("--dataset", type=str, default="", help="dataset to test locally")
     parser.addoption(
         "--dataset-version",
@@ -14,12 +12,8 @@ def pytest_addoption(parser):
         default="default",
         help="version of dataset to test locally",
     )
-    parser.addoption(
-        "--skip-download", action="store_true", default=False, help="skip download step"
-    )
-    parser.addoption(
-        "--report-file", type=str, default="", help="dataset to test locally"
-    )
+    parser.addoption("--skip-download", action="store_true", default=False, help="skip download step")
+    parser.addoption("--report-file", type=str, default="", help="dataset to test locally")
 
 
 @pytest.fixture(scope="session")
@@ -79,10 +73,7 @@ def pytest_sessionfinish(session, exitstatus):
         print(report)
         file_destination = session.config.option.report_file
         if os.path.isdir(os.path.dirname(file_destination)):
-            if os.path.exists(file_destination):
-                append_write = "a"  # append if already exists
-            else:
-                append_write = "w"  # make a new file if not
+            append_write = "a" if os.path.exists(file_destination) else "w"
 
             with open(file_destination, append_write) as txtfile:
                 txtfile.write(report + "\n")

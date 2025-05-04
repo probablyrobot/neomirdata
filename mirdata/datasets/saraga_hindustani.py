@@ -76,9 +76,7 @@ REMOTES = {
     )
 }
 
-LICENSE_INFO = (
-    "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
-)
+LICENSE_INFO = "Creative Commons Attribution Non Commercial Share Alike 4.0 International."
 
 
 class Track(core.Track):
@@ -277,7 +275,7 @@ def load_tempo(fhandle):
     section_count = 0
 
     reader = csv.reader(fhandle, delimiter=",")
-    for line in reader:
+    for i, line in enumerate(reader):
         if "NaN" in line or " NaN" in line or "NaN " in line:
             return None
 
@@ -289,22 +287,14 @@ def load_tempo(fhandle):
         start_time = line[4]
         duration = line[5]
 
-        tempo_annotation[sections[section_count]] = {
+        tempo_annotation[sections[i]] = {
             "tempo": float(tempo) if "." in tempo else int(tempo),
             "matra_interval": float(matra) if "." in matra else int(matra),
-            "sama_interval": (
-                float(sama_interval) if "." in sama_interval else int(sama_interval)
-            ),
-            "matras_per_cycle": (
-                float(matras_per_cycle)
-                if "." in matras_per_cycle
-                else int(matras_per_cycle)
-            ),
+            "sama_interval": (float(sama_interval) if "." in sama_interval else int(sama_interval)),
+            "matras_per_cycle": (float(matras_per_cycle) if "." in matras_per_cycle else int(matras_per_cycle)),
             "start_time": float(start_time) if "." in start_time else int(start_time),
             "duration": float(duration) if "." in duration else int(duration),
         }
-
-        section_count += 1  # Go to next section
 
     return tempo_annotation
 
@@ -334,9 +324,7 @@ def load_sama(fhandle):
     if not beat_times or beat_times[0] == -1.0:
         return None
 
-    return annotations.BeatData(
-        np.array(beat_times), "s", np.array(beat_positions), "global_index"
-    )
+    return annotations.BeatData(np.array(beat_times), "s", np.array(beat_positions), "global_index")
 
 
 @io.coerce_to_string_io
@@ -393,9 +381,7 @@ def load_phrases(fhandle):
     if not start_times:
         return None
 
-    return annotations.EventData(
-        np.array([start_times, end_times]).T, "s", events, "open"
-    )
+    return annotations.EventData(np.array([start_times, end_times]).T, "s", events, "open")
 
 
 @io.coerce_to_string_io
@@ -441,44 +427,30 @@ class Dataset(core.Dataset):
             license_info=LICENSE_INFO,
         )
 
-    @deprecated(
-        reason="Use mirdata.datasets.saraga_hindustani.load_audio", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.saraga_hindustani.load_audio", version="0.3.4")
     def load_audio(self, *args, **kwargs):
         return load_audio(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.saraga_hindustani.load_tonic", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.saraga_hindustani.load_tonic", version="0.3.4")
     def load_tonic(self, *args, **kwargs):
         return load_tonic(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.saraga_hindustani.load_pitch", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.saraga_hindustani.load_pitch", version="0.3.4")
     def load_pitch(self, *args, **kwargs):
         return load_pitch(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.saraga_hindustani.load_tempo", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.saraga_hindustani.load_tempo", version="0.3.4")
     def load_tempo(self, *args, **kwargs):
         return load_tempo(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.saraga_hindustani.load_sama", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.saraga_hindustani.load_sama", version="0.3.4")
     def load_sama(self, *args, **kwargs):
         return load_sama(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.saraga_hindustani.load_sections", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.saraga_hindustani.load_sections", version="0.3.4")
     def load_sections(self, *args, **kwargs):
         return load_sections(*args, **kwargs)
 
-    @deprecated(
-        reason="Use mirdata.datasets.saraga_hindustani.load_phrases", version="0.3.4"
-    )
+    @deprecated(reason="Use mirdata.datasets.saraga_hindustani.load_phrases", version="0.3.4")
     def load_phrases(self, *args, **kwargs):
         return load_phrases(*args, **kwargs)

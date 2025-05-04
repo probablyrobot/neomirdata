@@ -24,12 +24,8 @@ def test_track():
         "time_signature": "4-4",
         "midi_filename": "drummer1/eval_session/1_funk-groove1_138_beat_4-4.mid",
         "audio_filename": "drummer1/eval_session/1_funk-groove1_138_beat_4-4.wav",
-        "midi_path": os.path.join(
-            data_home, "drummer1/eval_session/1_funk-groove1_138_beat_4-4.mid"
-        ),
-        "audio_path": os.path.join(
-            data_home, "drummer1/eval_session/1_funk-groove1_138_beat_4-4.wav"
-        ),
+        "midi_path": os.path.join(data_home, "drummer1/eval_session/1_funk-groove1_138_beat_4-4.mid"),
+        "audio_path": os.path.join(data_home, "drummer1/eval_session/1_funk-groove1_138_beat_4-4.wav"),
         "duration": 27.872308,
         "split": "test",
     }
@@ -98,9 +94,8 @@ def test_download(httpserver):
     if os.path.exists(data_home):
         shutil.rmtree(data_home)
 
-    httpserver.serve_content(
-        open("tests/resources/download/groove-v1-0.0.zip", "rb").read()
-    )
+    with open("tests/resources/download/groove-v1-0.0.zip", "rb") as file_handle:
+        httpserver.serve_content(file_handle.read())
 
     remotes = {
         "all": download_utils.RemoteFileMetadata(
